@@ -1,8 +1,7 @@
-module.exports =
-{
-    project: {
+module.exports = {
+  project: {
     ios: {},
-    android: {}, 
+    android: {},
   },
-    asserts: ['./asserts/fonts']
-}
+  assets: ['./assets/fonts/'], 
+};

@@ -1,4 +1,9 @@
 {
   "migIndex": 1,
-  "data": []
+  "data": [
+    {
+      "path": "assets/fonts/Caveat.ttf",
+      "sha1": "82b10abbb30f9644797aada1802e9da7784e464e"
+    }
+  ]
 }
