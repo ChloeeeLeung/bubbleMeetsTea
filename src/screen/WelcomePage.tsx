@@ -1,7 +1,7 @@
-import {Button, Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {Button} from 'react-native-paper';
 
 const styles = StyleSheet.create({
   view: {
@@ -41,13 +41,14 @@ const WelcomPage = () => {
       <Image source={require('./Icon.png')} style={{width: 350, height: 200}} />
       <Text style={styles.appName}>Bubble Meets Tea</Text>
       <View style={styles.buttonSide}>
-        <Pressable
-          style={styles.startButton}
+        <Button
+          mode="outlined"
+          buttonColor="#25171c"
           onPress={() => {
             navigation.navigate('HomePage');
           }}>
           <Text style={styles.getStart}>START</Text>
-        </Pressable>
+        </Button>
       </View>
     </View>
   );

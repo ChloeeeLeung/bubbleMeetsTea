@@ -28,6 +28,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import HomePage from './src/screen/HomePage';
 import WelcomPage from './src/screen/WelcomePage';
+import {PaperProvider} from 'react-native-paper';
 
 const RootStack = createNativeStackNavigator();
 
@@ -39,26 +40,28 @@ function App(): JSX.Element {
   };
 
   return (
-    <NavigationContainer>
-      <RootStack.Navigator
-        initialRouteName="WelcomPage"
-        screenOptions={{
-          contentStyle: {
-            backgroundColor: '#cfc5b7',
-          },
-        }}>
-        <RootStack.Screen
-          name="HomePage"
-          component={HomePage}
-          options={{headerShown: false}}
-        />
-        <RootStack.Screen
-          name="WelcomPage"
-          component={WelcomPage}
-          options={{headerShown: false}}
-        />
-      </RootStack.Navigator>
-    </NavigationContainer>
+    <PaperProvider>
+      <NavigationContainer>
+        <RootStack.Navigator
+          initialRouteName="WelcomPage"
+          screenOptions={{
+            contentStyle: {
+              backgroundColor: '#cfc5b7',
+            },
+          }}>
+          <RootStack.Screen
+            name="HomePage"
+            component={HomePage}
+            options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="WelcomPage"
+            component={WelcomPage}
+            options={{headerShown: false}}
+          />
+        </RootStack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
 
