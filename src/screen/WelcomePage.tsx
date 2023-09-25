@@ -38,7 +38,10 @@ const WelcomPage = () => {
   const navigation = useNavigation();
   return (
     <View style={styles.view}>
-      <Image source={require('./Icon.png')} style={{width: 350, height: 200}} />
+      <Image
+        source={require('./bubbletea.png')}
+        style={{width: 200, height: 200}}
+      />
       <Text style={styles.appName}>Bubble Meets Tea</Text>
       <View style={styles.buttonSide}>
         <Button
