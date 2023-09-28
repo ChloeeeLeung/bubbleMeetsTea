@@ -30,7 +30,12 @@ import HomePage from './src/screen/HomePage';
 import WelcomPage from './src/screen/WelcomePage';
 import {PaperProvider} from 'react-native-paper';
 
-const RootStack = createNativeStackNavigator();
+export type RootStackParams = {
+  HomePage: any;
+  WelcomPage: any;
+};
+
+const RootStack = createNativeStackNavigator<RootStackParams>();
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';

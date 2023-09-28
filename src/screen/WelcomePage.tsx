@@ -2,11 +2,15 @@ import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {Button} from 'react-native-paper';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../App';
+import {TabBar} from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
-  view: {
-    alignItems: 'center',
+  centered: {
+    flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   appName: {
     fontWeight: 'bold',
@@ -31,13 +35,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#ffffff',
+    fontFamily: 'Caveat',
   },
 });
 
 const WelcomPage = () => {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParams>>();
+
+  // const renderTabBar = props => (
+  //   <TabBar
+  //     {...props}
+  //     activeColor={'white'}
+  //     inactiveColor={'black'}
+  //     style={{marginTop: 25, backgroundColor: 'red'}}
+  //   />
+  // );
+
   return (
-    <View style={styles.view}>
+    <View style={styles.centered}>
       <Image
         source={require('./bubbletea.png')}
         style={{width: 200, height: 200}}
@@ -45,7 +61,6 @@ const WelcomPage = () => {
       <Text style={styles.appName}>Bubble Meets Tea</Text>
       <View style={styles.buttonSide}>
         <Button
-          mode="outlined"
           buttonColor="#25171c"
           onPress={() => {
             navigation.navigate('HomePage');
