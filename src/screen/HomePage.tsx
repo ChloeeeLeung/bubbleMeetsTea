@@ -40,7 +40,7 @@ const HomePage = () => {
     <>
       <View style={styles.row}>
         <Image
-          source={require('./bubbletea.png')}
+          source={require('../image/bubbletea.png')}
           style={{width: 50, height: 50}}
         />
         <Text style={styles.title}>Bubble Meets Tea</Text>

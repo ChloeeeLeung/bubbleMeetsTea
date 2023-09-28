@@ -55,7 +55,7 @@ const WelcomPage = () => {
   return (
     <View style={styles.centered}>
       <Image
-        source={require('./bubbletea.png')}
+        source={require('../image/bubbletea.png')}
         style={{width: 200, height: 200}}
       />
       <Text style={styles.appName}>Bubble Meets Tea</Text>
