@@ -32,7 +32,7 @@ const HomePage = () => {
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'first', title: 'First'},
+    {key: 'first', title: 'hahaha'},
     {key: 'second', title: 'Second'},
   ]);
 
