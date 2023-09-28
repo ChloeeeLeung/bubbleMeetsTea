@@ -43,7 +43,7 @@ const HomePage = () => {
           source={require('./bubbletea.png')}
           style={{width: 50, height: 50}}
         />
-        <Text style={styles.title}>Bubble Meets Tea 123</Text>
+        <Text style={styles.title}>Bubble Meets Tea</Text>
       </View>
       <TabView
         navigationState={{index, routes}}
