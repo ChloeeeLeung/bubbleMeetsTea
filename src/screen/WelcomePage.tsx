@@ -43,15 +43,6 @@ const WelcomPage = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  // const renderTabBar = props => (
-  //   <TabBar
-  //     {...props}
-  //     activeColor={'white'}
-  //     inactiveColor={'black'}
-  //     style={{marginTop: 25, backgroundColor: 'red'}}
-  //   />
-  // );
-
   return (
     <View style={styles.centered}>
       <Image

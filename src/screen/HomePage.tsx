@@ -1,6 +1,6 @@
 import {Image, StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import React from 'react';
-import {SceneMap, TabView} from 'react-native-tab-view';
+import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 
 const styles = StyleSheet.create({
   row: {
@@ -16,16 +16,24 @@ const styles = StyleSheet.create({
   },
 });
 
-const FirstRoute = () => <View style={{flex: 1, backgroundColor: '#c4c1c4'}} />;
+const FirstRoute = () => <View style={{flex: 1}} />;
 
-const SecondRoute = () => (
-  <View style={{flex: 1, backgroundColor: '#e1e9e1'}} />
-);
+const SecondRoute = () => <View style={{flex: 1}} />;
 
 const renderScene = SceneMap({
   first: FirstRoute,
   second: SecondRoute,
 });
+
+const renderTabBar = (props: any) => (
+  <TabBar
+    {...props}
+    activeColor={'#c4c1c4'}
+    inactiveColor={'#25171c'}
+    style={{backgroundColor: '#e1e9e1', borderRadius: 30}}
+    indicatorStyle={{backgroundColor: 'transparent'}}
+  />
+);
 
 const HomePage = () => {
   const layout = useWindowDimensions();
@@ -48,6 +56,7 @@ const HomePage = () => {
       <TabView
         navigationState={{index, routes}}
         renderScene={renderScene}
+        renderTabBar={renderTabBar}
         onIndexChange={setIndex}
         initialLayout={{width: layout.width}}
       />
