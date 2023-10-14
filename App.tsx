@@ -27,12 +27,12 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import HomePage from './src/screen/HomePage';
-import WelcomPage from './src/screen/WelcomePage';
+import LoginPage from './src/screen/LoginPage';
 import {PaperProvider} from 'react-native-paper';
 
 export type RootStackParams = {
   HomePage: any;
-  WelcomPage: any;
+  LoginPage: any;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
@@ -48,10 +48,10 @@ function App(): JSX.Element {
     <PaperProvider>
       <NavigationContainer>
         <RootStack.Navigator
-          initialRouteName="WelcomPage"
+          initialRouteName="LoginPage"
           screenOptions={{
             contentStyle: {
-              backgroundColor: '#cfc5b7',
+              backgroundColor: '#C9D5BD',
             },
           }}>
           <RootStack.Screen
@@ -60,8 +60,8 @@ function App(): JSX.Element {
             options={{headerShown: false}}
           />
           <RootStack.Screen
-            name="WelcomPage"
-            component={WelcomPage}
+            name="LoginPage"
+            component={LoginPage}
             options={{headerShown: false}}
           />
         </RootStack.Navigator>

@@ -16,9 +16,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const FirstRoute = () => <View style={{flex: 1}} />;
+const FirstRoute = () => (
+  <View style={{flex: 1}}>
+    <Text>1</Text>
+  </View>
+);
 
-const SecondRoute = () => <View style={{flex: 1}} />;
+const SecondRoute = () => (
+  <View style={{flex: 1}}>
+    <Text>2</Text>
+  </View>
+);
 
 const renderScene = SceneMap({
   first: FirstRoute,
@@ -28,8 +36,8 @@ const renderScene = SceneMap({
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
-    activeColor={'#c4c1c4'}
-    inactiveColor={'#25171c'}
+    activeColor={'#25171c'}
+    inactiveColor={'#c4c1c4'}
     style={{backgroundColor: '#e1e9e1', borderRadius: 30}}
     indicatorStyle={{backgroundColor: 'transparent'}}
   />
@@ -40,8 +48,8 @@ const HomePage = () => {
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'first', title: 'yeah'},
-    {key: 'second', title: 'Second'},
+    {key: 'first', title: 'FUCK'},
+    {key: 'second', title: 'FYP'},
   ]);
 
   return (
