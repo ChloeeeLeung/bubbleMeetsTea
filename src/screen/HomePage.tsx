@@ -1,45 +1,68 @@
-import {Image, StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import React from 'react';
-import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import {Route, SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import RatingPage from './RatingPage';
+import MapPage from './MapPage';
+import FavouritePage from './FavouritePage';
+import ProfilePage from './ProfilePage';
+import {Scene} from 'react-native-tab-view/lib/typescript/src/types';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    padding: 15,
+    alignItems: 'center',
   },
   title: {
     fontWeight: 'bold',
     fontSize: 20,
+    fontFamily: 'serif',
   },
   tapContainer: {
     backgroundColor: '#c4c1c4',
   },
 });
 
-const FirstRoute = () => (
-  <View style={{flex: 1}}>
-    <Text>1</Text>
-  </View>
-);
-
-const SecondRoute = () => (
-  <View style={{flex: 1}}>
-    <Text>2</Text>
-  </View>
-);
-
 const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
+  rating: RatingPage,
+  map: MapPage,
+  favourite: FavouritePage,
+  profile: ProfilePage,
 });
+
+const getTabBarIcon = (
+  props: Scene<Route> & {focused: boolean; color: string},
+) => {
+  const {route} = props;
+
+  if (route.key === 'rating') {
+    return <Icon name="search" size={20} color={'#2f4858'} />;
+  } else if (route.key === 'map') {
+    return <Icon name="map-marker" size={20} color={'#2f4858'} />;
+  } else if (route.key === 'favourite') {
+    return <Icon name="heart" size={20} color={'#2f4858'} />;
+  } else if (route.key === 'profile') {
+    return <Icon name="user" size={20} color={'#2f4858'} />;
+  }
+};
 
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
     activeColor={'#25171c'}
     inactiveColor={'#c4c1c4'}
-    style={{backgroundColor: '#e1e9e1', borderRadius: 30}}
+    style={{backgroundColor: '#ffffff'}}
     indicatorStyle={{backgroundColor: 'transparent'}}
+    renderIcon={props => getTabBarIcon(props)}
   />
 );
 
@@ -48,8 +71,10 @@ const HomePage = () => {
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'first', title: 'FUCK'},
-    {key: 'second', title: 'FYP'},
+    {key: 'rating', title: 'FUCK'},
+    {key: 'map', title: 'FYP'},
+    {key: 'favourite', title: 'idk'},
+    {key: 'profile', title: ':<'},
   ]);
 
   return (
@@ -57,7 +82,7 @@ const HomePage = () => {
       <View style={styles.row}>
         <Image
           source={require('../image/bubbletea.png')}
-          style={{width: 50, height: 50}}
+          style={{width: 60, height: 60}}
         />
         <Text style={styles.title}>Bubble Meets Tea</Text>
       </View>
@@ -67,6 +92,7 @@ const HomePage = () => {
         renderTabBar={renderTabBar}
         onIndexChange={setIndex}
         initialLayout={{width: layout.width}}
+        tabBarPosition="bottom"
       />
     </>
   );
