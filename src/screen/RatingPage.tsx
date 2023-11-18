@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import React from 'react';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
-import {Avatar, Button, Card, IconButton} from 'react-native-paper';
+import {Avatar, Button, Card, IconButton, Searchbar} from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const styles = StyleSheet.create({
   row: {
@@ -29,6 +30,15 @@ const styles = StyleSheet.create({
 
 const FirstRoute = () => (
   <View style={{marginVertical: 5}}>
+    <Searchbar
+      style={{
+        width: Dimensions.get('window').width - 20,
+        marginVertical: 10,
+        backgroundColor: '#F4E6DC',
+      }}
+      placeholder="Search"
+      value={''}
+    />
     <Card
       style={{
         backgroundColor: '#FFF8DE',
@@ -36,12 +46,55 @@ const FirstRoute = () => (
       }}>
       <Card.Title
         title="Comebuytea"
-        subtitle="Card Subtitle"
-        left={props => <Avatar.Icon {...props} icon="folder" />}
-        // right={props => (
-        //   <IconButton {...props} icon="dots-vertical" onPress={() => {}} />
-        // )}
+        titleVariant="titleMedium"
+        left={props => (
+          <Avatar.Image
+            {...props}
+            source={require('../image/comebuytea.png')}
+          />
+        )}
+        right={props => (
+          <IconButton
+            {...props}
+            icon="heart"
+            iconColor="#B22222"
+            onPress={() => {}}
+          />
+        )}
       />
+      <View
+        style={{
+          flexDirection: 'row',
+          marginHorizontal: 15,
+          marginBottom: 5,
+        }}>
+        <Icon name="map-marker" size={20} color={'#2f4858'} />
+        <Text style={{marginLeft: 5}}>
+          Shop G03, G/F, T.O.P This is Our Place, 700 Nathan Road, Mong Kok
+        </Text>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          marginHorizontal: 15,
+          marginVertical: 5,
+        }}>
+        <Icon name="street-view" size={20} color={'#2f4858'} />
+        <Text style={{marginLeft: 5}}>450 m</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginLeft: 30,
+          }}>
+          <Icon name="star" size={20} color={'#2f4858'} />
+          <Icon name="star" size={20} color={'#2f4858'} />
+          <Icon name="star" size={20} color={'#2f4858'} />
+          <Icon name="star" size={20} color={'#2f4858'} />
+          <Icon name="star-o" size={20} color={'#2f4858'} />
+          <Text style={{marginLeft: 5}}>4.0</Text>
+        </View>
+      </View>
     </Card>
   </View>
 );
@@ -72,8 +125,8 @@ const RatingPage = () => {
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'first', title: 'FUCK'},
-    {key: 'second', title: 'FYP'},
+    {key: 'first', title: 'By Location'},
+    {key: 'second', title: 'By Flavor'},
   ]);
 
   return (
