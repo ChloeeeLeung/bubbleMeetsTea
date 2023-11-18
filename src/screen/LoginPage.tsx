@@ -60,7 +60,7 @@ const LoginPage = () => {
         style={{
           width: 300,
           height: 300,
-          backgroundColor: '#FFF8DE',
+          backgroundColor: '#C9D5BD',
           justifyContent: 'center',
           alignItems: 'center',
           borderRadius: 25,
@@ -76,7 +76,7 @@ const LoginPage = () => {
             value={username}
             onChangeText={setUsername}
             style={{
-              backgroundColor: '#C9D5BD',
+              backgroundColor: '#FFF8DE',
             }}
             left={<TextInput.Icon icon="account" />}
             activeUnderlineColor="#486B73"
@@ -94,7 +94,7 @@ const LoginPage = () => {
             onChangeText={setPassword}
             secureTextEntry
             style={{
-              backgroundColor: '#C9D5BD',
+              backgroundColor: '#FFF8DE',
             }}
             left={<TextInput.Icon icon="lock" />}
             activeUnderlineColor="#486B73"

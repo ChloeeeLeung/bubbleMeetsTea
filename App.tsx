@@ -51,7 +51,7 @@ function App(): JSX.Element {
           initialRouteName="LoginPage"
           screenOptions={{
             contentStyle: {
-              backgroundColor: '#C9D5BD',
+              backgroundColor: '#FFF8DE',
             },
           }}>
           <RootStack.Screen

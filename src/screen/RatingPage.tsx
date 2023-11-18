@@ -41,7 +41,7 @@ const FirstRoute = () => (
     />
     <Card
       style={{
-        backgroundColor: '#FFF8DE',
+        backgroundColor: '#C9D5BD',
         width: Dimensions.get('window').width - 20,
       }}>
       <Card.Title
