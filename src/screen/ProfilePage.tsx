@@ -1,8 +1,12 @@
 import React from 'react';
-import {Text} from 'react-native-paper';
+import {Button, Text} from 'react-native-paper';
 
 const ProfilePage = () => {
-  return <Text>This is profile Page</Text>;
+  return (
+    <Button mode="elevated" onPress={() => console.log('Pressed')}>
+      Log out
+    </Button>
+  );
 };
 
 export default ProfilePage;

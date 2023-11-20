@@ -45,13 +45,13 @@ const getTabBarIcon = (
   const {route} = props;
 
   if (route.key === 'rating') {
-    return <Icon name="search" size={20} color={'#2f4858'} />;
+    return <Icon name="search" size={23} color={'#2f4858'} />;
   } else if (route.key === 'map') {
-    return <Icon name="map-marker" size={20} color={'#2f4858'} />;
+    return <Icon name="map-marker" size={23} color={'#2f4858'} />;
   } else if (route.key === 'favourite') {
-    return <Icon name="heart" size={20} color={'#2f4858'} />;
+    return <Icon name="heart" size={23} color={'#2f4858'} />;
   } else if (route.key === 'profile') {
-    return <Icon name="user" size={20} color={'#2f4858'} />;
+    return <Icon name="user" size={23} color={'#2f4858'} />;
   }
 };
 
@@ -71,21 +71,14 @@ const HomePage = () => {
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    {key: 'rating', title: 'FUCK'},
-    {key: 'map', title: 'FYP'},
-    {key: 'favourite', title: 'idk'},
-    {key: 'profile', title: ':<'},
+    {key: 'rating'},
+    {key: 'map'},
+    {key: 'favourite'},
+    {key: 'profile'},
   ]);
 
   return (
     <>
-      <View style={styles.row}>
-        <Image
-          source={require('../image/bubbletea.png')}
-          style={{width: 60, height: 60}}
-        />
-        <Text style={styles.title}>Bubble Meets Tea</Text>
-      </View>
       <TabView
         navigationState={{index, routes}}
         renderScene={renderScene}
