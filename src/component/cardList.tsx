@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, View} from 'react-native';
 import {
   Avatar,
@@ -10,9 +10,27 @@ import {
   TouchableRipple,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import firestore from '@react-native-firebase/firestore';
 
 const cardList = () => {
   const navigation = useNavigation();
+  const [myData, setMyData] = useState(null);
+  useEffect(() => {
+    getDatabase();
+  }, []);
+  const getDatabase = async () => {
+    try {
+      const data = await firestore()
+        .collection('testing')
+        .doc('7GdLAXgCByyn3aWtsmFJ')
+        .get();
+      console.log(data._data);
+
+      if (data) setMyData(data._data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <View style={{marginVertical: 5}}>
       <Searchbar
@@ -31,7 +49,7 @@ const cardList = () => {
             width: Dimensions.get('window').width - 20,
           }}>
           <Card.Title
-            title="Comebuytea"
+            title={myData ? myData['name'] : 'bye'}
             titleVariant="titleMedium"
             left={props => (
               <Avatar.Image
@@ -56,7 +74,7 @@ const cardList = () => {
             }}>
             <Icon name="map-marker" size={20} color={'#2f4858'} />
             <Text style={{marginLeft: 5}}>
-              Shop G03, G/F, T.O.P This is Our Place, 700 Nathan Road, Mong Kok
+              {myData ? myData['location'] : 'bye'}
             </Text>
           </View>
           <View
@@ -78,7 +96,9 @@ const cardList = () => {
               <Icon name="star" size={20} color={'#2f4858'} />
               <Icon name="star" size={20} color={'#2f4858'} />
               <Icon name="star-o" size={20} color={'#2f4858'} />
-              <Text style={{marginLeft: 5}}>4.0</Text>
+              <Text style={{marginLeft: 5}}>
+                {myData ? myData['rating'] : 'rating'}
+              </Text>
             </View>
           </View>
         </Card>

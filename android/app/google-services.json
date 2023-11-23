@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "332158463238",
+    "project_id": "bubble-milk-tea-de1cd",
+    "storage_bucket": "bubble-milk-tea-de1cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332158463238:android:63b85024ed2b4019784287",
+        "android_client_info": {
+          "package_name": "com.bubblemeetstea"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzaHsrnZzE3EAY8SpgakQS7I79AqkMgSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
