@@ -10,7 +10,7 @@ import {
   TouchableRipple,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import firestore from '@react-native-firebase/firestore';
+import database, {firebase} from '@react-native-firebase/database';
 
 const cardList = () => {
   const navigation = useNavigation();
@@ -20,13 +20,16 @@ const cardList = () => {
   }, []);
   const getDatabase = async () => {
     try {
-      const data = await firestore()
-        .collection('testing')
-        .doc('7GdLAXgCByyn3aWtsmFJ')
-        .get();
-      console.log(data._data);
+      const data = await firebase
+        .app()
+        .database(
+          'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/',
+        )
+        .ref('shop/1/location/1')
+        .once('value');
 
-      if (data) setMyData(data._data);
+      console.log(data);
+      setMyData(data.val());
     } catch (err) {
       console.log(err);
     }
@@ -74,7 +77,7 @@ const cardList = () => {
             }}>
             <Icon name="map-marker" size={20} color={'#2f4858'} />
             <Text style={{marginLeft: 5}}>
-              {myData ? myData['location'] : 'bye'}
+              {myData ? myData['addr'] : 'bye'}
             </Text>
           </View>
           <View
