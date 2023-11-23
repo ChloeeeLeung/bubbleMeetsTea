@@ -3,8 +3,8 @@ import {Dimensions, View} from 'react-native';
 import {Avatar, Card, IconButton, Searchbar, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const shopCard = () => {
-  return <></>;
+const ShopCard = () => {
+  return <Text>123</Text>;
 };
 
-export default shopCard;
+export default ShopCard;

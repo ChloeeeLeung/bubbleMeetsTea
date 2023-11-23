@@ -11,8 +11,9 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import database, {firebase} from '@react-native-firebase/database';
+import ShopCard from './shopCard';
 
-const cardList = () => {
+const CardList = () => {
   const navigation = useNavigation();
   const [myData, setMyData] = useState(null);
   useEffect(() => {
@@ -45,7 +46,7 @@ const cardList = () => {
         placeholder="Search"
         value={''}
       />
-      <TouchableRipple onPress={() => console.log('Pressed')}>
+      <TouchableRipple onPress={() => navigation.navigate('ShopCard')}>
         <Card
           style={{
             backgroundColor: '#C9D5BD',
@@ -110,4 +111,4 @@ const cardList = () => {
   );
 };
 
-export default cardList;
+export default CardList;
