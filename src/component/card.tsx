@@ -36,7 +36,7 @@ const CardUI = ({
           left={props => (
             <Avatar.Image
               {...props}
-              source={require('../image/comebuytea.png')}
+              source={require('../image/shop/comebuytea.png')}
             />
           )}
           right={props => (
