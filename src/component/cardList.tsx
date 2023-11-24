@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import database, {firebase} from '@react-native-firebase/database';
 import ShopCard from './shopCard';
 import CardUI from './card';
+import DrinkTypes from './drinkTypes';
 
 const CardList = () => {
   const navigation = useNavigation();
@@ -47,6 +48,7 @@ const CardList = () => {
         placeholder="Search"
         value={''}
       />
+      <DrinkTypes />
       <CardUI
         name={myData ? myData['addr'] : ''}
         location={myData ? myData['addr'] : ''}
