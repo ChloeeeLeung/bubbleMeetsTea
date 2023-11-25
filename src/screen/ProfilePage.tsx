@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Button, Text } from 'react-native-paper';
-import
-{
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  View,
-  Image,
-  TouchableOpacity,
-  Switch,
-} from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, View, Image, TouchableOpacity, Switch, } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 const SECTIONS = [
@@ -52,7 +43,7 @@ export default function Example ()
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={ { flex: 1 } }>
       <ScrollView contentContainerStyle={ styles.container }>
         <View style={ styles.header }>
           <Text style={ styles.title }>Settings</Text>
@@ -92,7 +83,7 @@ export default function Example ()
               <Text style={ styles.sectionHeaderText }>{ header }</Text>
             </View>
             <View style={ styles.sectionBody }>
-              { items.map( ( { id, label, icon, type, value }, index ) =>
+              { items.map( ( { id, label, icon, type, }, index ) =>
               {
                 return (
                   <View
@@ -195,7 +186,9 @@ const styles = StyleSheet.create( {
     color: '#424242',
   },
   profile: {
+    marginHorizontal: 12,
     padding: 16,
+    borderRadius: 12,
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: '#e1e9e1',
@@ -240,12 +233,16 @@ const styles = StyleSheet.create( {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    paddingRight: 24,
     height: 50,
+    backgroundColor: '#c9d5bd',
+    borderRadius: 8,
+    marginBottom: 12,
+    paddingLeft: 12,
+    paddingRight: 12,
   },
   rowWrapper: {
-    paddingLeft: 24,
-    backgroundColor: '#c9d5bd',
+    paddingLeft: 10,
+    paddingRight: 10,
     borderTopWidth: 1,
     borderColor: '#e3e3e3',
   },
