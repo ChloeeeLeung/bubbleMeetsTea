@@ -68,7 +68,6 @@ const CardUI = ({
           <Text style={{marginLeft: 5}}>450 m</Text>
           <Rating
             style={{
-              flexDirection: 'row',
               marginLeft: 20,
             }}
             size={17}

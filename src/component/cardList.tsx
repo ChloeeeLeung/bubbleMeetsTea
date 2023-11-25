@@ -1,17 +1,8 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {Dimensions, View} from 'react-native';
-import {
-  Avatar,
-  Card,
-  IconButton,
-  Searchbar,
-  Text,
-  TouchableRipple,
-} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import database, {firebase} from '@react-native-firebase/database';
-import ShopCard from './shopCard';
+import {Searchbar} from 'react-native-paper';
+import {firebase} from '@react-native-firebase/database';
 import CardUI from './card';
 import DrinkTypes from './drinkTypes';
 
