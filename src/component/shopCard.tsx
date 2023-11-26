@@ -1,46 +1,44 @@
 import {Rating} from '@kolking/react-native-rating';
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 import {
-  Dimensions,
-  Image,
   ImageBackground,
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native';
-import ImageZoom from 'react-native-image-pan-zoom';
 import {
-  Avatar,
   Button,
-  Card,
+  Dialog,
   IconButton,
   Modal,
-  Searchbar,
+  Portal,
   Text,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import MenuModal from './menuModal';
+import RatingDialog from './ratingDialog';
 
 const ShopCard = () => {
   const navigation = useNavigation();
 
-  const [visible, setVisible] = React.useState(false);
+  // const [visible, setVisible] = React.useState(false);
 
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
-  const containerStyle = {backgroundColor: 'white'};
+  // const showModal = () => setVisible(true);
+  // const hideModal = () => setVisible(false);
+  // const containerStyle = {backgroundColor: 'white'};
+
+  const [dialogVisible, setDialogVisible] = React.useState(false);
+  const showDialog = () => setDialogVisible(true);
+  const hideDialog = () => setDialogVisible(false);
+
+  const [starRating, setStarRating] = useState(1);
 
   const iconSize = 23;
   return (
-    <View style={{flex: 1, padding: 15, backgroundColor: '#e1e9e1'}}>
-      <View>
-        <Modal
-          visible={visible}
-          onDismiss={hideModal}
-          contentContainerStyle={containerStyle}>
-          <Text>Example Modal. Click outside this area to dismiss.</Text>
-        </Modal>
-      </View>
+    <SafeAreaView style={{flex: 1, padding: 15, backgroundColor: '#e1e9e1'}}>
+      <RatingDialog visible={dialogVisible} hideDialog={hideDialog} />
       <View style={{justifyContent: 'center'}}>
         <ImageBackground
           source={require('../image/shop/comebuytea.png')}
@@ -67,7 +65,7 @@ const ShopCard = () => {
           </View>
         </ImageBackground>
       </View>
-      <View style={{paddingVertical: 5}}>
+      <ScrollView style={{paddingVertical: 5}}>
         <View
           style={{
             flexDirection: 'row',
@@ -117,12 +115,12 @@ const ShopCard = () => {
             buttonColor="#2f4858"
             icon="pencil"
             mode="contained"
-            onPress={() => console.log('Pressed')}>
+            onPress={() => showDialog()}>
             Rating
           </Button>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -132,6 +130,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingVertical: 5,
     justifyContent: 'space-between',
+  },
+  stars: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  starUnselected: {
+    color: '#aaa',
+  },
+  starSelected: {
+    color: '#ffb300',
   },
 });
 

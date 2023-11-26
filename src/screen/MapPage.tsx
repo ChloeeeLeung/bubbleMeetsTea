@@ -1,7 +1,6 @@
 import React from 'react';
-import {Image, SafeAreaView, View} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
-import {Text} from 'react-native-paper';
 
 const MapPage = () => {
   return (
