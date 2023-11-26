@@ -8,6 +8,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import ImageZoom from 'react-native-image-pan-zoom';
 import {
   Avatar,
   Button,
@@ -18,20 +19,28 @@ import {
   Text,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MenuModal from './menuModal';
 
 const ShopCard = () => {
   const navigation = useNavigation();
 
-  const [rating, setRating] = useState(0);
+  const [visible, setVisible] = React.useState(false);
 
-  const handleChange = useCallback(
-    (value: number) => setRating(Math.round((rating + value) * 5) / 10),
-    [rating],
-  );
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
+  const containerStyle = {backgroundColor: 'white'};
 
   const iconSize = 23;
   return (
     <View style={{flex: 1, padding: 15, backgroundColor: '#e1e9e1'}}>
+      <View>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={containerStyle}>
+          <Text>Example Modal. Click outside this area to dismiss.</Text>
+        </Modal>
+      </View>
       <View style={{justifyContent: 'center'}}>
         <ImageBackground
           source={require('../image/shop/comebuytea.png')}
@@ -58,7 +67,7 @@ const ShopCard = () => {
           </View>
         </ImageBackground>
       </View>
-      <View style={{flex: 3, paddingVertical: 5}}>
+      <View style={{paddingVertical: 5}}>
         <View
           style={{
             flexDirection: 'row',
@@ -94,10 +103,24 @@ const ShopCard = () => {
             Shop A312, 3/F, New Town Plaza Phase III, 18 Sha Tin Centre Street
           </Text>
         </View>
-        <Image
-          source={require('../image/menu/comebuytea.jpg')}
-          style={{width: 350, height: 200}}
-        />
+        <View style={styles.row}>
+          <Button
+            style={{width: 180}}
+            buttonColor="#2f4858"
+            icon="book"
+            mode="contained"
+            onPress={() => navigation.navigate('MenuModal')}>
+            Menu
+          </Button>
+          <Button
+            style={{width: 180}}
+            buttonColor="#2f4858"
+            icon="pencil"
+            mode="contained"
+            onPress={() => console.log('Pressed')}>
+            Rating
+          </Button>
+        </View>
       </View>
     </View>
   );
@@ -108,6 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingVertical: 5,
+    justifyContent: 'space-between',
   },
 });
 
