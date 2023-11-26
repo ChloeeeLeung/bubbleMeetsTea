@@ -131,16 +131,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     justifyContent: 'space-between',
   },
-  stars: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  starUnselected: {
-    color: '#aaa',
-  },
-  starSelected: {
-    color: '#ffb300',
-  },
 });
 
 export default ShopCard;
