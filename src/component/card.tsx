@@ -17,10 +17,12 @@ const CardUI = ({
   name,
   location,
   shopRating,
+  fav,
 }: {
   name: String;
   location: String;
   shopRating: Double;
+  fav: boolean;
 }) => {
   const navigation = useNavigation();
   return (
@@ -42,8 +44,8 @@ const CardUI = ({
           right={props => (
             <IconButton
               {...props}
-              icon="heart"
-              iconColor="#B22222"
+              icon={fav ? 'heart' : 'heart-outline'}
+              iconColor={fav ? '#B22222' : '#2f4858'}
               onPress={() => {}}
             />
           )}

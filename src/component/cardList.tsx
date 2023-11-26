@@ -1,17 +1,19 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {Dimensions, View} from 'react-native';
+import {Dimensions, FlatList, ScrollView, Text, View} from 'react-native';
 import {Searchbar} from 'react-native-paper';
 import {firebase} from '@react-native-firebase/database';
 import CardUI from './card';
 import DrinkTypes from './drinkTypes';
 
 const CardList = () => {
-  const navigation = useNavigation();
   const [myData, setMyData] = useState(null);
+  const [list, setList] = useState(null);
+
   useEffect(() => {
     getDatabase();
   }, []);
+
   const getDatabase = async () => {
     try {
       const data = await firebase
@@ -19,11 +21,11 @@ const CardList = () => {
         .database(
           'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/',
         )
-        .ref('shop/1/location/1')
+        .ref('shop')
         .once('value');
 
-      console.log(data);
       setMyData(data.val());
+      setList(data.val());
     } catch (err) {
       console.log(err);
     }
@@ -40,11 +42,27 @@ const CardList = () => {
         value={''}
       />
       <DrinkTypes />
-      <CardUI
-        name={myData ? myData['addr'] : ''}
-        location={myData ? myData['addr'] : ''}
-        shopRating={myData ? myData['rating'] : 0}
-      />
+      <View style={{flexGrow: 1}}>
+        <FlatList
+          data={list}
+          renderItem={item => {
+            console.log(item);
+            if (item.item !== null) {
+              return (
+                <View style={{paddingVertical: 5}}>
+                  <CardUI
+                    name={item.item.name}
+                    location={item.item.addr}
+                    shopRating={item.item.rating}
+                    fav={item.item.fav}
+                  />
+                </View>
+              );
+            }
+            return null;
+          }}
+        />
+      </View>
     </View>
   );
 };
