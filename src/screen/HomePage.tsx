@@ -15,23 +15,6 @@ import ProfilePage from './ProfilePage';
 import {Scene} from 'react-native-tab-view/lib/typescript/src/types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: 15,
-    alignItems: 'center',
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    fontFamily: 'serif',
-  },
-  tapContainer: {
-    backgroundColor: '#c4c1c4',
-  },
-});
-
 const renderScene = SceneMap({
   rating: RatingPage,
   map: MapPage,
