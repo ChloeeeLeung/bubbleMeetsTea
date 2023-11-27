@@ -29,7 +29,7 @@ const HomePage = () => {
     .then(location => {
       setLatitude(location.latitude);
       setLongitude(location.longitude);
-      console.log(location);
+      //console.log(location);
     })
     .catch(error => {
       const {code, message} = error;

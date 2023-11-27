@@ -48,14 +48,6 @@ const CardList = ({
     await getDatabase();
   };
 
-  const calculateDistance = (itemLatitude: any, itemLongitude: any) => {
-    var dis = getPreciseDistance(
-      {latitude: userLatitude, longitude: userLongitude},
-      {latitude: itemLatitude, longitude: itemLongitude},
-    );
-    console.log(`${itemLatitude} ${dis} Meter\nOR${dis / 1000} KM`);
-  };
-
   return (
     <View style={{marginVertical: 5, flex: 1, paddingHorizontal: 10}}>
       <Searchbar
@@ -71,7 +63,7 @@ const CardList = ({
       <FlatList
         data={list}
         renderItem={item => {
-          console.log(item);
+          //console.log(item);
           let distance = null;
           if (
             item.item !== null &&
