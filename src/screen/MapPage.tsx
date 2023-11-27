@@ -127,13 +127,6 @@ const MapPage = ({
           }
           return null;
         })}
-        <Marker
-          coordinate={{
-            latitude: 22.380118962517653,
-            longitude: 114.18740518791564,
-          }}>
-          <Icon name={'map-pin'} size={35} color={'#F29E18'}></Icon>
-        </Marker>
       </MapView>
       {cardContent}
     </SafeAreaView>
