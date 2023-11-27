@@ -1,4 +1,5 @@
-import React from 'react';
+import {firebase} from '@react-native-firebase/database';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native';
 import GetLocation from 'react-native-get-location';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
@@ -11,6 +12,32 @@ const MapPage = ({
   latitude: number;
   longitude: number;
 }) => {
+  // const [myData, setMyData] = useState(null);
+  // const [list, setList] = useState(null);
+
+  // useEffect(() => {
+  //   getDatabase();
+  // }, []);
+
+  // const getDatabase = async () => {
+  //   try {
+  //     const data = await firebase
+  //       .app()
+  //       .database(
+  //         'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/',
+  //       )
+  //       .ref('shop')
+  //       .once('value');
+
+  //     setMyData(data.val());
+  //     setList(data.val());
+
+  //     console.log('Received param:', list);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <MapView

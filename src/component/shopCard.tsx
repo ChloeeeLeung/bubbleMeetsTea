@@ -22,7 +22,7 @@ import RatingDialog from './ratingDialog';
 
 const ShopCard = ({route}: {route: any}) => {
   const navigation = useNavigation();
-  const {name, location, shopRating, openTime, closeTime, telephone} =
+  const {name, location, shopRating, openTime, closeTime, telephone, fav} =
     route.params;
 
   // const [visible, setVisible] = React.useState(false);
@@ -59,8 +59,8 @@ const ShopCard = ({route}: {route: any}) => {
               onPress={() => navigation.goBack()}
             />
             <IconButton
-              icon="heart"
-              iconColor="#B22222"
+              icon={fav ? 'heart' : 'heart-outline'}
+              iconColor={fav ? '#B22222' : '#2f4858'}
               size={30}
               onPress={() => console.log('Pressed')}
             />
