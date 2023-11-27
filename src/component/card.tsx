@@ -21,6 +21,7 @@ const CardUI = ({
   openTime,
   closeTime,
   telephone,
+  handleToggleFavorite,
 }: {
   name: String;
   location: String;
@@ -29,6 +30,7 @@ const CardUI = ({
   openTime: String;
   closeTime: String;
   telephone: Number;
+  handleToggleFavorite: () => void;
 }) => {
   const navigation = useNavigation();
   return (
@@ -42,6 +44,7 @@ const CardUI = ({
           closeTime,
           telephone,
           fav,
+          handleToggleFavorite,
         })
       }>
       <Card
@@ -63,7 +66,9 @@ const CardUI = ({
               {...props}
               icon={fav ? 'heart' : 'heart-outline'}
               iconColor={fav ? '#B22222' : '#2f4858'}
-              onPress={() => {}}
+              onPress={() => {
+                handleToggleFavorite();
+              }}
             />
           )}
         />

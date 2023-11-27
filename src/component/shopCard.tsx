@@ -1,43 +1,51 @@
 import {Rating} from '@kolking/react-native-rating';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {
   ImageBackground,
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  Button,
-  Dialog,
-  IconButton,
-  Modal,
-  Portal,
-  Text,
-} from 'react-native-paper';
+import {Button, IconButton, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RatingDialog from './ratingDialog';
 
-const ShopCard = ({route}: {route: any}) => {
-  const navigation = useNavigation();
-  const {name, location, shopRating, openTime, closeTime, telephone, fav} =
-    route.params;
-
-  // const [visible, setVisible] = React.useState(false);
-
-  // const showModal = () => setVisible(true);
-  // const hideModal = () => setVisible(false);
-  // const containerStyle = {backgroundColor: 'white'};
+const ShopCard = ({route, navigation}: {route: any; navigation: any}) => {
+  const {
+    name,
+    location,
+    shopRating,
+    openTime,
+    closeTime,
+    telephone,
+    fav,
+    handleToggleFavorite,
+  } = route.params;
 
   const [dialogVisible, setDialogVisible] = React.useState(false);
   const showDialog = () => setDialogVisible(true);
   const hideDialog = () => setDialogVisible(false);
 
-  const [starRating, setStarRating] = useState(1);
-
   const iconSize = 23;
+
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <IconButton
+  //         icon={fav ? 'heart' : 'heart-outline'}
+  //         iconColor={fav ? '#B22222' : '#2f4858'}
+  //         size={30}
+  //         onPress={async () => {
+  //           handleToggleFavorite();
+  //           navigation.navigate('ShopCard');
+  //         }}
+  //       />
+  //     ),
+  //   });
+  // }, [fav]);
+
   return (
     <SafeAreaView style={{flex: 1, padding: 15, backgroundColor: '#e1e9e1'}}>
       <RatingDialog visible={dialogVisible} hideDialog={hideDialog} />
@@ -62,7 +70,7 @@ const ShopCard = ({route}: {route: any}) => {
               icon={fav ? 'heart' : 'heart-outline'}
               iconColor={fav ? '#B22222' : '#2f4858'}
               size={30}
-              onPress={() => console.log('Pressed')}
+              onPress={() => handleToggleFavorite()}
             />
           </View>
         </ImageBackground>
