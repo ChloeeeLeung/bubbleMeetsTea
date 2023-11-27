@@ -11,7 +11,6 @@ import CardUI from '../component/card';
 import {firebase} from '@react-native-firebase/database';
 
 const FavouritePage = () => {
-  const [myData, setMyData] = useState(null);
   const [list, setList] = useState(null);
 
   useEffect(() => {
@@ -28,12 +27,26 @@ const FavouritePage = () => {
         .ref('shop')
         .once('value');
 
-      setMyData(data.val());
       setList(data.val());
     } catch (err) {
       console.log(err);
     }
   };
+
+  const handleToggleFavorite = async (itemId: any, itemFav: any) => {
+    await firebase
+      .app()
+      .database(
+        'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/',
+      )
+      .ref(`shop/${itemId}`)
+      .update({
+        fav: !itemFav,
+      });
+
+    await getDatabase();
+  };
+
   return (
     <SafeAreaView style={{flex: 1, padding: 10}}>
       <View style={styles.header}>
@@ -50,6 +63,12 @@ const FavouritePage = () => {
                   location={item.item.addr}
                   shopRating={item.item.rating}
                   fav={item.item.fav}
+                  openTime={item.item.openTime}
+                  closeTime={item.item.closeTime}
+                  telephone={item.item.telephone}
+                  handleToggleFavorite={() =>
+                    handleToggleFavorite(item.index, item.item.fav)
+                  }
                 />
               </View>
             );
