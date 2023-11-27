@@ -1,5 +1,4 @@
-import
-{
+import {
   Dimensions,
   Image,
   StyleSheet,
@@ -8,47 +7,51 @@ import
   useWindowDimensions,
 } from 'react-native';
 import React from 'react';
-import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
-import { Avatar, Button, Card, IconButton, Searchbar } from 'react-native-paper';
+import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import {Avatar, Button, Card, IconButton, Searchbar} from 'react-native-paper';
 import cardList from '../component/cardList';
 import CardList from '../component/cardList';
 
-const renderScene = SceneMap( {
+const renderScene = SceneMap({
   first: cardList,
   second: cardList,
-} );
+});
 
-const renderTabBar = ( props: any ) => (
+const renderTabBar = (props: any) => (
   <TabBar
-    { ...props }
-    activeColor={ '#25171c' }
-    inactiveColor={ '#c4c1c4' }
-    style={ { backgroundColor: '#e1e9e1', borderRadius: 30 } }
-    indicatorStyle={ { backgroundColor: 'transparent' } }
+    {...props}
+    activeColor={'#25171c'}
+    inactiveColor={'#c4c1c4'}
+    style={{backgroundColor: '#e1e9e1', borderRadius: 30}}
+    indicatorStyle={{backgroundColor: 'transparent'}}
   />
 );
 
-const RatingPage = () =>
-{
+const RatingPage = ({
+  userLatitude,
+  userLongitude,
+}: {
+  userLatitude: number;
+  userLongitude: number;
+}) => {
   const layout = useWindowDimensions();
 
-  const [ index, setIndex ] = React.useState( 0 );
-  const [ routes ] = React.useState( [
-    { key: 'first', title: 'By Location' },
-    { key: 'second', title: 'By Flavor' },
-  ] );
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    {key: 'first', title: 'By Location'},
+    {key: 'second', title: 'By Flavor'},
+  ]);
 
   return (
     <>
-      <View style={ styles.row }>
+      <View style={styles.row}>
         <Image
-          source={ require( '../image/bubbletea.png' ) }
-          style={ { width: 60, height: 60 } }
+          source={require('../image/bubbletea.png')}
+          style={{width: 60, height: 60}}
         />
-        <Text style={ styles.title }>Bubble Meets Tea</Text>
-
+        <Text style={styles.title}>Bubble Meets Tea</Text>
       </View>
-      <CardList />
+      <CardList userLatitude={userLatitude} userLongitude={userLongitude} />
       {/* <TabView
         style={{paddingHorizontal: 10}}
         navigationState={{index, routes}}
@@ -61,7 +64,7 @@ const RatingPage = () =>
   );
 };
 
-const styles = StyleSheet.create( {
+const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -76,6 +79,6 @@ const styles = StyleSheet.create( {
   tapContainer: {
     backgroundColor: '#c4c1c4',
   },
-} );
+});
 
 export default RatingPage;

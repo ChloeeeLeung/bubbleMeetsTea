@@ -45,9 +45,13 @@ const HomePage = () => {
   ]);
 
   const renderScene = SceneMap({
-    rating: RatingPage,
+    rating: () => (
+      <RatingPage userLatitude={latitude} userLongitude={longitude} />
+    ),
     map: () => <MapPage latitude={latitude} longitude={longitude} />,
-    favourite: FavouritePage,
+    favourite: () => (
+      <FavouritePage userLatitude={latitude} userLongitude={longitude} />
+    ),
     profile: ProfilePage,
   });
 

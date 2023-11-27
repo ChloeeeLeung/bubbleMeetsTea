@@ -22,6 +22,7 @@ const CardUI = ({
   closeTime,
   telephone,
   handleToggleFavorite,
+  distance,
 }: {
   name: String;
   location: String;
@@ -31,6 +32,7 @@ const CardUI = ({
   closeTime: String;
   telephone: Number;
   handleToggleFavorite: () => void;
+  distance: any;
 }) => {
   const navigation = useNavigation();
   return (
@@ -89,7 +91,7 @@ const CardUI = ({
             marginVertical: 5,
           }}>
           <Icon name="street-view" size={20} color={'#2f4858'} />
-          <Text style={{marginLeft: 5}}>450 m</Text>
+          <Text style={{marginLeft: 5}}>{distance} km</Text>
           <Rating
             style={{
               marginLeft: 20,

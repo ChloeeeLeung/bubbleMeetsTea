@@ -9,8 +9,15 @@ import {
 import {Text} from 'react-native-paper';
 import CardUI from '../component/card';
 import {firebase} from '@react-native-firebase/database';
+import {getPreciseDistance} from 'geolib';
 
-const FavouritePage = () => {
+const FavouritePage = ({
+  userLatitude,
+  userLongitude,
+}: {
+  userLatitude: number;
+  userLongitude: number;
+}) => {
   const [list, setList] = useState(null);
 
   useEffect(() => {
@@ -55,6 +62,18 @@ const FavouritePage = () => {
       <FlatList
         data={list}
         renderItem={item => {
+          let distance = null;
+          if (
+            item.item !== null &&
+            item.item.latitude !== null &&
+            item.item.longitude !== null
+          ) {
+            distance =
+              getPreciseDistance(
+                {latitude: userLatitude, longitude: userLongitude},
+                {latitude: item.item.latitude, longitude: item.item.longitude},
+              ) / 1000;
+          }
           if (item.item !== null && item.item.fav == true) {
             return (
               <View style={{paddingVertical: 5}}>
@@ -69,6 +88,7 @@ const FavouritePage = () => {
                   handleToggleFavorite={() =>
                     handleToggleFavorite(item.index, item.item.fav)
                   }
+                  distance={distance}
                 />
               </View>
             );

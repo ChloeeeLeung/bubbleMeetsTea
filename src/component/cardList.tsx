@@ -3,8 +3,15 @@ import {Dimensions, FlatList, View} from 'react-native';
 import {Searchbar} from 'react-native-paper';
 import {firebase} from '@react-native-firebase/database';
 import CardUI from './card';
+import {getDistance, getPreciseDistance} from 'geolib';
 
-const CardList = () => {
+const CardList = ({
+  userLatitude,
+  userLongitude,
+}: {
+  userLatitude: number;
+  userLongitude: number;
+}) => {
   const [list, setList] = useState(null);
 
   useEffect(() => {
@@ -41,6 +48,14 @@ const CardList = () => {
     await getDatabase();
   };
 
+  const calculateDistance = (itemLatitude: any, itemLongitude: any) => {
+    var dis = getPreciseDistance(
+      {latitude: userLatitude, longitude: userLongitude},
+      {latitude: itemLatitude, longitude: itemLongitude},
+    );
+    console.log(`${itemLatitude} ${dis} Meter\nOR${dis / 1000} KM`);
+  };
+
   return (
     <View style={{marginVertical: 5, flex: 1, paddingHorizontal: 10}}>
       <Searchbar
@@ -57,6 +72,18 @@ const CardList = () => {
         data={list}
         renderItem={item => {
           console.log(item);
+          let distance = null;
+          if (
+            item.item !== null &&
+            item.item.latitude !== null &&
+            item.item.longitude !== null
+          ) {
+            distance =
+              getPreciseDistance(
+                {latitude: userLatitude, longitude: userLongitude},
+                {latitude: item.item.latitude, longitude: item.item.longitude},
+              ) / 1000;
+          }
           if (item.item !== null) {
             return (
               <View style={{paddingVertical: 5}}>
@@ -71,6 +98,7 @@ const CardList = () => {
                   handleToggleFavorite={() =>
                     handleToggleFavorite(item.index, item.item.fav)
                   }
+                  distance={distance}
                 />
               </View>
             );
