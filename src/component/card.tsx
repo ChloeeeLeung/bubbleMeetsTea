@@ -41,6 +41,7 @@ const CardUI = ({
           openTime,
           closeTime,
           telephone,
+          fav,
         })
       }>
       <Card
