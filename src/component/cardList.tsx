@@ -55,6 +55,9 @@ const CardList = () => {
                     location={item.item.addr}
                     shopRating={item.item.rating}
                     fav={item.item.fav}
+                    openTime={item.item.openTime}
+                    closeTime={item.item.closeTime}
+                    telephone={item.item.telephone}
                   />
                 </View>
               );

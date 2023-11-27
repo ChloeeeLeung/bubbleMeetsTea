@@ -18,15 +18,31 @@ const CardUI = ({
   location,
   shopRating,
   fav,
+  openTime,
+  closeTime,
+  telephone,
 }: {
   name: String;
   location: String;
   shopRating: Double;
   fav: boolean;
+  openTime: String;
+  closeTime: String;
+  telephone: Number;
 }) => {
   const navigation = useNavigation();
   return (
-    <TouchableRipple onPress={() => navigation.navigate('ShopCard')}>
+    <TouchableRipple
+      onPress={() =>
+        navigation.navigate('ShopCard', {
+          name,
+          location,
+          shopRating,
+          openTime,
+          closeTime,
+          telephone,
+        })
+      }>
       <Card
         style={{
           backgroundColor: '#C9D5BD',

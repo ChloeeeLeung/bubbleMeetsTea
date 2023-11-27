@@ -20,8 +20,10 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RatingDialog from './ratingDialog';
 
-const ShopCard = () => {
+const ShopCard = ({route}: {route: any}) => {
   const navigation = useNavigation();
+  const {name, location, shopRating, openTime, closeTime, telephone} =
+    route.params;
 
   // const [visible, setVisible] = React.useState(false);
 
@@ -73,35 +75,37 @@ const ShopCard = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text style={{fontSize: 22, fontWeight: 'bold'}}>Comebuytea</Text>
+          <Text style={{fontSize: 22, fontWeight: 'bold'}}>{name}</Text>
           <Rating
             style={{marginLeft: 20}}
-            rating={4.8}
+            rating={shopRating}
             size={18}
             disabled={true}
             variant={'stars-outline'}
             fillColor={'#2f4858'}
             baseColor={'#2f4858'}
           />
-          <Text style={{textAlign: 'center', marginLeft: 5}}>4.8</Text>
+          <Text style={{textAlign: 'center', marginLeft: 5}}>{shopRating}</Text>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
           <View style={styles.row}>
             <Icon name="sun-o" size={iconSize} color={'#2f4858'} />
-            <Text style={{marginLeft: 5}}>Open at 11:00</Text>
+            <Text style={{marginLeft: 5}}>Open at {openTime}</Text>
           </View>
           <View style={styles.row}>
             <Icon name="moon-o" size={iconSize} color={'#2f4858'} />
-            <Text style={{marginLeft: 5}}>Close at 23:00</Text>
+            <Text style={{marginLeft: 5}}>Close at {closeTime}</Text>
           </View>
         </View>
         <View style={styles.row}>
           <Icon name="map-marker" size={iconSize} color={'#2f4858'} />
-          <Text style={{marginLeft: 5}}>
-            Shop A312, 3/F, New Town Plaza Phase III, 18 Sha Tin Centre Street
-          </Text>
+          <Text style={{marginLeft: 5}}>{location}</Text>
         </View>
         <View style={styles.row}>
+          <Icon name="phone" size={iconSize} color={'#2f4858'} />
+          <Text style={{marginLeft: 5}}>{telephone}</Text>
+        </View>
+        <View style={styles.button}>
           <Button
             style={{width: 180}}
             buttonColor="#2f4858"
@@ -126,6 +130,11 @@ const ShopCard = () => {
 
 const styles = StyleSheet.create({
   row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingVertical: 5,
+  },
+  button: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingVertical: 5,

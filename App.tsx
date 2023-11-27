@@ -56,6 +56,7 @@ function App(): JSX.Element {
           <RootStack.Screen
             name="ShopCard"
             component={ShopCard}
+            initialParams={{name: ''}}
             options={{headerShown: false}}
           />
           <RootStack.Screen
