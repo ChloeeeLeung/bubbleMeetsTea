@@ -10,23 +10,7 @@ import React from 'react';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import {Avatar, Button, Card, IconButton, Searchbar} from 'react-native-paper';
 import cardList from '../component/cardList';
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: 15,
-    alignItems: 'center',
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    fontFamily: 'serif',
-  },
-  tapContainer: {
-    backgroundColor: '#c4c1c4',
-  },
-});
+import CardList from '../component/cardList';
 
 const renderScene = SceneMap({
   first: cardList,
@@ -60,17 +44,35 @@ const RatingPage = () => {
           style={{width: 60, height: 60}}
         />
         <Text style={styles.title}>Bubble Meets Tea</Text>
+        <CardList />
       </View>
-      <TabView
+      {/* <TabView
         style={{paddingHorizontal: 10}}
         navigationState={{index, routes}}
         renderScene={renderScene}
         renderTabBar={renderTabBar}
         onIndexChange={setIndex}
         initialLayout={{width: layout.width}}
-      />
+      /> */}
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 10,
+    alignItems: 'center',
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    fontFamily: 'serif',
+  },
+  tapContainer: {
+    backgroundColor: '#c4c1c4',
+  },
+});
 
 export default RatingPage;

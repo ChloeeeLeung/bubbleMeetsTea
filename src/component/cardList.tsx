@@ -41,7 +41,7 @@ const CardList = () => {
         placeholder="Search"
         value={''}
       />
-      <DrinkTypes />
+      {/* <DrinkTypes /> */}
       <View style={{flexGrow: 1}}>
         <FlatList
           data={list}
