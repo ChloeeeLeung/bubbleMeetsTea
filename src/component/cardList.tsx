@@ -45,11 +45,10 @@ const CardList = ({
   };
 
   const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
-    await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
-      fav: !itemFav,
-    });
-
-    await getDatabase();
+    // await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
+    //   fav: !itemFav,
+    // });
+    // await getDatabase();
   };
 
   const updateDatabaseRecommend = async (
@@ -89,7 +88,7 @@ const CardList = ({
       <FlatList
         data={list}
         renderItem={item => {
-          //console.log(item);
+          console.log(item);
           let distance = null;
           if (
             item.item !== null &&
