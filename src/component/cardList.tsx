@@ -29,7 +29,16 @@ const CardList = ({
         .ref('shop')
         .once('value');
 
-      setList(data.val());
+      const shopData = data.val();
+
+      const sortedList = shopData
+        .filter(Boolean)
+        .sort(
+          (a: {recommend: number}, b: {recommend: number}) =>
+            b.recommend - a.recommend,
+        );
+
+      setList(sortedList);
     } catch (err) {
       console.log(err);
     }
