@@ -13,6 +13,10 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Double} from 'react-native/Libraries/Types/CodegenTypes';
 
+const icon1 = '../image/shop/aNiceGift.jpg';
+const icon2 = '../image/shop/comebuytea.png';
+const icon3 = '../image/shop/sharetea.png';
+
 const CardUI = ({
   name,
   location,
@@ -57,12 +61,17 @@ const CardUI = ({
         <Card.Title
           title={name}
           titleVariant="titleMedium"
-          left={props => (
-            <Avatar.Image
-              {...props}
-              source={require('../image/shop/comebuytea.png')}
-            />
-          )}
+          left={props =>
+            name == 'Comebuytea' ? (
+              name == 'ShareTea' ? (
+                <Avatar.Image {...props} source={require(icon3)} />
+              ) : (
+                <Avatar.Image {...props} source={require(icon2)} />
+              )
+            ) : (
+              <Avatar.Image {...props} source={require(icon1)} />
+            )
+          }
           right={props => (
             <IconButton
               {...props}

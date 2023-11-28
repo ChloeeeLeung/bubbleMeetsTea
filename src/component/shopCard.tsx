@@ -12,6 +12,10 @@ import {Button, IconButton, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import RatingDialog from './ratingDialog';
 
+const icon1 = '../image/shop/aNiceGift.jpg';
+const icon2 = '../image/shop/comebuytea.png';
+const icon3 = '../image/shop/sharetea.png';
+
 const ShopCard = ({route, navigation}: {route: any; navigation: any}) => {
   const {
     name,
@@ -51,7 +55,13 @@ const ShopCard = ({route, navigation}: {route: any; navigation: any}) => {
       <RatingDialog visible={dialogVisible} hideDialog={hideDialog} />
       <View style={{justifyContent: 'center'}}>
         <ImageBackground
-          source={require('../image/shop/comebuytea.png')}
+          source={
+            name == 'Comebuytea'
+              ? name == 'ShareTea'
+                ? require(icon3)
+                : require(icon2)
+              : require(icon1)
+          }
           style={{justifyContent: 'center', height: 250}}
           imageStyle={{borderRadius: 25}}>
           <View
