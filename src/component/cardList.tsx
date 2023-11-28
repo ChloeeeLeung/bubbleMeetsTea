@@ -3,7 +3,10 @@ import {Dimensions, FlatList, View} from 'react-native';
 import {Searchbar} from 'react-native-paper';
 import {firebase} from '@react-native-firebase/database';
 import CardUI from './card';
-import {getDistance, getPreciseDistance} from 'geolib';
+import {getPreciseDistance} from 'geolib';
+
+const databaseUrl =
+  'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
 const CardList = ({
   userLatitude,
@@ -22,9 +25,7 @@ const CardList = ({
     try {
       const data = await firebase
         .app()
-        .database(
-          'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/',
-        )
+        .database(databaseUrl)
         .ref('shop')
         .once('value');
 
@@ -34,18 +35,34 @@ const CardList = ({
     }
   };
 
-  const handleToggleFavorite = async (itemId: any, itemFav: any) => {
-    await firebase
-      .app()
-      .database(
-        'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/',
-      )
-      .ref(`shop/${itemId}`)
-      .update({
-        fav: !itemFav,
-      });
+  const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
+    await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
+      fav: !itemFav,
+    });
 
     await getDatabase();
+  };
+
+  const updateDatabaseRecommend = async (
+    itemId: number,
+    itemDistance: number,
+    itemRating: number,
+  ) => {
+    await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
+      distance: itemDistance,
+    });
+
+    let distanceBuff;
+    if (itemDistance > 1.5) {
+      distanceBuff = -(itemDistance - 1.5) * 10;
+    } else {
+      distanceBuff = (1.5 - itemDistance) * 10;
+    }
+    const buff = distanceBuff + itemRating * 10;
+
+    await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
+      recommend: buff,
+    });
   };
 
   return (
@@ -75,6 +92,7 @@ const CardList = ({
                 {latitude: userLatitude, longitude: userLongitude},
                 {latitude: item.item.latitude, longitude: item.item.longitude},
               ) / 1000;
+            updateDatabaseRecommend(item.index, distance, item.item.rating);
           }
           if (item.item !== null) {
             return (
@@ -90,7 +108,7 @@ const CardList = ({
                   handleToggleFavorite={() =>
                     handleToggleFavorite(item.index, item.item.fav)
                   }
-                  distance={distance}
+                  distance={item.item.distance}
                 />
               </View>
             );
