@@ -45,10 +45,12 @@ const CardList = ({
   };
 
   const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
-    // await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
-    //   fav: !itemFav,
-    // });
-    // await getDatabase();
+    if (itemId !== undefined) {
+      await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
+        fav: !itemFav,
+      });
+      await getDatabase();
+    }
   };
 
   const updateDatabaseRecommend = async (
@@ -93,14 +95,15 @@ const CardList = ({
           if (
             item.item !== null &&
             item.item.latitude !== null &&
-            item.item.longitude !== null
+            item.item.longitude !== null &&
+            item.item.id !== undefined
           ) {
             distance =
               getPreciseDistance(
                 {latitude: userLatitude, longitude: userLongitude},
                 {latitude: item.item.latitude, longitude: item.item.longitude},
               ) / 1000;
-            updateDatabaseRecommend(item.index, distance, item.item.rating);
+            updateDatabaseRecommend(item.item.id, distance, item.item.rating);
           }
           if (item.item !== null) {
             return (
@@ -114,7 +117,7 @@ const CardList = ({
                   closeTime={item.item.closeTime}
                   telephone={item.item.telephone}
                   handleToggleFavorite={() =>
-                    handleToggleFavorite(item.index, item.item.fav)
+                    handleToggleFavorite(item.item.id, item.item.fav)
                   }
                   distance={item.item.distance}
                 />
