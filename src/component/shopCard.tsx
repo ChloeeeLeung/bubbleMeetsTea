@@ -57,9 +57,9 @@ const ShopCard = ({route, navigation}: {route: any; navigation: any}) => {
         <ImageBackground
           source={
             name == 'Comebuytea'
-              ? name == 'ShareTea'
-                ? require(icon3)
-                : require(icon2)
+              ? require(icon2)
+              : name == 'ShareTea'
+              ? require(icon3)
               : require(icon1)
           }
           style={{justifyContent: 'center', height: 250}}

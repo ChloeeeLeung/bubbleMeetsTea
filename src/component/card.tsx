@@ -63,11 +63,9 @@ const CardUI = ({
           titleVariant="titleMedium"
           left={props =>
             name == 'Comebuytea' ? (
-              name == 'ShareTea' ? (
-                <Avatar.Image {...props} source={require(icon3)} />
-              ) : (
-                <Avatar.Image {...props} source={require(icon2)} />
-              )
+              <Avatar.Image {...props} source={require(icon2)} />
+            ) : name == 'ShareTea' ? (
+              <Avatar.Image {...props} source={require(icon3)} />
             ) : (
               <Avatar.Image {...props} source={require(icon1)} />
             )
