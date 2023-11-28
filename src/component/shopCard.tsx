@@ -47,7 +47,7 @@ const ShopCard = ({route, navigation}: {route: any; navigation: any}) => {
   // }, [fav]);
 
   return (
-    <SafeAreaView style={{flex: 1, padding: 15, backgroundColor: '#e1e9e1'}}>
+    <SafeAreaView style={{flex: 1, padding: 15}}>
       <RatingDialog visible={dialogVisible} hideDialog={hideDialog} />
       <View style={{justifyContent: 'center'}}>
         <ImageBackground

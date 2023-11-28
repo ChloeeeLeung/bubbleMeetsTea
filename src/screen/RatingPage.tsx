@@ -68,13 +68,16 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 10,
+    padding: 5,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontWeight: 'bold',
     fontSize: 20,
     fontFamily: 'serif',
+    marginLeft: 10,
+    color: '#3D4A3D',
   },
   tapContainer: {
     backgroundColor: '#c4c1c4',

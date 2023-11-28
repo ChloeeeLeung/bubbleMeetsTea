@@ -79,7 +79,7 @@ const CardList = ({
         style={{
           width: Dimensions.get('window').width - 20,
           marginVertical: 10,
-          backgroundColor: '#F4E6DC',
+          backgroundColor: '#AEB6AE',
         }}
         placeholder="Search"
         value={''}
