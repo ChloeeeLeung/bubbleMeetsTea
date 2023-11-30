@@ -121,7 +121,7 @@ const MapPage = ({
                   latitude: item.latitude,
                   longitude: item.longitude,
                 }}>
-                <Icon name={'map-pin'} size={35} color={'#F29E18'}></Icon>
+                <Icon name={'map-pin'} size={35} color={'#2F4858'}></Icon>
               </Marker>
             );
           }
