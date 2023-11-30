@@ -90,7 +90,7 @@ const CardList = ({
       <FlatList
         data={list}
         renderItem={item => {
-          //console.log(item);
+          console.log(item);
           let distance = null;
           if (
             item.item !== null &&
@@ -107,7 +107,7 @@ const CardList = ({
           }
           if (item.item !== null) {
             return (
-              <View style={{paddingVertical: 5}}>
+              <View style={{paddingVertical: 5, marginBottom: 5}}>
                 <CardUI
                   name={item.item.name}
                   location={item.item.addr}
