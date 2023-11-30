@@ -1,43 +1,9 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {Button, TextInput} from 'react-native-paper';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
-import {TabBar} from 'react-native-tab-view';
-
-const styles = StyleSheet.create({
-  centered: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  appName: {
-    fontWeight: 'bold',
-    fontSize: 30,
-    textAlign: 'center',
-    fontFamily: 'Caveat',
-  },
-  startButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    backgroundColor: '#25171c',
-  },
-  buttonSide: {
-    paddingVertical: 12,
-    width: 200,
-    height: 80,
-  },
-  getStart: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    fontFamily: 'Caveat',
-  },
-});
 
 const LoginPage = () => {
   const navigation =
@@ -100,7 +66,7 @@ const LoginPage = () => {
             activeUnderlineColor="#486B73"
           />
         </View>
-        <View style={styles.buttonSide}>
+        <View style={styles.buttonSize}>
           <Button
             buttonColor="#2F4858"
             onPress={() => {
@@ -108,10 +74,41 @@ const LoginPage = () => {
             }}>
             <Text style={styles.getStart}>Login</Text>
           </Button>
+          <Button
+            mode="text"
+            onPress={() => console.log('Pressed')}
+            textColor="#2F4858">
+            Register
+          </Button>
         </View>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  appName: {
+    fontWeight: 'bold',
+    fontSize: 30,
+    textAlign: 'center',
+    fontFamily: 'Caveat',
+  },
+  buttonSize: {
+    paddingVertical: 12,
+    width: 200,
+    height: 80,
+  },
+  getStart: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    fontFamily: 'Caveat',
+  },
+});
 
 export default LoginPage;
