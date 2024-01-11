@@ -15,6 +15,7 @@ import ProfilePage from './ProfilePage';
 import {Scene} from 'react-native-tab-view/lib/typescript/src/types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import GetLocation from 'react-native-get-location';
+import CommunityPage from './CommunityPage';
 
 const HomePage = () => {
   const layout = useWindowDimensions();
@@ -40,6 +41,7 @@ const HomePage = () => {
   const [routes] = React.useState([
     {key: 'rating'},
     {key: 'map'},
+    {key: 'community'},
     {key: 'favourite'},
     {key: 'profile'},
   ]);
@@ -49,6 +51,7 @@ const HomePage = () => {
       <RatingPage userLatitude={latitude} userLongitude={longitude} />
     ),
     map: () => <MapPage latitude={latitude} longitude={longitude} />,
+    community: CommunityPage,
     favourite: () => (
       <FavouritePage userLatitude={latitude} userLongitude={longitude} />
     ),
@@ -64,6 +67,8 @@ const HomePage = () => {
       return <Icon name="search" size={23} color={'#2f4858'} />;
     } else if (route.key === 'map') {
       return <Icon name="map-marker" size={23} color={'#2f4858'} />;
+    } else if (route.key === 'community') {
+      return <Icon name="comments" size={23} color={'#2f4858'} />;
     } else if (route.key === 'favourite') {
       return <Icon name="heart" size={23} color={'#2f4858'} />;
     } else if (route.key === 'profile') {

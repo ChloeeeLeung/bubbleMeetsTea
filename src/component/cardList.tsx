@@ -90,7 +90,7 @@ const CardList = ({
       <FlatList
         data={list}
         renderItem={item => {
-          console.log(item);
+          //console.log(item);
           let distance = null;
           if (
             item.item !== null &&
