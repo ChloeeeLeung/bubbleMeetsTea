@@ -1,12 +1,12 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {useNavigation} from '@react-navigation/core';
-import {Button, TextInput} from 'react-native-paper';
+import {Image, StyleSheet, View} from 'react-native';
+import {Button, Text, TextInput} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
-import auth from '@react-native-firebase/auth';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
@@ -14,20 +14,17 @@ const LoginPage = () => {
   const [password, setPassword] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  const handlelogin = async () => {
+  const handleRegister = async () => {
     try {
       console.log('Username =>', username, ' password =>', password);
 
-      const isUserLogin = await auth().signInWithEmailAndPassword(
+      const isUserCreated = await auth().createUserWithEmailAndPassword(
         username,
         password,
       );
-      console.log(isUserLogin);
+      console.log(isUserCreated);
 
-      navigation.navigate('HomePage', {
-        username: isUserLogin.user.email,
-        uid: isUserLogin.user.uid,
-      });
+      navigation.navigate('LoginPage');
     } catch (err) {
       console.log(err);
       setErrorMessage('' + err);
@@ -92,17 +89,17 @@ const LoginPage = () => {
           <Button
             buttonColor="#2F4858"
             onPress={() => {
-              handlelogin();
+              handleRegister();
             }}>
-            <Text style={styles.getStart}>Login</Text>
+            <Text style={styles.getStart}>Register</Text>
           </Button>
           <Button
             mode="text"
             onPress={() => {
-              navigation.navigate('RegisterPage');
+              navigation.navigate('LoginPage');
             }}
             textColor="#2F4858">
-            Register
+            Have account? Sign In
           </Button>
         </View>
       </View>
@@ -135,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginPage;
+export default RegisterPage;

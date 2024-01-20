@@ -10,9 +10,11 @@ import {PaperProvider} from 'react-native-paper';
 import CardList from './src/component/cardList';
 import ShopCard from './src/component/shopCard';
 import MenuModal from './src/component/menuModal';
+import RegisterPage from './src/screen/RegisterPage';
 
 export type RootStackParams = {
   HomePage: any;
+  RegisterPage: any;
   LoginPage: any;
   CardList: any;
   ShopCard: any;
@@ -39,6 +41,16 @@ function App(): JSX.Element {
             },
           }}>
           <RootStack.Screen
+            name="RegisterPage"
+            component={RegisterPage}
+            options={{
+              headerShown: false,
+              contentStyle: {
+                backgroundColor: '#e1e9e1',
+              },
+            }}
+          />
+          <RootStack.Screen
             name="HomePage"
             component={HomePage}
             options={{headerShown: false}}
@@ -48,11 +60,11 @@ function App(): JSX.Element {
             component={LoginPage}
             options={{headerShown: false}}
           />
-          <RootStack.Screen
+          {/* <RootStack.Screen
             name="CardList"
             component={CardList}
             options={{headerShown: false}}
-          />
+          /> */}
           <RootStack.Screen
             name="ShopCard"
             component={ShopCard}
