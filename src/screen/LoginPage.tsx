@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/core';
 import {Button, TextInput} from 'react-native-paper';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
+import auth from '@react-native-firebase/auth';
 
 const LoginPage = () => {
   const navigation =
@@ -11,6 +12,33 @@ const LoginPage = () => {
 
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
+
+  const handlelogin = async () => {
+    try {
+      console.log('Username =>', username, ' password =>', password);
+
+      // const isUserCreated = await auth().createUserWithEmailAndPassword(
+      //   username,
+      //   password,
+      // );
+      // console.log(isUserCreated);
+
+      const isUserLogin = await auth().signInWithEmailAndPassword(
+        username,
+        password,
+      );
+      console.log(isUserLogin);
+
+      navigation.navigate('HomePage', {
+        username: isUserLogin.user.email,
+        uid: isUserLogin.user.uid,
+      });
+    } catch (err) {
+      console.log(err);
+      setErrorMessage('' + err);
+    }
+  };
 
   return (
     <View style={styles.centered}>
@@ -40,7 +68,7 @@ const LoginPage = () => {
           <TextInput
             placeholder="Username"
             value={username}
-            onChangeText={setUsername}
+            onChangeText={value => setUsername(value)}
             style={{
               backgroundColor: '#FFF8DE',
             }}
@@ -57,7 +85,7 @@ const LoginPage = () => {
           <TextInput
             placeholder="Password"
             value={password}
-            onChangeText={setPassword}
+            onChangeText={value => setPassword(value)}
             secureTextEntry
             style={{
               backgroundColor: '#FFF8DE',
@@ -70,7 +98,7 @@ const LoginPage = () => {
           <Button
             buttonColor="#2F4858"
             onPress={() => {
-              navigation.navigate('HomePage');
+              handlelogin();
             }}>
             <Text style={styles.getStart}>Login</Text>
           </Button>
