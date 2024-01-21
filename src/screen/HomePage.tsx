@@ -1,11 +1,4 @@
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {useWindowDimensions} from 'react-native';
 import React, {useEffect} from 'react';
 import {Route, SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import RatingPage from './RatingPage';
