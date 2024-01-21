@@ -12,19 +12,21 @@ const RegisterPage = () => {
 
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+
   const [errorMessage, setErrorMessage] = React.useState('');
 
   const handleRegister = async () => {
     try {
       console.log('Username =>', username, ' password =>', password);
 
-      const isUserCreated = await auth().createUserWithEmailAndPassword(
-        username,
-        password,
-      );
-      console.log(isUserCreated);
-
-      navigation.navigate('LoginPage');
+      if (username.length > 0 && password.length > 0) {
+        const isUserCreated = await auth().createUserWithEmailAndPassword(
+          username,
+          password,
+        );
+        console.log(isUserCreated);
+        navigation.navigate('LoginPage');
+      }
     } catch (err) {
       console.log(err);
       setErrorMessage('' + err);
