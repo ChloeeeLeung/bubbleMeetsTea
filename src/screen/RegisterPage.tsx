@@ -38,6 +38,7 @@ const RegisterPage = () => {
         setEmailError(false);
         setPasswordError(false);
         setNameError(false);
+        setErrorMessage('');
 
         const response = await auth().createUserWithEmailAndPassword(
           email,
@@ -98,7 +99,10 @@ const RegisterPage = () => {
 
   return (
     <View style={styles.centered}>
-      <Image source={require('../image/bubbletea.png')} style={styles.image} />
+      <Image
+        source={require('../image/font/Welcome.png')}
+        style={styles.welcome}
+      />
       <View style={styles.errorBox}>
         <Text style={styles.errorText}>{errorMessage}</Text>
       </View>
@@ -200,10 +204,9 @@ const styles = StyleSheet.create({
   textInputcolor: {
     backgroundColor: '#FFF8DE',
   },
-  image: {
-    width: 125,
-    height: 125,
-    margin: 10,
+  welcome: {
+    width: 400,
+    height: 70,
   },
   errorBox: {
     width: 270,

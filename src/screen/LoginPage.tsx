@@ -24,11 +24,12 @@ const LoginPage = () => {
       if (email.length > 0 && password.length > 0) {
         setEmailError(false);
         setPasswordError(false);
+        setErrorMessage('');
+
         const isUserLogin = await auth().signInWithEmailAndPassword(
           email,
           password,
         );
-        console.log(isUserLogin);
         navigation.navigate('HomePage', {
           email: isUserLogin.user.email,
           uid: isUserLogin.user.uid,
@@ -69,6 +70,10 @@ const LoginPage = () => {
   return (
     <View style={styles.centered}>
       <Image source={require('../image/bubbletea.png')} style={styles.image} />
+      <Image
+        source={require('../image/appNameBrown.png')}
+        style={styles.appName}
+      />
       <View style={styles.errorBox}>
         <Text style={styles.errorText}>{errorMessage}</Text>
       </View>
@@ -152,10 +157,13 @@ const styles = StyleSheet.create({
   textInputcolor: {
     backgroundColor: '#FFF8DE',
   },
+  appName: {
+    width: 300,
+    height: 70,
+  },
   image: {
-    width: 125,
-    height: 125,
-    margin: 10,
+    width: 150,
+    height: 150,
   },
   errorBox: {
     width: 250,
