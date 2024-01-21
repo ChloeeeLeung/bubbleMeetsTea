@@ -6,7 +6,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Route, SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import RatingPage from './RatingPage';
 import MapPage from './MapPage';
@@ -23,19 +23,21 @@ const HomePage = () => {
   const [latitude, setLatitude] = React.useState(0);
   const [longitude, setLongitude] = React.useState(0);
 
-  GetLocation.getCurrentPosition({
-    enableHighAccuracy: false,
-    timeout: 60000,
-  })
-    .then(location => {
-      setLatitude(location.latitude);
-      setLongitude(location.longitude);
-      //console.log(location);
+  useEffect(() => {
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: false,
+      timeout: 60000,
     })
-    .catch(error => {
-      const {code, message} = error;
-      console.warn(code, message);
-    });
+      .then(location => {
+        setLatitude(location.latitude);
+        setLongitude(location.longitude);
+        console.log(location);
+      })
+      .catch(error => {
+        const {code, message} = error;
+        console.warn(code, message);
+      });
+  }, []);
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
