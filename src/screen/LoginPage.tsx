@@ -10,41 +10,41 @@ const LoginPage = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  const [username, setUsername] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  const [usernameError, setUsernameError] = React.useState(false);
+  const [emailError, setEmailError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
   const handlelogin = async () => {
     try {
-      console.log('Username =>', username, ' password =>', password);
+      console.log('email =>', email, ' password =>', password);
 
-      if (username.length > 0 && password.length > 0) {
-        setUsernameError(false);
+      if (email.length > 0 && password.length > 0) {
+        setEmailError(false);
         setPasswordError(false);
         const isUserLogin = await auth().signInWithEmailAndPassword(
-          username,
+          email,
           password,
         );
         console.log(isUserLogin);
         navigation.navigate('HomePage', {
-          username: isUserLogin.user.email,
+          email: isUserLogin.user.email,
           uid: isUserLogin.user.uid,
         });
-      } else if (username.length == 0 && password.length != 0) {
-        setUsernameError(true);
+      } else if (email.length == 0 && password.length != 0) {
+        setEmailError(true);
         setPasswordError(false);
-        setErrorMessage('Please fill in user name.');
-      } else if (username.length != 0 && password.length == 0) {
-        setUsernameError(false);
+        setErrorMessage('Please fill in email address.');
+      } else if (email.length != 0 && password.length == 0) {
+        setEmailError(false);
         setPasswordError(true);
         setErrorMessage('Please fill in password.');
-      } else if (username.length == 0 && password.length == 0) {
-        setUsernameError(true);
+      } else if (email.length == 0 && password.length == 0) {
+        setEmailError(true);
         setPasswordError(true);
-        setErrorMessage('Please fill in user name and password.');
+        setErrorMessage('Please fill in email address and password.');
       }
     } catch (err) {
       console.log(err);
@@ -54,13 +54,13 @@ const LoginPage = () => {
 
       console.log(errorCode);
       if (errorCode == '[auth/invalid-email]') {
-        setUsernameError(true);
-        setErrorMessage('User Name should be an email address.');
+        setEmailError(true);
+        setErrorMessage('The email address is badly formatted.');
       } else if (errorCode == '[auth/invalid-login]') {
-        setUsernameError(true);
+        setEmailError(true);
         setPasswordError(true);
         setErrorMessage(
-          'Unable to Login. Please check your user name and password.',
+          'Unable to Login. Please check your email address and password.',
         );
       }
     }
@@ -74,14 +74,14 @@ const LoginPage = () => {
       </View>
       <View style={styles.textInputBox}>
         <View style={styles.textInput}>
-          <Text>User Name</Text>
+          <Text>Email</Text>
           <TextInput
-            placeholder="Username"
-            error={usernameError}
-            value={username}
-            onChangeText={value => setUsername(value)}
+            placeholder="Email"
+            error={emailError}
+            value={email}
+            onChangeText={value => setEmail(value)}
             style={styles.textInputcolor}
-            left={<TextInput.Icon icon="account" />}
+            left={<TextInput.Icon icon="email" />}
             activeUnderlineColor="#486B73"
           />
         </View>
