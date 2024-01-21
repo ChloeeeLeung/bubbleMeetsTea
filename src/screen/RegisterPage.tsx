@@ -5,41 +5,72 @@ import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
+import {firebase} from '@react-native-firebase/database';
+
+const databaseUrl =
+  'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
 const RegisterPage = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  const [username, setUsername] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [name, setName] = React.useState('');
 
-  const [usernameError, setUsernameError] = React.useState(false);
+  const [emailError, setEmailError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
+  const [nameError, setNameError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
   const handleRegister = async () => {
     try {
-      console.log('Username =>', username, ' password =>', password);
+      console.log(
+        'email =>',
+        email,
+        ' password =>',
+        password,
+        ' user name =>',
+        name,
+      );
 
-      if (username.length > 0 && password.length > 0) {
-        const isUserCreated = await auth().createUserWithEmailAndPassword(
-          username,
+      if (email.length > 0 && password.length > 0 && name.length > 0) {
+        setEmailError(false);
+        setPasswordError(false);
+        setNameError(false);
+
+        const response = await auth().createUserWithEmailAndPassword(
+          email,
           password,
         );
-        console.log(isUserCreated);
+
+        const userData = {
+          id: response.user.uid,
+          name: name,
+          email: email,
+        };
+        await firebase.app().database(databaseUrl).ref('user/1').set(userData);
+
         navigation.navigate('LoginPage');
-      } else if (username.length == 0 && password.length != 0) {
-        setUsernameError(true);
+      } else if (name.length == 0) {
+        setEmailError(false);
         setPasswordError(false);
-        setErrorMessage('Please fill in user name.');
-      } else if (username.length != 0 && password.length == 0) {
-        setUsernameError(false);
+        setNameError(true);
+      } else if (email.length == 0 && password.length != 0) {
+        setEmailError(true);
+        setPasswordError(false);
+        setNameError(false);
+        setErrorMessage('Please fill in email address.');
+      } else if (email.length != 0 && password.length == 0) {
+        setEmailError(false);
         setPasswordError(true);
+        setNameError(false);
         setErrorMessage('Please fill in password.');
-      } else if (username.length == 0 && password.length == 0) {
-        setUsernameError(true);
+      } else if (email.length == 0 && password.length == 0) {
+        setEmailError(true);
         setPasswordError(true);
-        setErrorMessage('Please fill in user name and password.');
+        setNameError(false);
+        setErrorMessage('Please fill in email address and password.');
       }
     } catch (err) {
       console.log(err);
@@ -49,18 +80,18 @@ const RegisterPage = () => {
 
       console.log(errorCode);
       if (errorCode == '[auth/invalid-email]') {
-        setUsernameError(true);
-        setErrorMessage('User Name should be an email address.');
-      } else if (errorCode == '[auth/invalid-login]') {
-        setUsernameError(true);
-        setPasswordError(true);
-        setErrorMessage(
-          'Unable to Login. Please check your user name and password.',
-        );
+        setEmailError(true);
+        setErrorMessage('The email address is badly formatted.');
       } else if (errorCode == '[auth/weak-password]') {
-        setUsernameError(false);
+        setEmailError(false);
         setPasswordError(true);
         setErrorMessage('Password should be at least 6 characters.');
+      } else if (errorCode == '[auth/email-already-in-use]') {
+        setEmailError(true);
+        setPasswordError(false);
+        setErrorMessage(
+          'The email address is already in use by another account.',
+        );
       }
     }
   };
@@ -75,14 +106,28 @@ const RegisterPage = () => {
         <View style={styles.textInput}>
           <Text>User Name</Text>
           <TextInput
-            placeholder="Username"
-            value={username}
-            error={usernameError}
-            onChangeText={value => setUsername(value)}
+            placeholder="User Name"
+            value={name}
+            error={nameError}
+            onChangeText={value => setName(value)}
             style={{
               backgroundColor: '#FFF8DE',
             }}
             left={<TextInput.Icon icon="account" />}
+            activeUnderlineColor="#486B73"
+          />
+        </View>
+        <View style={styles.textInput}>
+          <Text>Email</Text>
+          <TextInput
+            placeholder="Email"
+            value={email}
+            error={emailError}
+            onChangeText={value => setEmail(value)}
+            style={{
+              backgroundColor: '#FFF8DE',
+            }}
+            left={<TextInput.Icon icon="email" />}
             activeUnderlineColor="#486B73"
           />
         </View>
