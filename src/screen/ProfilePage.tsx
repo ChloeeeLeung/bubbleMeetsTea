@@ -11,6 +11,7 @@ const SECTIONS = [
       { id: 'language', icon: 'globe', label: 'Language', type: 'select' },
       { id: 'notification', icon: 'bell', label: 'Notification', type: 'toggle' },
       { id: 'darkMode', icon: 'moon', label: 'Dark Mode', type: 'toggle' },
+      { id: 'perference', icon: 'heart', label: 'Perference', type: 'select' },
     ],
   },
   {
