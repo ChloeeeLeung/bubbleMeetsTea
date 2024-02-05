@@ -49,7 +49,7 @@ const RatingPage = ({
           style={{width: 65, height: 65}}
         />
         <Image
-          source={require('../image/appNameBrown.png')}
+          source={require('../image/font/appNameBrown.png')}
           style={styles.appName}
         />
       </View>

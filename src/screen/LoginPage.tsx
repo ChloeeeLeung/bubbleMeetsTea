@@ -74,7 +74,7 @@ const LoginPage = () => {
     <View style={styles.centered}>
       <Image source={require('../image/bubbletea.png')} style={styles.image} />
       <Image
-        source={require('../image/appNameBrown.png')}
+        source={require('../image/font/appNameBrown.png')}
         style={styles.appName}
       />
       <View style={styles.errorBox}>
