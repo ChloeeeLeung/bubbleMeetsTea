@@ -10,8 +10,9 @@ const LoginPage = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  //for development use
+  const [email, setEmail] = React.useState('test@gmail.com');
+  const [password, setPassword] = React.useState('123456');
 
   const [emailError, setEmailError] = React.useState(false);
   const [passwordError, setPasswordError] = React.useState(false);
