@@ -30,6 +30,8 @@ const LoginPage = () => {
           email,
           password,
         );
+        setEmail('');
+        setPassword('');
         navigation.navigate('HomePage', {
           email: isUserLogin.user.email,
           uid: isUserLogin.user.uid,

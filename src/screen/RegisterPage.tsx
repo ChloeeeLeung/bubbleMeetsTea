@@ -1,14 +1,35 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Button, Text, TextInput} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
 import {firebase} from '@react-native-firebase/database';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {black} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
+
+const windowWidth = Dimensions.get('window').width;
+
+const teaList = [
+  {name: 'Bubble Tea', img: require('../image/tea/bubbleTea.png'), id: 1},
+  {name: 'Fruit Tea', img: require('../image/tea/fruitTea.png'), id: 2},
+  {name: 'Herbal Tea', img: require('../image/tea/herbalTea.png'), id: 3},
+  {name: 'Milk Cap Tea', img: require('../image/tea/milkCapTea.jpg'), id: 4},
+  {name: 'Pure Tea', img: require('../image/tea/pureTea.jpg'), id: 5},
+  {name: 'Yakult', img: require('../image/tea/yakult.jpg'), id: 6},
+  {name: 'Smoothie', img: require('../image/tea/fruitTea.png'), id: 7},
+  {name: 'No Idea', img: require('../image/tea/noIdea.png'), id: 8},
+];
 
 const RegisterPage = () => {
   const navigation =
@@ -23,6 +44,8 @@ const RegisterPage = () => {
   const [nameError, setNameError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
+  const [preferable, setPreferable] = React.useState(-1);
+
   const handleRegister = async () => {
     try {
       console.log(
@@ -34,7 +57,12 @@ const RegisterPage = () => {
         name,
       );
 
-      if (email.length > 0 && password.length > 0 && name.length > 0) {
+      if (
+        email.length > 0 &&
+        password.length > 0 &&
+        name.length > 0 &&
+        preferable != -1
+      ) {
         setEmailError(false);
         setPasswordError(false);
         setNameError(false);
@@ -57,6 +85,7 @@ const RegisterPage = () => {
         setEmailError(false);
         setPasswordError(false);
         setNameError(true);
+        setErrorMessage('Please fill in user name.');
       } else if (email.length == 0 && password.length != 0) {
         setEmailError(true);
         setPasswordError(false);
@@ -72,6 +101,8 @@ const RegisterPage = () => {
         setPasswordError(true);
         setNameError(false);
         setErrorMessage('Please fill in email address and password.');
+      } else if (preferable == -1) {
+        setErrorMessage('Please choose your preferred drink type.');
       }
     } catch (err) {
       console.log(err);
@@ -97,6 +128,8 @@ const RegisterPage = () => {
     }
   };
 
+  console.log(preferable);
+
   return (
     <View style={styles.centered}>
       <Image
@@ -106,67 +139,87 @@ const RegisterPage = () => {
       <View style={styles.errorBox}>
         <Text style={styles.errorText}>{errorMessage}</Text>
       </View>
-      <View style={styles.textInputBox}>
-        <View style={styles.textInput}>
-          <Text>User Name</Text>
-          <TextInput
-            placeholder="User Name"
-            value={name}
-            error={nameError}
-            onChangeText={value => setName(value)}
-            style={{
-              backgroundColor: '#FFF8DE',
-            }}
-            left={<TextInput.Icon icon="account" />}
-            activeUnderlineColor="#486B73"
-          />
-        </View>
-        <View style={styles.textInput}>
-          <Text>Email</Text>
-          <TextInput
-            placeholder="Email"
-            value={email}
-            error={emailError}
-            onChangeText={value => setEmail(value)}
-            style={{
-              backgroundColor: '#FFF8DE',
-            }}
-            left={<TextInput.Icon icon="email" />}
-            activeUnderlineColor="#486B73"
-          />
-        </View>
-        <View style={styles.textInput}>
-          <Text>Password</Text>
-          <TextInput
-            placeholder="Password"
-            value={password}
-            error={passwordError}
-            onChangeText={value => setPassword(value)}
-            secureTextEntry
-            style={{
-              backgroundColor: '#FFF8DE',
-            }}
-            left={<TextInput.Icon icon="lock" />}
-            activeUnderlineColor="#486B73"
-          />
-        </View>
-        <View style={styles.buttonSize}>
-          <Button
-            buttonColor="#2F4858"
+      <View style={styles.textInput}>
+        <Text>User Name</Text>
+        <TextInput
+          placeholder="User Name"
+          value={name}
+          error={nameError}
+          onChangeText={value => setName(value)}
+          style={{
+            backgroundColor: '#FFF8DE',
+          }}
+          left={<TextInput.Icon icon="account" />}
+          activeUnderlineColor="#486B73"
+        />
+      </View>
+      <View style={styles.textInput}>
+        <Text>Email</Text>
+        <TextInput
+          placeholder="Email"
+          value={email}
+          error={emailError}
+          onChangeText={value => setEmail(value)}
+          style={{
+            backgroundColor: '#FFF8DE',
+          }}
+          left={<TextInput.Icon icon="email" />}
+          activeUnderlineColor="#486B73"
+        />
+      </View>
+      <View style={styles.textInput}>
+        <Text>Password</Text>
+        <TextInput
+          placeholder="Password"
+          value={password}
+          error={passwordError}
+          onChangeText={value => setPassword(value)}
+          secureTextEntry
+          style={{
+            backgroundColor: '#FFF8DE',
+          }}
+          left={<TextInput.Icon icon="lock" />}
+          activeUnderlineColor="#486B73"
+        />
+      </View>
+      <View style={styles.textInput}>
+        <Text>What type of drink you are more preferable?</Text>
+      </View>
+      <View style={styles.imageList}>
+        {teaList.map(({name, img, id}) => (
+          <TouchableOpacity
             onPress={() => {
-              handleRegister();
-            }}>
-            <Text style={styles.getStart}>Register</Text>
-          </Button>
-          <Button
-            mode="text"
-            onPress={() => {
-              navigation.navigate('LoginPage');
+              setPreferable(id);
             }}
-            textColor="#2F4858">
-            Have account? Sign In
-          </Button>
-        </View>
+            style={styles.touchableOpacity}>
+            <Image alt={name} source={img} style={styles.image} />
+            <View style={styles.iconOverlay}>
+              <Icon
+                name={'check'}
+                size={preferable == id ? 50 : 0}
+                color={'#e1e9e1'}
+              />
+            </View>
+            <Text>{name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <View style={styles.buttonBox}>
+        <Button
+          buttonColor="#2F4858"
+          onPress={() => {
+            handleRegister();
+          }}>
+          <Text style={styles.getStart}>Register</Text>
+        </Button>
+        <Button
+          mode="text"
+          onPress={() => {
+            navigation.navigate('LoginPage');
+          }}
+          textColor="#2F4858">
+          Have account? Sign In
+        </Button>
       </View>
     </View>
   );
@@ -178,9 +231,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  buttonBox: {
+    paddingVertical: 12,
+    width: windowWidth - 50,
+    height: 80,
+  },
   buttonSize: {
     paddingVertical: 12,
-    width: 200,
+    width: windowWidth - 50,
     height: 80,
   },
   getStart: {
@@ -189,16 +247,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontFamily: 'Caveat',
   },
-  textInputBox: {
-    width: 300,
-    height: 300,
-    backgroundColor: '#C9D5BD',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 25,
-  },
   textInput: {
-    width: 250,
+    width: windowWidth - 50,
     margin: 5,
   },
   textInputcolor: {
@@ -210,9 +260,38 @@ const styles = StyleSheet.create({
   },
   errorBox: {
     width: 270,
+    margin: 5,
   },
   errorText: {
     color: 'red',
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 15,
+    marginHorizontal: 5,
+  },
+  iconOverlay: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 10,
+    left: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageList: {
+    width: windowWidth - 50,
+    margin: 5,
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+  },
+  touchableOpacity: {
+    marginVertical: 5,
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
