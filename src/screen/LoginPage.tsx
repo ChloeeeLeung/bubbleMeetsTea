@@ -5,6 +5,7 @@ import {Button, TextInput} from 'react-native-paper';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
 import auth from '@react-native-firebase/auth';
+import {StackActions} from '@react-navigation/native';
 
 const LoginPage = () => {
   const navigation =
@@ -33,10 +34,7 @@ const LoginPage = () => {
         );
         setEmail('');
         setPassword('');
-        navigation.navigate('HomePage', {
-          email: isUserLogin.user.email,
-          uid: isUserLogin.user.uid,
-        });
+        navigation.dispatch(StackActions.replace('HomePage'));
       } else if (email.length == 0 && password.length != 0) {
         setEmailError(true);
         setPasswordError(false);

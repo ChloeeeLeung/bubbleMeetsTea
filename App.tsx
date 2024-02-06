@@ -2,7 +2,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {useColorScheme} from 'react-native';
-
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import HomePage from './src/screen/HomePage';
 import LoginPage from './src/screen/LoginPage';
@@ -11,8 +10,10 @@ import CardList from './src/component/cardList';
 import ShopCard from './src/component/shopCard';
 import MenuModal from './src/component/menuModal';
 import RegisterPage from './src/screen/RegisterPage';
+import SplashPage from './src/screen/SplashPage';
 
 export type RootStackParams = {
+  SplashPage: any;
   HomePage: any;
   RegisterPage: any;
   LoginPage: any;
@@ -33,16 +34,10 @@ function App(): JSX.Element {
   return (
     <PaperProvider>
       <NavigationContainer>
-        <RootStack.Navigator
-          initialRouteName="LoginPage"
-          screenOptions={{
-            contentStyle: {
-              backgroundColor: '#e1e9e1',
-            },
-          }}>
+        <RootStack.Navigator>
           <RootStack.Screen
-            name="RegisterPage"
-            component={RegisterPage}
+            name="SplashPage"
+            component={SplashPage}
             options={{
               headerShown: false,
               contentStyle: {
@@ -51,13 +46,25 @@ function App(): JSX.Element {
             }}
           />
           <RootStack.Screen
-            name="HomePage"
-            component={HomePage}
-            options={{headerShown: false}}
-          />
-          <RootStack.Screen
             name="LoginPage"
             component={LoginPage}
+            options={{
+              headerShown: false,
+              contentStyle: {
+                backgroundColor: '#e1e9e1',
+              },
+            }}
+          />
+          <RootStack.Screen
+            name="RegisterPage"
+            component={RegisterPage}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <RootStack.Screen
+            name="HomePage"
+            component={HomePage}
             options={{headerShown: false}}
           />
           {/* <RootStack.Screen
