@@ -15,4 +15,10 @@ export default function SplashScreen() {
     }, 3000);
     return () => {};
   });
+
+  return (
+    <View>
+      <Text>123</Text>
+    </View>
+  );
 }
