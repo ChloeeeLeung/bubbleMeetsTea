@@ -13,7 +13,6 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParams} from '../../App';
 import {firebase} from '@react-native-firebase/database';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {black} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -72,6 +71,10 @@ export default function RegisterPage() {
           email,
           password,
         );
+
+        auth().currentUser?.updateProfile({
+          displayName: name,
+        });
 
         const userData = {
           id: response.user.uid,

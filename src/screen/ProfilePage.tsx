@@ -59,6 +59,8 @@ export default function ProfilePage() {
 
   const navigation = useNavigation();
 
+  console.log(Auth().currentUser);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={{paddingVertical: 24}}>
@@ -75,7 +77,9 @@ export default function ProfilePage() {
             style={styles.profileAvatar}
           />
 
-          <Text style={styles.profileName}>User1</Text>
+          <Text style={styles.profileName}>
+            {Auth().currentUser?.displayName ?? ''}
+          </Text>
 
           <Text style={styles.profileEmail}>{Auth().currentUser?.email}</Text>
 
