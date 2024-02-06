@@ -1,17 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import CardUI from '../component/card';
 import {firebase} from '@react-native-firebase/database';
 import {getPreciseDistance} from 'geolib';
 
-const CommunityPage = () => {
+export default function CommunityPage() {
   return (
     <SafeAreaView style={{flex: 1, padding: 10}}>
       <View style={styles.header}>
@@ -19,7 +13,7 @@ const CommunityPage = () => {
       </View>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -46,5 +40,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default CommunityPage;

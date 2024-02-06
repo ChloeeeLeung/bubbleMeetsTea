@@ -4,7 +4,7 @@ import {Dimensions, Image, ImageSourcePropType, View} from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import {IconButton, Modal, Text} from 'react-native-paper';
 
-const MenuModal = () => {
+export default function MenuModal() {
   const navigation = useNavigation();
   return (
     <View style={{flex: 1, backgroundColor: '#e1e9e1'}}>
@@ -31,6 +31,4 @@ const MenuModal = () => {
       </ImageZoom>
     </View>
   );
-};
-
-export default MenuModal;
+}

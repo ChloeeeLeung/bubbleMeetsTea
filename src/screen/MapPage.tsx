@@ -1,18 +1,21 @@
 import {firebase} from '@react-native-firebase/database';
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, Text, View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CardUI from '../component/card';
 import {getPreciseDistance} from 'geolib';
 
-const MapPage = ({
+const databaseUrl =
+  'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
+
+export default function MapPage({
   latitude,
   longitude,
 }: {
   latitude: number;
   longitude: number;
-}) => {
+}) {
   const [list, setList] = useState<any[]>([]);
   const [card, setCard] = useState(Infinity);
   const [cardContent, setCardContent] = useState<React.ReactNode | null>(null);
@@ -25,9 +28,7 @@ const MapPage = ({
     try {
       const data = await firebase
         .app()
-        .database(
-          'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/',
-        )
+        .database(databaseUrl)
         .ref('shop')
         .once('value');
 
@@ -42,9 +43,7 @@ const MapPage = ({
       try {
         const data = await firebase
           .app()
-          .database(
-            'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/',
-          )
+          .database(databaseUrl)
           .ref(`shop/${index}`)
           .once('value');
 
@@ -131,6 +130,4 @@ const MapPage = ({
       {cardContent}
     </SafeAreaView>
   );
-};
-
-export default MapPage;
+}

@@ -17,7 +17,7 @@ const icon1 = '../image/shop/aNiceGift.jpg';
 const icon2 = '../image/shop/comebuytea.png';
 const icon3 = '../image/shop/sharetea.png';
 
-const CardUI = ({
+export default function CardUI({
   name,
   location,
   shopRating,
@@ -37,7 +37,7 @@ const CardUI = ({
   telephone: Number;
   handleToggleFavorite: () => void;
   distance: any;
-}) => {
+}) {
   const navigation = useNavigation();
   return (
     <TouchableRipple
@@ -115,6 +115,4 @@ const CardUI = ({
       </Card>
     </TouchableRipple>
   );
-};
-
-export default CardUI;
+}

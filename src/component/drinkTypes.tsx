@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View, ScrollView, Image} from 'react-native';
 import React from 'react';
 
-const DrinkTypes = () => {
+export default function DrinkTypes() {
   const types = [
     {
       id: '0',
@@ -45,8 +45,6 @@ const DrinkTypes = () => {
       </ScrollView>
     </View>
   );
-};
-
-export default DrinkTypes;
+}
 
 const styles = StyleSheet.create({});

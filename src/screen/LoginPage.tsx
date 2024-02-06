@@ -7,7 +7,7 @@ import {RootStackParams} from '../../App';
 import auth from '@react-native-firebase/auth';
 import {StackActions} from '@react-navigation/native';
 
-const LoginPage = () => {
+export default function LoginPage() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
@@ -124,7 +124,7 @@ const LoginPage = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   centered: {
@@ -173,5 +173,3 @@ const styles = StyleSheet.create({
     color: 'red',
   },
 });
-
-export default LoginPage;

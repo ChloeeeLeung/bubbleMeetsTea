@@ -1,13 +1,6 @@
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {Image, StyleSheet, View, useWindowDimensions} from 'react-native';
 import React from 'react';
-import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import {SceneMap, TabBar} from 'react-native-tab-view';
 import cardList from '../component/cardList';
 import CardList from '../component/cardList';
 
@@ -26,13 +19,13 @@ const renderTabBar = (props: any) => (
   />
 );
 
-const RatingPage = ({
+export default function RatingPage({
   userLatitude,
   userLongitude,
 }: {
   userLatitude: number;
   userLongitude: number;
-}) => {
+}) {
   const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
@@ -64,7 +57,7 @@ const RatingPage = ({
       /> */}
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   row: {
@@ -90,5 +83,3 @@ const styles = StyleSheet.create({
     height: 50,
   },
 });
-
-export default RatingPage;

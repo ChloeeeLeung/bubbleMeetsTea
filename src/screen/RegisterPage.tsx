@@ -31,7 +31,7 @@ const teaList = [
   {name: 'No Idea', img: require('../image/tea/noIdea.png'), id: 8},
 ];
 
-const RegisterPage = () => {
+export default function RegisterPage() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
@@ -188,6 +188,7 @@ const RegisterPage = () => {
       <View style={styles.imageList}>
         {teaList.map(({name, img, id}) => (
           <TouchableOpacity
+            key={id}
             onPress={() => {
               setPreferable(id);
             }}
@@ -223,7 +224,7 @@ const RegisterPage = () => {
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   centered: {
@@ -294,5 +295,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default RegisterPage;

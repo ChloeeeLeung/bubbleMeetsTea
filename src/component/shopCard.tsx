@@ -16,7 +16,13 @@ const icon1 = '../image/shop/aNiceGift.jpg';
 const icon2 = '../image/shop/comebuytea.png';
 const icon3 = '../image/shop/sharetea.png';
 
-const ShopCard = ({route, navigation}: {route: any; navigation: any}) => {
+export default function ShopCard({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) {
   const {
     name,
     location,
@@ -144,7 +150,7 @@ const ShopCard = ({route, navigation}: {route: any; navigation: any}) => {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   row: {
@@ -159,5 +165,3 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 });
-
-export default ShopCard;

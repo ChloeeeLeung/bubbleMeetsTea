@@ -8,13 +8,13 @@ import {getPreciseDistance} from 'geolib';
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
-const CardList = ({
+export default function CardList({
   userLatitude,
   userLongitude,
 }: {
   userLatitude: number;
   userLongitude: number;
-}) => {
+}) {
   const [list, setList] = useState(null);
 
   useEffect(() => {
@@ -129,6 +129,4 @@ const CardList = ({
       />
     </View>
   );
-};
-
-export default CardList;
+}

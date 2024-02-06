@@ -3,13 +3,13 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Button, Dialog, Portal, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const RatingDialog = ({
+export default function RatingDialog({
   visible,
   hideDialog,
 }: {
   visible: boolean;
   hideDialog: () => void;
-}) => {
+}) {
   const [starRating, setStarRating] = useState(5);
   return (
     <Portal>
@@ -88,7 +88,7 @@ const RatingDialog = ({
       </Dialog>
     </Portal>
   );
-};
+}
 
 const styles = StyleSheet.create({
   heading: {
@@ -115,5 +115,3 @@ const styles = StyleSheet.create({
     width: 130,
   },
 });
-
-export default RatingDialog;

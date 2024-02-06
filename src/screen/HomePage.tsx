@@ -12,7 +12,7 @@ import CommunityPage from './CommunityPage';
 import {Text} from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
 
-const HomePage = () => {
+export default function HomePage() {
   const layout = useWindowDimensions();
 
   const [latitude, setLatitude] = useState(0);
@@ -113,7 +113,7 @@ const HomePage = () => {
       )}
     </>
   );
-};
+}
 
 const styles = StyleSheet.create({
   centered: {
@@ -131,5 +131,3 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
 });
-
-export default HomePage;
