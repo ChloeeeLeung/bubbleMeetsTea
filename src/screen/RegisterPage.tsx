@@ -81,9 +81,21 @@ export default function RegisterPage() {
           name: name,
           email: email,
         };
-        await firebase.app().database(databaseUrl).ref('user/1').set(userData);
+        await firebase.app().database(databaseUrl).ref('user/2').set(userData);
 
         navigation.navigate('LoginPage');
+
+        for (let i = 0; i <= 42; i++) {
+          const idSnapshot = await firebase.app().database(databaseUrl).ref(`shop/${i}/id`).once('value');
+          const shopData = {
+            id: idSnapshot.val(),
+            fav: false,
+            distance: 0,
+            recommend: 0,
+          };
+          await firebase.app().database(databaseUrl).ref(`user/2/shop/${i}`).set(shopData);
+        }
+
       } else if (name.length == 0) {
         setEmailError(false);
         setPasswordError(false);
@@ -130,8 +142,6 @@ export default function RegisterPage() {
       }
     }
   };
-
-  console.log(preferable);
 
   return (
     <View style={styles.centered}>

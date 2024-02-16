@@ -4,6 +4,7 @@ import {Searchbar} from 'react-native-paper';
 import {firebase} from '@react-native-firebase/database';
 import CardUI from './card';
 import {getPreciseDistance} from 'geolib';
+import Auth from '@react-native-firebase/auth';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -23,22 +24,38 @@ export default function CardList({
 
   const getDatabase = async () => {
     try {
-      const data = await firebase
-        .app()
-        .database(databaseUrl)
-        .ref('shop')
-        .once('value');
+      const id = Auth().currentUser?.uid??'';
+      const check = await firebase.app().database(databaseUrl).ref('user').orderByChild('id').equalTo(id)
+      .once('value');
+      const snapshotValue = check.val();
 
-      const shopData = data.val();
+      if (snapshotValue) {
+        const keys = Object.keys(snapshotValue);
+        console.log('keys' + keys);
+        if (keys.length > 0) {
+          const key = keys[1];
+          const data = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref(`user/${key}/shop`)
+            .once('value');
+          console.log(data.val());
+          const shopData = data.val();
 
-      const sortedList = shopData
-        .filter(Boolean)
-        .sort(
-          (a: {recommend: number}, b: {recommend: number}) =>
-            b.recommend - a.recommend,
-        );
+          const sortedList = shopData
+            .filter(Boolean)
+            .sort(
+              (a: {recommend: number}, b: {recommend: number}) =>
+                b.recommend - a.recommend,
+            );
 
-      setList(sortedList);
+          setList(sortedList);
+        } else {
+          console.log("No user found for the provided ID");
+        }
+      } else {
+        console.log("Snapshot value is null or undefined");
+      }
     } catch (err) {
       console.log(err);
     }
@@ -46,10 +63,25 @@ export default function CardList({
 
   const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
     if (itemId !== undefined) {
-      await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
-        fav: !itemFav,
-      });
-      await getDatabase();
+      const id = Auth().currentUser?.uid??'';
+      const check = await firebase.app().database(databaseUrl).ref('user').orderByChild('id').equalTo(id)
+      .once('value');
+      const snapshotValue = check.val();
+
+      if (snapshotValue) {
+        const keys = Object.keys(snapshotValue);
+        if (keys.length > 0) {
+          const key = keys[0];
+          await firebase.app().database(databaseUrl).ref(`user/${key}/shop/${itemId}`).update({
+            fav: !itemFav,
+          });
+          await getDatabase();
+        } else {
+          console.log("No user found for the provided ID");
+        }
+      } else {
+        console.log("Snapshot value is null or undefined");
+      }
     }
   };
 
@@ -91,31 +123,31 @@ export default function CardList({
         data={list}
         renderItem={item => {
           //console.log(item);
-          let distance = null;
-          if (
-            item.item !== null &&
-            item.item.latitude !== null &&
-            item.item.longitude !== null &&
-            item.item.id !== undefined
-          ) {
-            distance =
-              getPreciseDistance(
-                {latitude: userLatitude, longitude: userLongitude},
-                {latitude: item.item.latitude, longitude: item.item.longitude},
-              ) / 1000;
-            updateDatabaseRecommend(item.item.id, distance, item.item.rating);
-          }
+          // let distance = null;
+          // if (
+          //   item.item !== null &&
+          //   item.item.latitude !== null &&
+          //   item.item.longitude !== null &&
+          //   item.item.id !== undefined
+          // ) {
+          //   distance =
+          //     getPreciseDistance(
+          //       {latitude: userLatitude, longitude: userLongitude},
+          //       {latitude: item.item.latitude, longitude: item.item.longitude},
+          //     ) / 1000;
+          //   updateDatabaseRecommend(item.item.id, distance, item.item.rating);
+          // }
           if (item.item !== null) {
             return (
               <View style={{paddingVertical: 5, marginBottom: 5}}>
                 <CardUI
-                  name={item.item.name}
-                  location={item.item.addr}
-                  shopRating={item.item.rating}
+                  name={''}
+                  location={''}
+                  shopRating={0}
                   fav={item.item.fav}
-                  openTime={item.item.openTime}
-                  closeTime={item.item.closeTime}
-                  telephone={item.item.telephone}
+                  openTime={''}
+                  closeTime={''}
+                  telephone={0}
                   handleToggleFavorite={() =>
                     handleToggleFavorite(item.item.id, item.item.fav)
                   }
