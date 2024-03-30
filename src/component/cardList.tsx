@@ -16,7 +16,10 @@ export default function CardList({
   userLatitude: number;
   userLongitude: number;
 }) {
-  const [list, setList] = useState(null);
+  const [list, setList] = useState([]);
+  const [shopList, setShopList] = useState([]);
+  const [finalList, setFinalList] = useState<[] | any[]>([]);
+  const [visibleData, setVisibleData] = useState(10);
 
   useEffect(() => {
     getDatabase();
@@ -24,14 +27,18 @@ export default function CardList({
 
   const getDatabase = async () => {
     try {
-      const id = Auth().currentUser?.uid??'';
-      const check = await firebase.app().database(databaseUrl).ref('user').orderByChild('id').equalTo(id)
-      .once('value');
-      const snapshotValue = check.val();
+      const id = Auth().currentUser?.uid ?? '';
+      const getUserID = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('user')
+        .orderByChild('id')
+        .equalTo(id)
+        .once('value');
+      const userID = getUserID.val();
 
-      if (snapshotValue) {
-        const keys = Object.keys(snapshotValue);
-        console.log('keys' + keys);
+      if (userID) {
+        const keys = Object.keys(userID);
         if (keys.length > 0) {
           const key = keys[1];
           const data = await firebase
@@ -39,7 +46,7 @@ export default function CardList({
             .database(databaseUrl)
             .ref(`user/${key}/shop`)
             .once('value');
-          console.log(data.val());
+          // console.log(data.val());
           const shopData = data.val();
 
           const sortedList = shopData
@@ -50,11 +57,29 @@ export default function CardList({
             );
 
           setList(sortedList);
+
+          const getShopInfo = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref('shop')
+            .once('value');
+          const shopInfo = getShopInfo.val();
+          setShopList(shopInfo);
+
+          if (shopList !== null && list !== null) {
+            const combinedList = list.map((item: any) => {
+              const shopItem = shopList.find(
+                (shopItem: any) => shopItem && shopItem.id === item.id,
+              );
+              return {...item, ...(shopItem || {})};
+            });
+            setFinalList(combinedList);
+          }
         } else {
-          console.log("No user found for the provided ID");
+          console.log('No user found for the provided ID');
         }
       } else {
-        console.log("Snapshot value is null or undefined");
+        console.log('Snapshot value is null or undefined');
       }
     } catch (err) {
       console.log(err);
@@ -63,24 +88,33 @@ export default function CardList({
 
   const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
     if (itemId !== undefined) {
-      const id = Auth().currentUser?.uid??'';
-      const check = await firebase.app().database(databaseUrl).ref('user').orderByChild('id').equalTo(id)
-      .once('value');
-      const snapshotValue = check.val();
+      const id = Auth().currentUser?.uid ?? '';
+      const getUserID = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('user')
+        .orderByChild('id')
+        .equalTo(id)
+        .once('value');
+      const userID = getUserID.val();
 
-      if (snapshotValue) {
-        const keys = Object.keys(snapshotValue);
+      if (userID) {
+        const keys = Object.keys(userID);
         if (keys.length > 0) {
           const key = keys[0];
-          await firebase.app().database(databaseUrl).ref(`user/${key}/shop/${itemId}`).update({
-            fav: !itemFav,
-          });
+          await firebase
+            .app()
+            .database(databaseUrl)
+            .ref(`user/${key}/shop/${itemId}`)
+            .update({
+              fav: !itemFav,
+            });
           await getDatabase();
         } else {
-          console.log("No user found for the provided ID");
+          console.log('No user found for the provided ID');
         }
       } else {
-        console.log("Snapshot value is null or undefined");
+        console.log('Snapshot value is null or undefined');
       }
     }
   };
@@ -90,21 +124,55 @@ export default function CardList({
     itemDistance: number,
     itemRating: number,
   ) => {
-    await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
-      distance: itemDistance,
-    });
+    const id = Auth().currentUser?.uid ?? '';
+    const getUserID = await firebase
+      .app()
+      .database(databaseUrl)
+      .ref('user')
+      .orderByChild('id')
+      .equalTo(id)
+      .once('value');
+    const userID = getUserID.val();
 
-    let distanceBuff;
-    if (itemDistance > 1.5) {
-      distanceBuff = -(itemDistance - 1.5) * 10;
+    if (userID) {
+      const keys = Object.keys(userID);
+      if (keys.length > 0) {
+        const key = keys[1];
+        await firebase
+          .app()
+          .database(databaseUrl)
+          .ref(`user/${key}/shop/${itemId}`)
+          .update({
+            distance: itemDistance,
+          });
+
+        let distanceBuff;
+        if (itemDistance > 1.5) {
+          distanceBuff = -(itemDistance - 1.5) * 10;
+        } else {
+          distanceBuff = (1.5 - itemDistance) * 10;
+        }
+        const buff = distanceBuff + itemRating * 10;
+
+        await firebase
+          .app()
+          .database(databaseUrl)
+          .ref(`user/${key}/shop/${itemId}`)
+          .update({
+            recommend: buff,
+          });
+      } else {
+        console.log('No user found for the provided ID');
+      }
     } else {
-      distanceBuff = (1.5 - itemDistance) * 10;
+      console.log('Snapshot value is null or undefined');
     }
-    const buff = distanceBuff + itemRating * 10;
+  };
 
-    await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
-      recommend: buff,
-    });
+  const handleEndReached = () => {
+    if (visibleData < finalList.length) {
+      setVisibleData(visibleData + 10);
+    }
   };
 
   return (
@@ -120,44 +188,46 @@ export default function CardList({
       />
       {/* <DrinkTypes /> */}
       <FlatList
-        data={list}
-        renderItem={item => {
-          //console.log(item);
-          // let distance = null;
-          // if (
-          //   item.item !== null &&
-          //   item.item.latitude !== null &&
-          //   item.item.longitude !== null &&
-          //   item.item.id !== undefined
-          // ) {
-          //   distance =
-          //     getPreciseDistance(
-          //       {latitude: userLatitude, longitude: userLongitude},
-          //       {latitude: item.item.latitude, longitude: item.item.longitude},
-          //     ) / 1000;
-          //   updateDatabaseRecommend(item.item.id, distance, item.item.rating);
-          // }
-          if (item.item !== null) {
+        data={finalList !== null ? finalList.slice(0, visibleData) : []}
+        renderItem={({item}) => {
+          // console.log(item);
+          let distance = null;
+          if (
+            item !== null &&
+            item.latitude !== null &&
+            item.longitude !== null &&
+            item.id !== undefined
+          ) {
+            distance =
+              getPreciseDistance(
+                {latitude: userLatitude, longitude: userLongitude},
+                {latitude: item.latitude, longitude: item.longitude},
+              ) / 1000;
+            updateDatabaseRecommend(item.id, distance, item.rating);
+          }
+          if (item !== null) {
             return (
               <View style={{paddingVertical: 5, marginBottom: 5}}>
                 <CardUI
-                  name={''}
-                  location={''}
-                  shopRating={0}
-                  fav={item.item.fav}
-                  openTime={''}
-                  closeTime={''}
-                  telephone={0}
+                  name={item.name}
+                  location={item.addr}
+                  shopRating={item.rating}
+                  fav={item.fav}
+                  openTime={item.openTime}
+                  closeTime={item.closeTime}
+                  telephone={item.telephone}
                   handleToggleFavorite={() =>
-                    handleToggleFavorite(item.item.id, item.item.fav)
+                    handleToggleFavorite(item.id, item.fav)
                   }
-                  distance={item.item.distance}
+                  distance={item.distance}
                 />
               </View>
             );
           }
           return null;
         }}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.5}
       />
     </View>
   );
