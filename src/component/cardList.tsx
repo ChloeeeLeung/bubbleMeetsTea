@@ -21,10 +21,6 @@ export default function CardList({
   const [finalList, setFinalList] = useState<[] | any[]>([]);
   const [visibleData, setVisibleData] = useState(10);
 
-  useEffect(() => {
-    getDatabase();
-  }, []);
-
   const getDatabase = async () => {
     try {
       const id = Auth().currentUser?.uid ?? '';
@@ -65,16 +61,6 @@ export default function CardList({
             .once('value');
           const shopInfo = getShopInfo.val();
           setShopList(shopInfo);
-
-          if (shopList !== null && list !== null) {
-            const combinedList = list.map((item: any) => {
-              const shopItem = shopList.find(
-                (shopItem: any) => shopItem && shopItem.id === item.id,
-              );
-              return {...item, ...(shopItem || {})};
-            });
-            setFinalList(combinedList);
-          }
         } else {
           console.log('No user found for the provided ID');
         }
@@ -85,6 +71,22 @@ export default function CardList({
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    getDatabase();
+  }, []);
+
+  useEffect(() => {
+    if (shopList.length > 0 && list.length > 0) {
+      const combinedList = list.map((item: any) => {
+        const shopItem = shopList.find(
+          (shopItem: any) => shopItem && shopItem.id === item.id,
+        );
+        return {...item, ...(shopItem || {})};
+      });
+      setFinalList(combinedList);
+    }
+  }, [list, shopList]);
 
   const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
     if (itemId !== undefined) {
@@ -97,11 +99,14 @@ export default function CardList({
         .equalTo(id)
         .once('value');
       const userID = getUserID.val();
+      console.log(itemId);
+      console.log(itemFav);
 
       if (userID) {
         const keys = Object.keys(userID);
         if (keys.length > 0) {
-          const key = keys[0];
+          const key = keys[1];
+          console.log(key);
           await firebase
             .app()
             .database(databaseUrl)

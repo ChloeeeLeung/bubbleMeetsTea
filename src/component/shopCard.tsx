@@ -86,7 +86,7 @@ export default function ShopCard({
               icon={fav ? 'heart' : 'heart-outline'}
               iconColor={fav ? '#B22222' : '#2f4858'}
               size={30}
-              onPress={() => handleToggleFavorite()}
+              // onPress={() => handleToggleFavorite()}
             />
           </View>
         </ImageBackground>
