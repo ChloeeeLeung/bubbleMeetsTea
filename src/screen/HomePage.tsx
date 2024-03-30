@@ -8,7 +8,7 @@ import ProfilePage from './ProfilePage';
 import {Scene} from 'react-native-tab-view/lib/typescript/src/types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import GetLocation from 'react-native-get-location';
-import CommunityPage from './CommunityPage';
+import ExplorePage from './ExplorePage';
 import {Text} from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
 
@@ -42,7 +42,7 @@ export default function HomePage() {
   const [routes] = React.useState([
     {key: 'rating'},
     {key: 'map'},
-    {key: 'community'},
+    {key: 'explore'},
     {key: 'favourite'},
     {key: 'profile'},
   ]);
@@ -52,7 +52,7 @@ export default function HomePage() {
       <RatingPage userLatitude={latitude} userLongitude={longitude} />
     ),
     map: () => <MapPage latitude={latitude} longitude={longitude} />,
-    community: CommunityPage,
+    explore: ExplorePage,
     favourite: () => (
       <FavouritePage userLatitude={latitude} userLongitude={longitude} />
     ),
@@ -68,8 +68,8 @@ export default function HomePage() {
       return <Icon name="search" size={23} color={'#2f4858'} />;
     } else if (route.key === 'map') {
       return <Icon name="map-marker" size={23} color={'#2f4858'} />;
-    } else if (route.key === 'community') {
-      return <Icon name="comments" size={23} color={'#2f4858'} />;
+    } else if (route.key === 'explore') {
+      return <Icon name="compass" size={23} color={'#2f4858'} />;
     } else if (route.key === 'favourite') {
       return <Icon name="heart" size={23} color={'#2f4858'} />;
     } else if (route.key === 'profile') {

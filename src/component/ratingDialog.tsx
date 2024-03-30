@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Button, Dialog, Portal, Text} from 'react-native-paper';
+import {Button, Dialog, Portal, Text, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function RatingDialog({
@@ -11,6 +11,8 @@ export default function RatingDialog({
   hideDialog: () => void;
 }) {
   const [starRating, setStarRating] = useState(5);
+  const [text, setText] = React.useState('');
+
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={hideDialog}>
@@ -68,6 +70,14 @@ export default function RatingDialog({
               />
             </TouchableOpacity>
           </View>
+          <View style={styles.skip}></View>
+          <TextInput
+            label="Comment"
+            value={text}
+            onChangeText={text => setText(text)}
+            outlineColor="#2f4858"
+            multiline={true}
+          />
         </Dialog.Content>
         <Dialog.Actions style={styles.spaceAround}>
           <Button
@@ -113,5 +123,8 @@ const styles = StyleSheet.create({
   button: {
     borderColor: '#2f4858',
     width: 130,
+  },
+  skip: {
+    height: 20,
   },
 });
