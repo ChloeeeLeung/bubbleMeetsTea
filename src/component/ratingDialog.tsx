@@ -16,9 +16,7 @@ export default function RatingDialog({
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={hideDialog}>
-        <Dialog.Title style={{justifyContent: 'center'}}>
-          Tab to rate
-        </Dialog.Title>
+        <Dialog.Title>Tab to rate</Dialog.Title>
         <Dialog.Content>
           <View style={styles.row}>
             <Text style={styles.heading}>{starRating}</Text>

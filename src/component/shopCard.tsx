@@ -1,6 +1,5 @@
 import {Rating} from '@kolking/react-native-rating';
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useLayoutEffect} from 'react';
+import React from 'react';
 import {
   ImageBackground,
   SafeAreaView,
@@ -10,7 +9,7 @@ import {
 } from 'react-native';
 import {Button, IconButton, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import RatingDialog from './ratingDialog';
+import DrinkCard from './drinkCard';
 
 const icon1 = '../image/shop/aNiceGift.jpg';
 const icon2 = '../image/shop/comebuytea.png';
@@ -34,10 +33,6 @@ export default function ShopCard({
     handleToggleFavorite,
   } = route.params;
 
-  const [dialogVisible, setDialogVisible] = React.useState(false);
-  const showDialog = () => setDialogVisible(true);
-  const hideDialog = () => setDialogVisible(false);
-
   const iconSize = 23;
 
   // useLayoutEffect(() => {
@@ -49,7 +44,7 @@ export default function ShopCard({
   //         size={30}
   //         onPress={async () => {
   //           handleToggleFavorite();
-  //           navigation.navigate('ShopCard');
+  //           navigation.navigate('ShopPage');
   //         }}
   //       />
   //     ),
@@ -58,7 +53,6 @@ export default function ShopCard({
 
   return (
     <SafeAreaView style={{flex: 1, padding: 15}}>
-      <RatingDialog visible={dialogVisible} hideDialog={hideDialog} />
       <View style={{justifyContent: 'center'}}>
         <ImageBackground
           source={
@@ -121,32 +115,24 @@ export default function ShopCard({
             <Text style={{marginLeft: 5}}>Close at {closeTime}</Text>
           </View>
         </View>
+        <Button
+          buttonColor="#2f4858"
+          icon="book"
+          mode="contained"
+          onPress={() => navigation.navigate('MenuModal')}>
+          Menu
+        </Button>
         <View style={styles.row}>
           <Icon name="map-marker" size={iconSize} color={'#2f4858'} />
           <Text style={{marginLeft: 5}}>{location}</Text>
         </View>
-        <View style={styles.row}>
-          <Icon name="phone" size={iconSize} color={'#2f4858'} />
-          <Text style={{marginLeft: 5}}>{telephone}</Text>
-        </View>
-        <View style={styles.button}>
-          <Button
-            style={{width: 180}}
-            buttonColor="#2f4858"
-            icon="book"
-            mode="contained"
-            onPress={() => navigation.navigate('MenuModal')}>
-            Menu
-          </Button>
-          <Button
-            style={{width: 180}}
-            buttonColor="#2f4858"
-            icon="pencil"
-            mode="contained"
-            onPress={() => showDialog()}>
-            Rating
-          </Button>
-        </View>
+        {telephone && (
+          <View style={styles.row}>
+            <Icon name="phone" size={iconSize} color={'#2f4858'} />
+            <Text style={{marginLeft: 5}}>{telephone}</Text>
+          </View>
+        )}
+        <DrinkCard />
       </ScrollView>
     </SafeAreaView>
   );
@@ -162,6 +148,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingVertical: 5,
-    justifyContent: 'space-between',
   },
 });
