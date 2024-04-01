@@ -85,55 +85,53 @@ export default function ShopCard({
           </View>
         </ImageBackground>
       </View>
-      <ScrollView style={{paddingVertical: 5}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingVertical: 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text style={{fontSize: 22, fontWeight: 'bold'}}>{name}</Text>
-          <Rating
-            style={{marginLeft: 20}}
-            rating={shopRating}
-            size={18}
-            disabled={true}
-            variant={'stars-outline'}
-            fillColor={'#2f4858'}
-            baseColor={'#2f4858'}
-          />
-          <Text style={{textAlign: 'center', marginLeft: 5}}>{shopRating}</Text>
-        </View>
-        <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-          <View style={styles.row}>
-            <Icon name="sun-o" size={iconSize} color={'#2f4858'} />
-            <Text style={{marginLeft: 5}}>Open at {openTime}</Text>
-          </View>
-          <View style={styles.row}>
-            <Icon name="moon-o" size={iconSize} color={'#2f4858'} />
-            <Text style={{marginLeft: 5}}>Close at {closeTime}</Text>
-          </View>
-        </View>
-        <Button
-          buttonColor="#2f4858"
-          icon="book"
-          mode="contained"
-          onPress={() => navigation.navigate('MenuModal')}>
-          Menu
-        </Button>
+      <View
+        style={{
+          flexDirection: 'row',
+          paddingVertical: 5,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text style={{fontSize: 22, fontWeight: 'bold'}}>{name}</Text>
+        <Rating
+          style={{marginLeft: 20}}
+          rating={shopRating}
+          size={18}
+          disabled={true}
+          variant={'stars-outline'}
+          fillColor={'#2f4858'}
+          baseColor={'#2f4858'}
+        />
+        <Text style={{textAlign: 'center', marginLeft: 5}}>{shopRating}</Text>
+      </View>
+      <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
         <View style={styles.row}>
-          <Icon name="map-marker" size={iconSize} color={'#2f4858'} />
-          <Text style={{marginLeft: 5}}>{location}</Text>
+          <Icon name="sun-o" size={iconSize} color={'#2f4858'} />
+          <Text style={{marginLeft: 5}}>Open at {openTime}</Text>
         </View>
-        {telephone && (
-          <View style={styles.row}>
-            <Icon name="phone" size={iconSize} color={'#2f4858'} />
-            <Text style={{marginLeft: 5}}>{telephone}</Text>
-          </View>
-        )}
-        <DrinkCard />
-      </ScrollView>
+        <View style={styles.row}>
+          <Icon name="moon-o" size={iconSize} color={'#2f4858'} />
+          <Text style={{marginLeft: 5}}>Close at {closeTime}</Text>
+        </View>
+      </View>
+      <Button
+        buttonColor="#2f4858"
+        icon="book"
+        mode="contained"
+        onPress={() => navigation.navigate('MenuModal')}>
+        Menu
+      </Button>
+      <View style={styles.row}>
+        <Icon name="map-marker" size={iconSize} color={'#2f4858'} />
+        <Text style={{marginLeft: 5}}>{location}</Text>
+      </View>
+      {telephone && (
+        <View style={styles.row}>
+          <Icon name="phone" size={iconSize} color={'#2f4858'} />
+          <Text style={{marginLeft: 5}}>{telephone}</Text>
+        </View>
+      )}
+      <DrinkCard />
     </SafeAreaView>
   );
 }

@@ -11,7 +11,30 @@ export default function RatingDialog({
   hideDialog: () => void;
 }) {
   const [starRating, setStarRating] = useState(5);
-  const [text, setText] = React.useState('');
+  const [text, setText] = useState('');
+
+  const StarRating = ({starRating}: {starRating: number}) => {
+    const renderStars = () => {
+      const stars = [];
+      for (let i = 1; i <= 5; i++) {
+        stars.push(
+          <TouchableOpacity
+            key={i}
+            style={styles.marginRight}
+            onPress={() => setStarRating(i)}>
+            <Icon
+              name={starRating >= i ? 'star' : 'star-o'}
+              size={25}
+              style={styles.starColor}
+            />
+          </TouchableOpacity>,
+        );
+      }
+      return stars;
+    };
+
+    return <View style={styles.row}>{renderStars()}</View>;
+  };
 
   return (
     <Portal>
@@ -21,60 +44,18 @@ export default function RatingDialog({
           <View style={styles.row}>
             <Text style={styles.heading}>{starRating}</Text>
           </View>
-          <View style={styles.row}>
-            <TouchableOpacity
-              style={styles.marginRight}
-              onPress={() => setStarRating(1)}>
-              <Icon
-                name={starRating >= 1 ? 'star' : 'star-o'}
-                size={32}
-                style={styles.starColor}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.marginRight}
-              onPress={() => setStarRating(2)}>
-              <Icon
-                name={starRating >= 2 ? 'star' : 'star-o'}
-                size={32}
-                style={styles.starColor}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.marginRight}
-              onPress={() => setStarRating(3)}>
-              <Icon
-                name={starRating >= 3 ? 'star' : 'star-o'}
-                size={32}
-                style={styles.starColor}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.marginRight}
-              onPress={() => setStarRating(4)}>
-              <Icon
-                name={starRating >= 4 ? 'star' : 'star-o'}
-                size={32}
-                style={styles.starColor}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.marginRight}
-              onPress={() => setStarRating(5)}>
-              <Icon
-                name={starRating >= 5 ? 'star' : 'star-o'}
-                size={32}
-                style={styles.starColor}
-              />
-            </TouchableOpacity>
-          </View>
+          <StarRating starRating={starRating} />
           <View style={styles.skip}></View>
           <TextInput
             label="Comment"
             value={text}
             onChangeText={text => setText(text)}
-            outlineColor="#2f4858"
             multiline={true}
+            theme={{
+              colors: {
+                primary: '#2f4858',
+              },
+            }}
           />
         </Dialog.Content>
         <Dialog.Actions style={styles.spaceAround}>
