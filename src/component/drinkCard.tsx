@@ -10,9 +10,14 @@ import {firebase} from '@react-native-firebase/database';
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
-export default function DrinkCard() {
+export default function DrinkCard({shopID, id}: {shopID: String; id: number}) {
   const [ratingDialogVisible, setRatingDialogVisible] = useState(false);
-  const showRatingDialog = () => setRatingDialogVisible(true);
+  const [ratedDrinkID, setRatingDrinkID] = useState(-1);
+  const showRatingDialog = (drinkID: number) => {
+    setRatingDialogVisible(true);
+    setRatingDrinkID(drinkID);
+    console.log(drinkID);
+  };
   const hideRatingDialog = () => setRatingDialogVisible(false);
 
   const [commentDialogVisible, setCommentDialogVisible] = useState(false);
@@ -31,7 +36,7 @@ export default function DrinkCard() {
     const data = await firebase
       .app()
       .database(databaseUrl)
-      .ref(`drink/0`)
+      .ref(`drink/${shopID}`)
       .once('value');
     const drinkData = data.val();
     setDrinkList(drinkData);
@@ -46,6 +51,9 @@ export default function DrinkCard() {
       <RatingDialog
         visible={ratingDialogVisible}
         hideDialog={hideRatingDialog}
+        shopID={shopID}
+        id={id}
+        drinkID={ratedDrinkID}
       />
       <CommentDialog
         visible={commentDialogVisible}
@@ -56,8 +64,8 @@ export default function DrinkCard() {
         data={drinkList !== null ? drinkList : []}
         renderItem={({item}) => {
           let averageRating = 3;
-          if (item.comment !== undefined) {
-            const ratings = item.comment.map(
+          if (item.comment[id] !== undefined) {
+            const ratings = item.comment[id].map(
               (comment: {rate: number}) => comment.rate,
             );
             averageRating =
@@ -85,7 +93,9 @@ export default function DrinkCard() {
                         fillColor={'#2f4858'}
                         baseColor={'#2f4858'}
                       />
-                      <Text style={styles.rowText}>{averageRating}</Text>
+                      <Text style={styles.rowText}>
+                        {averageRating.toFixed(1)}
+                      </Text>
                     </View>
                   </View>
                   <View style={styles.rowList}>
@@ -93,14 +103,14 @@ export default function DrinkCard() {
                       icon="comment-multiple"
                       iconColor="#2f4858"
                       onPress={() => {
-                        showCommentDialog(item.comment);
+                        showCommentDialog(item.comment[id]);
                       }}
                     />
                     <IconButton
                       icon="pencil"
                       iconColor="#2f4858"
                       onPress={() => {
-                        showRatingDialog();
+                        showRatingDialog(item.drinkID);
                       }}
                     />
                   </View>

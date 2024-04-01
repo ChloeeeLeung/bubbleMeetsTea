@@ -2,13 +2,23 @@ import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Button, Dialog, Portal, Text, TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {firebase} from '@react-native-firebase/database';
+
+const databaseUrl =
+  'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
 export default function RatingDialog({
   visible,
   hideDialog,
+  shopID,
+  id,
+  drinkID,
 }: {
   visible: boolean;
   hideDialog: () => void;
+  shopID: String;
+  id: number;
+  drinkID: number;
 }) {
   const [starRating, setStarRating] = useState(5);
   const [text, setText] = useState('');
@@ -34,6 +44,24 @@ export default function RatingDialog({
     };
 
     return <View style={styles.row}>{renderStars()}</View>;
+  };
+
+  const rate = async () => {
+    const drinkComment = await firebase
+      .app()
+      .database(databaseUrl)
+      .ref(`drink/${shopID}/${drinkID}/comment/${id}`)
+      .once('value');
+    const commentLength = drinkComment.numChildren() ?? 0;
+    firebase
+      .app()
+      .database(databaseUrl)
+      .ref(`drink/${shopID}/${drinkID}/comment/${id}/${commentLength}`)
+      .set({
+        detail: text,
+        rate: starRating,
+      });
+    hideDialog();
   };
 
   return (
@@ -69,7 +97,7 @@ export default function RatingDialog({
           <Button
             style={styles.button}
             mode="contained"
-            onPress={hideDialog}
+            onPress={rate}
             buttonColor="#2f4858">
             Done
           </Button>

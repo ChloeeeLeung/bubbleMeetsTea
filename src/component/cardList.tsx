@@ -225,6 +225,8 @@ export default function CardList({
                     handleToggleFavorite(item.id, item.fav)
                   }
                   distance={item.distance}
+                  shopID={item.shopID}
+                  id={item.id}
                 />
               </View>
             );

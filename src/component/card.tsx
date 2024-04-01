@@ -27,6 +27,8 @@ export default function CardUI({
   telephone,
   handleToggleFavorite,
   distance,
+  shopID,
+  id,
 }: {
   name: String;
   location: String;
@@ -37,6 +39,8 @@ export default function CardUI({
   telephone: Number;
   handleToggleFavorite: () => void;
   distance: any;
+  shopID: String;
+  id: number;
 }) {
   const navigation = useNavigation();
   return (
@@ -51,6 +55,8 @@ export default function CardUI({
           telephone,
           fav,
           handleToggleFavorite,
+          shopID,
+          id,
         })
       }>
       <Card

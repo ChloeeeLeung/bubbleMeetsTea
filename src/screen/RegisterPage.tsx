@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -34,16 +34,16 @@ export default function RegisterPage() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [name, setName] = React.useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
 
-  const [emailError, setEmailError] = React.useState(false);
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [nameError, setNameError] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [nameError, setNameError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const [preferable, setPreferable] = React.useState(-1);
+  const [preferable, setPreferable] = useState(-1);
 
   const handleRegister = async () => {
     try {
@@ -86,16 +86,23 @@ export default function RegisterPage() {
         navigation.navigate('LoginPage');
 
         for (let i = 0; i <= 42; i++) {
-          const idSnapshot = await firebase.app().database(databaseUrl).ref(`shop/${i}/id`).once('value');
+          const idSnapshot = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref(`shop/${i}/id`)
+            .once('value');
           const shopData = {
             id: idSnapshot.val(),
             fav: false,
             distance: 0,
             recommend: 0,
           };
-          await firebase.app().database(databaseUrl).ref(`user/2/shop/${i}`).set(shopData);
+          await firebase
+            .app()
+            .database(databaseUrl)
+            .ref(`user/2/shop/${i}`)
+            .set(shopData);
         }
-
       } else if (name.length == 0) {
         setEmailError(false);
         setPasswordError(false);

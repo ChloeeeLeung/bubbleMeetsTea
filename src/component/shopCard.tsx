@@ -31,6 +31,8 @@ export default function ShopCard({
     telephone,
     fav,
     handleToggleFavorite,
+    shopID,
+    id,
   } = route.params;
 
   const iconSize = 23;
@@ -131,7 +133,7 @@ export default function ShopCard({
           <Text style={{marginLeft: 5}}>{telephone}</Text>
         </View>
       )}
-      <DrinkCard />
+      <DrinkCard shopID={shopID} id={id} />
     </SafeAreaView>
   );
 }
