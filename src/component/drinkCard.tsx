@@ -44,7 +44,7 @@ export default function DrinkCard({shopID, id}: {shopID: String; id: number}) {
 
   useEffect(() => {
     getDrink();
-  }, []);
+  }, [drinkList]);
 
   return (
     <View style={styles.flex}>
