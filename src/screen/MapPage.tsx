@@ -68,6 +68,8 @@ export default function MapPage({
                 telephone={shopData.telephone}
                 handleToggleFavorite={() => {}}
                 distance={distance}
+                shopID={shopData.shopID}
+                id={shopData.id}
               />
             </View>,
           );

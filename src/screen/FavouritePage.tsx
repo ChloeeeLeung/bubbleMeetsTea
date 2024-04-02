@@ -4,6 +4,7 @@ import {Text} from 'react-native-paper';
 import CardUI from '../component/card';
 import {firebase} from '@react-native-firebase/database';
 import {getPreciseDistance} from 'geolib';
+import Auth from '@react-native-firebase/auth';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -15,32 +16,106 @@ export default function FavouritePage({
   userLatitude: number;
   userLongitude: number;
 }) {
-  const [list, setList] = useState(null);
-
-  useEffect(() => {
-    getDatabase();
-  }, []);
+  const [list, setList] = useState([]);
+  const [shopList, setShopList] = useState([]);
+  const [finalList, setFinalList] = useState<[] | any[]>([]);
 
   const getDatabase = async () => {
     try {
-      const data = await firebase
+      const id = Auth().currentUser?.uid ?? '';
+      const getUserID = await firebase
         .app()
         .database(databaseUrl)
-        .ref('shop')
+        .ref('user')
+        .orderByChild('id')
+        .equalTo(id)
         .once('value');
+      const userID = getUserID.val();
 
-      setList(data.val());
+      if (userID) {
+        const keys = Object.keys(userID);
+        if (keys.length > 0) {
+          const key = keys[1];
+          const data = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref(`user/${key}/shop`)
+            .once('value');
+          const shopData = data.val();
+
+          const sortedList = shopData
+            .filter(Boolean)
+            .sort(
+              (a: {recommend: number}, b: {recommend: number}) =>
+                b.recommend - a.recommend,
+            );
+
+          setList(sortedList);
+
+          const getShopInfo = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref('shop')
+            .once('value');
+          const shopInfo = getShopInfo.val();
+          setShopList(shopInfo);
+        } else {
+          console.log('No user found for the provided ID');
+        }
+      } else {
+        console.log('Snapshot value is null or undefined');
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleToggleFavorite = async (itemId: any, itemFav: any) => {
-    await firebase.app().database(databaseUrl).ref(`shop/${itemId}`).update({
-      fav: !itemFav,
-    });
+  useEffect(() => {
+    getDatabase();
+  }, []);
 
-    await getDatabase();
+  useEffect(() => {
+    if (shopList.length > 0 && list.length > 0) {
+      const combinedList = list.map((item: any) => {
+        const shopItem = shopList.find(
+          (shopItem: any) => shopItem && shopItem.id === item.id,
+        );
+        return {...item, ...(shopItem || {})};
+      });
+      setFinalList(combinedList);
+    }
+  }, [list, shopList]);
+
+  const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
+    if (itemId !== undefined) {
+      const id = Auth().currentUser?.uid ?? '';
+      const getUserID = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('user')
+        .orderByChild('id')
+        .equalTo(id)
+        .once('value');
+      const userID = getUserID.val();
+      if (userID) {
+        const keys = Object.keys(userID);
+        if (keys.length > 0) {
+          const key = keys[1];
+          await firebase
+            .app()
+            .database(databaseUrl)
+            .ref(`user/${key}/shop/${itemId}`)
+            .update({
+              fav: !itemFav,
+            });
+          await getDatabase();
+        } else {
+          console.log('No user found for the provided ID');
+        }
+      } else {
+        console.log('Snapshot value is null or undefined');
+      }
+    }
   };
 
   return (
@@ -49,35 +124,38 @@ export default function FavouritePage({
         <Text style={styles.title}>My Favourite</Text>
       </View>
       <FlatList
-        data={list}
-        renderItem={item => {
+        data={finalList !== null ? finalList : []}
+        renderItem={({item}) => {
           let distance = null;
           if (
-            item.item !== null &&
-            item.item.latitude !== null &&
-            item.item.longitude !== null
+            item !== null &&
+            item.latitude !== null &&
+            item.longitude !== null &&
+            item.id !== undefined
           ) {
             distance =
               getPreciseDistance(
                 {latitude: userLatitude, longitude: userLongitude},
-                {latitude: item.item.latitude, longitude: item.item.longitude},
+                {latitude: item.latitude, longitude: item.longitude},
               ) / 1000;
           }
-          if (item.item !== null && item.item.fav == true) {
+          if (item !== null && item.fav === true) {
             return (
-              <View style={styles.row}>
+              <View style={{paddingVertical: 5, marginBottom: 5}}>
                 <CardUI
-                  name={item.item.name}
-                  location={item.item.addr}
-                  shopRating={item.item.rating}
-                  fav={item.item.fav}
-                  openTime={item.item.openTime}
-                  closeTime={item.item.closeTime}
-                  telephone={item.item.telephone}
+                  name={item.name}
+                  location={item.addr}
+                  shopRating={item.rating}
+                  fav={item.fav}
+                  openTime={item.openTime}
+                  closeTime={item.closeTime}
+                  telephone={item.telephone}
                   handleToggleFavorite={() =>
-                    handleToggleFavorite(item.index, item.item.fav)
+                    handleToggleFavorite(item.id, item.fav)
                   }
-                  distance={distance}
+                  distance={item.distance}
+                  shopID={item.shopID}
+                  id={item.id}
                 />
               </View>
             );
