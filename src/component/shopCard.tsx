@@ -1,15 +1,11 @@
 import {Rating} from '@kolking/react-native-rating';
-import React from 'react';
-import {
-  ImageBackground,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {ImageBackground, SafeAreaView, StyleSheet, View} from 'react-native';
 import {Button, IconButton, Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DrinkCard from './drinkCard';
+import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import ShopInfo from './shopInfo';
 
 const icon1 = '../image/shop/aNiceGift.jpg';
 const icon2 = '../image/shop/comebuytea.png';
@@ -30,28 +26,34 @@ export default function ShopCard({
     closeTime,
     telephone,
     fav,
-    handleToggleFavorite,
     shopID,
     id,
   } = route.params;
 
-  const iconSize = 23;
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([{key: 'info'}, {key: 'drinks'}]);
 
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <IconButton
-  //         icon={fav ? 'heart' : 'heart-outline'}
-  //         iconColor={fav ? '#B22222' : '#2f4858'}
-  //         size={30}
-  //         onPress={async () => {
-  //           handleToggleFavorite();
-  //           navigation.navigate('ShopPage');
-  //         }}
-  //       />
-  //     ),
-  //   });
-  // }, [fav]);
+  const renderScene = SceneMap({
+    info: () => (
+      <ShopInfo
+        closeTime={closeTime}
+        openTime={openTime}
+        location={location}
+        telephone={telephone}
+        navigation={navigation}
+      />
+    ),
+    drinks: () => <DrinkCard shopID={shopID} id={id} />,
+  });
+
+  const renderTabBar = (props: any) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{backgroundColor: '#2f4858'}}
+      style={{backgroundColor: '#82919b', height: 2}}
+      labelStyle={{fontWeight: 'bold', color: '#ffffff'}}
+    />
+  );
 
   return (
     <SafeAreaView style={{flex: 1, padding: 15}}>
@@ -106,34 +108,12 @@ export default function ShopCard({
         />
         <Text style={{textAlign: 'center', marginLeft: 5}}>{shopRating}</Text>
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-        <View style={styles.row}>
-          <Icon name="sun-o" size={iconSize} color={'#2f4858'} />
-          <Text style={{marginLeft: 5}}>Open at {openTime}</Text>
-        </View>
-        <View style={styles.row}>
-          <Icon name="moon-o" size={iconSize} color={'#2f4858'} />
-          <Text style={{marginLeft: 5}}>Close at {closeTime}</Text>
-        </View>
-      </View>
-      <Button
-        buttonColor="#2f4858"
-        icon="book"
-        mode="contained"
-        onPress={() => navigation.navigate('MenuModal')}>
-        Menu
-      </Button>
-      <View style={styles.row}>
-        <Icon name="map-marker" size={iconSize} color={'#2f4858'} />
-        <Text style={{marginLeft: 5}}>{location}</Text>
-      </View>
-      {telephone && (
-        <View style={styles.row}>
-          <Icon name="phone" size={iconSize} color={'#2f4858'} />
-          <Text style={{marginLeft: 5}}>{telephone}</Text>
-        </View>
-      )}
-      <DrinkCard shopID={shopID} id={id} />
+      <TabView
+        navigationState={{index, routes}}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        renderTabBar={renderTabBar}
+      />
     </SafeAreaView>
   );
 }
