@@ -84,6 +84,23 @@ export default function CardList({
         );
         return {...item, ...(shopItem || {})};
       });
+      combinedList.map((item: any) => {
+        let distance = null;
+        if (
+          item !== null &&
+          item.latitude !== null &&
+          item.longitude !== null &&
+          item.id !== undefined
+        ) {
+          distance =
+            getPreciseDistance(
+              {latitude: userLatitude, longitude: userLongitude},
+              {latitude: item.latitude, longitude: item.longitude},
+            ) / 1000;
+          updateDatabaseRecommend(item.id, distance, item.rating);
+        }
+        return null;
+      });
       setFinalList(combinedList);
     }
   }, [list, shopList]);
@@ -195,21 +212,6 @@ export default function CardList({
       <FlatList
         data={finalList !== null ? finalList.slice(0, visibleData) : []}
         renderItem={({item}) => {
-          // console.log(item);
-          let distance = null;
-          if (
-            item !== null &&
-            item.latitude !== null &&
-            item.longitude !== null &&
-            item.id !== undefined
-          ) {
-            distance =
-              getPreciseDistance(
-                {latitude: userLatitude, longitude: userLongitude},
-                {latitude: item.latitude, longitude: item.longitude},
-              ) / 1000;
-            updateDatabaseRecommend(item.id, distance, item.rating);
-          }
           if (item !== null) {
             return (
               <View style={{paddingVertical: 5, marginBottom: 5}}>
