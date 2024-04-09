@@ -39,29 +39,6 @@ export default function RatingDialog({
   const [crowds, setCrowds] = useState('1');
   const [error, setError] = useState(false);
 
-  const StarRating = ({starRating}: {starRating: number}) => {
-    const renderStars = () => {
-      const stars = [];
-      for (let i = 1; i <= 5; i++) {
-        stars.push(
-          <TouchableOpacity
-            key={i}
-            style={styles.marginRight}
-            onPress={() => setStarRating(i)}>
-            <Icon
-              name={starRating >= i ? 'star' : 'star-o'}
-              size={25}
-              style={styles.starColor}
-            />
-          </TouchableOpacity>,
-        );
-      }
-      return stars;
-    };
-
-    return <View style={styles.row}>{renderStars()}</View>;
-  };
-
   const renderToggleButton = (
     buttonValue: string,
     iconColor: ColorValue,
@@ -86,6 +63,8 @@ export default function RatingDialog({
     if (comment !== '') {
       setError(false);
       setComment('');
+      setStarRating(5);
+      setCrowds('1');
       const drinkComment = await firebase
         .app()
         .database(databaseUrl)
@@ -125,7 +104,20 @@ export default function RatingDialog({
           <View style={styles.row}>
             <Text style={styles.heading}>{starRating}</Text>
           </View>
-          <StarRating starRating={starRating} />
+          <View style={styles.row}>
+            {Array.from({length: 5}, (_, index) => (
+              <TouchableOpacity
+                key={index + 1}
+                style={styles.marginRight}
+                onPress={() => setStarRating(index + 1)}>
+                <Icon
+                  name={starRating >= index + 1 ? 'star' : 'star-o'}
+                  size={25}
+                  style={styles.starColor}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
           <View style={styles.skip} />
           <TextInput
             label="Leave a review for the drink"
@@ -160,6 +152,8 @@ export default function RatingDialog({
             mode="outlined"
             onPress={() => {
               setError(false);
+              setStarRating(5);
+              setCrowds('1');
               setComment('');
               hideDialog();
             }}
