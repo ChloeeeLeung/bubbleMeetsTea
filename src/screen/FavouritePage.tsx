@@ -3,7 +3,6 @@ import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import CardUI from '../component/card';
 import {firebase} from '@react-native-firebase/database';
-import {getPreciseDistance} from 'geolib';
 import Auth from '@react-native-firebase/auth';
 
 const databaseUrl =
@@ -49,8 +48,8 @@ export default function FavouritePage({
               (a: {recommend: number}, b: {recommend: number}) =>
                 b.recommend - a.recommend,
             );
-
-          setList(sortedList);
+          const favList = sortedList.filter((item: { fav: boolean; }) => item.fav === true);
+          setList(favList);
 
           const getShopInfo = await firebase
             .app()
@@ -126,19 +125,6 @@ export default function FavouritePage({
       <FlatList
         data={finalList !== null ? finalList : []}
         renderItem={({item}) => {
-          let distance = null;
-          if (
-            item !== null &&
-            item.latitude !== null &&
-            item.longitude !== null &&
-            item.id !== undefined
-          ) {
-            distance =
-              getPreciseDistance(
-                {latitude: userLatitude, longitude: userLongitude},
-                {latitude: item.latitude, longitude: item.longitude},
-              ) / 1000;
-          }
           if (item !== null && item.fav === true) {
             return (
               <View style={{paddingVertical: 5, marginBottom: 5}}>
