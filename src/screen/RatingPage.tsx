@@ -1,23 +1,6 @@
-import {Image, StyleSheet, View, useWindowDimensions} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import React from 'react';
-import {SceneMap, TabBar} from 'react-native-tab-view';
-import cardList from '../component/cardList';
 import CardList from '../component/cardList';
-
-const renderScene = SceneMap({
-  first: cardList,
-  second: cardList,
-});
-
-const renderTabBar = (props: any) => (
-  <TabBar
-    {...props}
-    activeColor={'#25171c'}
-    inactiveColor={'#c4c1c4'}
-    style={{backgroundColor: '#e1e9e1', borderRadius: 30}}
-    indicatorStyle={{backgroundColor: 'transparent'}}
-  />
-);
 
 export default function RatingPage({
   userLatitude,
@@ -26,7 +9,6 @@ export default function RatingPage({
   userLatitude: number;
   userLongitude: number;
 }) {
-  const layout = useWindowDimensions();
 
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -47,14 +29,6 @@ export default function RatingPage({
         />
       </View>
       <CardList userLatitude={userLatitude} userLongitude={userLongitude} />
-      {/* <TabView
-        style={{paddingHorizontal: 10}}
-        navigationState={{index, routes}}
-        renderScene={renderScene}
-        renderTabBar={renderTabBar}
-        onIndexChange={setIndex}
-        initialLayout={{width: layout.width}}
-      /> */}
     </>
   );
 }

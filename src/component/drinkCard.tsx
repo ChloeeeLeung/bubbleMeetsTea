@@ -44,6 +44,22 @@ export default function DrinkCard({shopID, id}: {shopID: String; id: number}) {
 
   useEffect(() => {
     getDrink();
+
+    let totalRatingSum = 0;
+    let totalRatingCount = 0;
+
+    drinkList.forEach((item) => {
+      if (item.comment[id] !== undefined) {
+        const ratings = item.comment[id].map((comment: {rate: number}) => comment.rate);
+        const ratingSum = ratings.reduce((a: any, b: any) => a + b, 0);
+        totalRatingSum += ratingSum;
+        totalRatingCount += ratings.length;
+      }
+    });
+
+    const averageRating = totalRatingCount > 0 ? totalRatingSum / totalRatingCount : 0;
+    console.log(averageRating);
+    console.log(drinkList);
   }, [drinkList]);
 
   return (
