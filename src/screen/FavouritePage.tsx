@@ -8,13 +8,7 @@ import Auth from '@react-native-firebase/auth';
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
-export default function FavouritePage({
-  userLatitude,
-  userLongitude,
-}: {
-  userLatitude: number;
-  userLongitude: number;
-}) {
+export default function FavouritePage() {
   const [list, setList] = useState([]);
   const [shopList, setShopList] = useState([]);
   const [finalList, setFinalList] = useState<[] | any[]>([]);

@@ -53,9 +53,7 @@ export default function HomePage() {
     ),
     map: () => <MapPage latitude={latitude} longitude={longitude} />,
     explore: ExplorePage,
-    favourite: () => (
-      <FavouritePage userLatitude={latitude} userLongitude={longitude} />
-    ),
+    favourite: FavouritePage,
     profile: ProfilePage,
   });
 
