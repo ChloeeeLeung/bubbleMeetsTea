@@ -1,9 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import {PermissionsAndroid, SafeAreaView, StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import ExploreCard from '../component/exploreCard';
-import {firebase} from '@react-native-firebase/database';
-import {getPreciseDistance} from 'geolib';
 import {
   CameraType,
   MediaType,
@@ -12,19 +10,38 @@ import {
 } from 'react-native-image-picker';
 
 export default function ExplorePage() {
-  let options = {
-    mediaType: 'photo' as MediaType,
-    cameraType: 'back' as CameraType,
-    durationLimit: 5,
-    saveToPhotos: true,
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const openImagePicker = () => {
+    const options = {
+      mediaType: 'photo' as MediaType,
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+
+    launchImageLibrary(options, handleResponse);
   };
 
-  const openCamera = async () => {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      const result = await launchCamera(options, result => {});
+  const handleCameraLaunch = () => {
+    const options = {
+      mediaType: 'photo' as MediaType,
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+
+    launchCamera(options, handleResponse);
+  };
+
+  const handleResponse = (response: any) => {
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('Image picker error: ', response.error);
+    } else {
+      let imageUri = response.uri || response.assets?.[0]?.uri;
+      setSelectedImage(imageUri);
     }
   };
 
@@ -32,8 +49,8 @@ export default function ExplorePage() {
     <SafeAreaView style={{flex: 1, padding: 10}}>
       <View style={styles.header}>
         <Text style={styles.title}>Explore</Text>
-        <ExploreCard></ExploreCard>
-        <Button icon="camera" mode="contained" onPress={openCamera}>
+        <ExploreCard/>
+        <Button icon="camera" mode="contained" onPress={handleCameraLaunch}>
           Press me
         </Button>
       </View>

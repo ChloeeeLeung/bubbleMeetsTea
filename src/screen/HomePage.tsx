@@ -49,7 +49,7 @@ export default function HomePage() {
 
   const renderScene = SceneMap({
     rating: () => (
-      <RatingPage userLatitude={latitude} userLongitude={longitude} />
+      <RatingPage userLatitude={22.418205503565268} userLongitude={114.20799136514684} />
     ),
     map: () => <MapPage latitude={latitude} longitude={longitude} />,
     explore: ExplorePage,
