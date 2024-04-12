@@ -16,6 +16,7 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {firebase} from '@react-native-firebase/database';
+import DatePicker from 'react-native-date-picker';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -38,6 +39,7 @@ export default function RatingDialog({
   const [comment, setComment] = useState('');
   const [crowds, setCrowds] = useState('1');
   const [error, setError] = useState(false);
+  const [time, setTime] = useState(new Date());
 
   const renderToggleButton = (
     buttonValue: string,
@@ -80,10 +82,7 @@ export default function RatingDialog({
           rate: starRating,
         });
       hideDialog();
-      const clickTime = new Date().getTime();
-      const clickDate = new Date(clickTime);
-      const hour = clickDate.getHours();
-      console.log('Click time:', hour);
+      console.log(time.getHours());
 
       console.log(crowds);
     } else {
@@ -134,8 +133,15 @@ export default function RatingDialog({
           <Text style={styles.labelText}>
             Please provide us with more information
           </Text>
+          <Text style={styles.labelText}>When did you visit the shop?</Text>
+          <DatePicker
+            date={time}
+            onDateChange={setTime}
+            mode="time"
+            style={{height: 60}}
+          />
           <Text style={styles.labelText}>
-            What is the current level of activity in the shop?
+            What is the current level of activity in the shop at that time?
           </Text>
           <ToggleButton.Row
             onValueChange={value => setCrowds(value)}
@@ -156,6 +162,7 @@ export default function RatingDialog({
               setCrowds('1');
               setComment('');
               hideDialog();
+              setTime(new Date());
             }}
             textColor="#2f4858">
             Cancel
