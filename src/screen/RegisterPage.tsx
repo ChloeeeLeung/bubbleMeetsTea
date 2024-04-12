@@ -76,16 +76,33 @@ export default function RegisterPage() {
           displayName: name,
         });
 
+        const allUser = await firebase
+          .app()
+          .database(databaseUrl)
+          .ref('/user')
+          .once('value');
+        const userNum = allUser.numChildren() ?? 0;
         const userData = {
           id: response.user.uid,
           name: name,
           email: email,
+          preferType: preferable,
         };
-        await firebase.app().database(databaseUrl).ref('user/2').set(userData);
+        await firebase
+          .app()
+          .database(databaseUrl)
+          .ref(`user/${userNum}`)
+          .set(userData);
 
         navigation.navigate('LoginPage');
 
-        for (let i = 0; i <= 42; i++) {
+        const allShop = await firebase
+          .app()
+          .database(databaseUrl)
+          .ref('/shop')
+          .once('value');
+        const shopNum = allShop.numChildren() ?? 0;
+        for (let i = 0; i <= shopNum; i++) {
           const idSnapshot = await firebase
             .app()
             .database(databaseUrl)
@@ -100,7 +117,7 @@ export default function RegisterPage() {
           await firebase
             .app()
             .database(databaseUrl)
-            .ref(`user/2/shop/${i}`)
+            .ref(`user/${userNum}/shop/${i}`)
             .set(shopData);
         }
       } else if (name.length == 0) {
