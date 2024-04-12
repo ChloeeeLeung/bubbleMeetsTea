@@ -1,69 +1,44 @@
-import React, { useState } from 'react';
-import {PermissionsAndroid, SafeAreaView, StyleSheet, View} from 'react-native';
-import {Button, Text} from 'react-native-paper';
+import React from 'react';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {IconButton, Text} from 'react-native-paper';
 import ExploreCard from '../component/exploreCard';
-import {
-  CameraType,
-  MediaType,
-  launchCamera,
-  launchImageLibrary,
-} from 'react-native-image-picker';
+import {useNavigation, StackActions} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParams} from '../../App';
 
 export default function ExplorePage() {
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const openImagePicker = () => {
-    const options = {
-      mediaType: 'photo' as MediaType,
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-
-    launchImageLibrary(options, handleResponse);
-  };
-
-  const handleCameraLaunch = () => {
-    const options = {
-      mediaType: 'photo' as MediaType,
-      includeBase64: false,
-      maxHeight: 2000,
-      maxWidth: 2000,
-    };
-
-    launchCamera(options, handleResponse);
-  };
-
-  const handleResponse = (response: any) => {
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    } else if (response.error) {
-      console.log('Image picker error: ', response.error);
-    } else {
-      let imageUri = response.uri || response.assets?.[0]?.uri;
-      setSelectedImage(imageUri);
-    }
-  };
+  const navigation = useNavigation();
 
   return (
-    <SafeAreaView style={{flex: 1, padding: 10}}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Explore</Text>
-        <ExploreCard/>
-        <Button icon="camera" mode="contained" onPress={handleCameraLaunch}>
-          Press me
-        </Button>
+        <IconButton
+          icon="plus"
+          size={20}
+          iconColor="#FFFFFF"
+          containerColor="#2f4858"
+          onPress={() => {
+            navigation.navigate('PostPage');
+          }}
+          style={styles.addPost}
+        />
       </View>
+      <ExploreCard />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 15,
+    flex: 1,
+    padding: 10,
   },
   header: {
     marginBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
     fontWeight: 'bold',
@@ -74,12 +49,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     paddingLeft: 5,
   },
-  row: {
-    paddingVertical: 5,
-    borderRadius: 8,
-    marginBottom: 5,
-    paddingLeft: 12,
-    paddingRight: 12,
-    alignItems: 'center',
+  addPost: {
+    width: 150,
   },
 });
