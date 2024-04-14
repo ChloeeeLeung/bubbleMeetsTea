@@ -106,7 +106,9 @@ export default function ShopCard({
           fillColor={'#2f4858'}
           baseColor={'#2f4858'}
         />
-        <Text style={{textAlign: 'center', marginLeft: 5}}>{shopRating}</Text>
+        <Text style={{textAlign: 'center', marginLeft: 5}}>
+          {shopRating.toFixed(1)}
+        </Text>
       </View>
       <TabView
         navigationState={{index, routes}}

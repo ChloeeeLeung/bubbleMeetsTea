@@ -9,13 +9,6 @@ export default function RatingPage({
   userLatitude: number;
   userLongitude: number;
 }) {
-
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    {key: 'first', title: 'By Location'},
-    {key: 'second', title: 'By Flavor'},
-  ]);
-
   return (
     <>
       <View style={styles.row}>

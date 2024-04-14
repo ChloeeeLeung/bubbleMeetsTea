@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import RatingDialog from './ratingDialog';
 import CommentDialog from './commentDialog';
 import {firebase} from '@react-native-firebase/database';
+import Auth from '@react-native-firebase/auth';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -41,26 +42,35 @@ export default function DrinkCard({shopID, id}: {shopID: String; id: number}) {
     const drinkData = data.val();
     setDrinkList(drinkData);
   };
-
   useEffect(() => {
     getDrink();
-
-    let totalRatingSum = 0;
-    let totalRatingCount = 0;
-
-    drinkList.forEach((item) => {
-      if (item.comment[id] !== undefined) {
-        const ratings = item.comment[id].map((comment: {rate: number}) => comment.rate);
-        const ratingSum = ratings.reduce((a: any, b: any) => a + b, 0);
-        totalRatingSum += ratingSum;
-        totalRatingCount += ratings.length;
-      }
-    });
-
-    const averageRating = totalRatingCount > 0 ? totalRatingSum / totalRatingCount : 0;
-    console.log(averageRating);
-    console.log(drinkList);
   }, [drinkList]);
+
+  const [userPreferType, setUserPreferType] = useState(-1);
+
+  const getUserPreferType = async () => {
+    const userID = Auth().currentUser?.uid ?? '';
+    const data = await firebase
+      .app()
+      .database(databaseUrl)
+      .ref('user')
+      .orderByChild('id')
+      .equalTo(userID)
+      .once('value');
+
+    if (data.exists()) {
+      const userData = data.val();
+      const preferType = userData[Object.keys(userData)[1]].preferType;
+      setUserPreferType(preferType);
+    } else {
+      console.log('User data not found.');
+    }
+  };
+
+  useEffect(() => {
+    getUserPreferType();
+    console.log(userPreferType);
+  }, [userPreferType]);
 
   return (
     <View style={styles.flex}>
@@ -70,6 +80,7 @@ export default function DrinkCard({shopID, id}: {shopID: String; id: number}) {
         shopID={shopID}
         id={id}
         drinkID={ratedDrinkID}
+        drinkList={drinkList}
       />
       <CommentDialog
         visible={commentDialogVisible}
@@ -95,7 +106,9 @@ export default function DrinkCard({shopID, id}: {shopID: String; id: number}) {
                   <View>
                     <View style={styles.row}>
                       <View style={styles.rowList}>
-                        <Icon name="rocket" size={20} color={'#2f4858'} />
+                        {userPreferType == item.type && (
+                          <Icon name="rocket" size={20} color={'#2f4858'} />
+                        )}
                         <Text style={styles.rowText}>{item.name}</Text>
                         <Text style={styles.rowText}>${item.price}</Text>
                       </View>
