@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Image, SafeAreaView, StyleSheet, View, TouchableOpacity, } from 'react-native';
+import {Image, SafeAreaView, StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
 import {Button, IconButton, Text, TextInput} from 'react-native-paper';
 import {
   MediaType,
@@ -8,6 +8,7 @@ import {
 } from 'react-native-image-picker';
 import {useNavigation} from '@react-navigation/native';
 import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
+import SearchableDropdown from 'react-native-searchable-dropdown';
 
 export default function PostPage() {
   const navigation = useNavigation();
@@ -18,6 +19,23 @@ export default function PostPage() {
   const [title, setTitle] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [reset, setReset] = useState(false);
+
+  const options = [
+    {
+      id: 1,
+      name: 'A Nice Gift',
+      address: 'Tea House, LG2, Kunkle Student Centre, Ma Liu Shui',
+    },
+    {
+      id: 2,
+      name: 'Comebuytea',
+      address: 'Shop G03, G/F, T.O.P This is Our Place, 700 Nathan Road, Mong Kok',
+    },
+  ];
+
+  const dropdownHeight = 200;
+
+  const [selectedOption, setSelectedOption] = useState(null);
 
   const openImagePicker = () => {
     const options = {
@@ -94,12 +112,23 @@ export default function PostPage() {
             }}
           />
         </View>
+        
         <View style={styles.rightColumn}>
-        <TextInput value={name} onChangeText={name => setName(name)} style={styles.shopName} placeholder="Shop Name"/>
+          <SearchableDropdown
+            onTextChange={(text: string) => console.log(text)}
+            onItemSelect={(item: { id: number, name: string, address: string }) => setSelectedOption(() => item)}
+            containerStyle={styles.dropdownContainer}
+            textInputStyle={styles.dropdownTextInput}
+            itemStyle={styles.dropdownItem}
+
+            itemsContainerStyle={styles.dropdownItemsContainer}
+            items={options.map(option => ({ ...option, name: <Text><Text style={styles.dropdownItemName}>{option.name}</Text>{'\n'}<Text style={styles.dropdownItemAddress}>{option.address}</Text></Text> }))} // Update the options array
+            placeholder="Select Tea Shop"
+            resetValue={false}
+          />
         </View>
       </View>
-      <TextInput value={location} onChangeText={location => setLocation(location)} style={styles.shopLocation} placeholder="Location"/>
-      
+     
       <View style={styles.imageContainer}>
         {selectedImage && (
           <Image
@@ -170,15 +199,52 @@ const styles = StyleSheet.create({
   shopInfoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-start',
+    position: 'relative',
   },
   leftColumn: {
     flex: 1,
     paddingHorizontal: 10,
+    alignSelf: 'flex-start',
   },
   rightColumn: {
     flex: 8,
     paddingHorizontal: 10,
   },
+  dropdownContainer: {
+    position: 'absolute',
+    top: -30,
+    left: 12,
+    right: 0,
+    zIndex: 9999,
+    borderWidth: 0.9,
+    borderColor: 'gray',
+    borderRadius: 5,
+    },
+  dropdownTextInput: {
+      padding: 10,
+    },
+  dropdownItem: {
+      padding: 10,
+      backgroundColor: '#fff',
+      borderColor: '#bbb',
+      borderWidth: 1,
+    },
+    dropdownItemName: {
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    dropdownItemAddress: {
+      fontSize: 12,
+      color: 'gray',
+    },
+  dropdownItemText: {
+      fontSize: 16,
+      lineHeight: 20, 
+    },
+  dropdownItemsContainer: {
+      maxHeight: 300,
+    },
   shopName: {
     fontSize: 20,
     height: 40,
@@ -239,6 +305,8 @@ const styles = StyleSheet.create({
   submitButton:{
     backgroundColor: '#C9D5BD',
     marginTop: 20,
+    borderWidth: 1,
+    borderColor: 'gray',
   },
   buttonText: {
     color: 'black',
