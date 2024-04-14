@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ColorValue,
   Dimensions,
@@ -28,12 +28,14 @@ export default function RatingDialog({
   shopID,
   id,
   drinkID,
+  drinkList,
 }: {
   visible: boolean;
   hideDialog: () => void;
   shopID: String;
   id: number;
   drinkID: number;
+  drinkList: [] | any[];
 }) {
   const [starRating, setStarRating] = useState(5);
   const [comment, setComment] = useState('');
@@ -81,10 +83,27 @@ export default function RatingDialog({
           detail: comment,
           rate: starRating,
         });
-      hideDialog();
-      console.log(time.getHours());
 
-      console.log(crowds);
+      let totalRatingSum = 0;
+      let totalRatingCount = 0;
+      drinkList.forEach(item => {
+        if (item.comment[id] !== undefined) {
+          const ratings = item.comment[id].map(
+            (comment: {rate: number}) => comment.rate,
+          );
+          const ratingSum = ratings.reduce((a: any, b: any) => a + b, 0);
+          totalRatingSum += ratingSum;
+          totalRatingCount += ratings.length;
+        }
+      });
+      const averageRating =
+        totalRatingCount > 0 ? totalRatingSum / totalRatingCount : 0;
+
+      firebase.app().database(databaseUrl).ref(`shop/${id}`).update({
+        rating: averageRating,
+      });
+
+      hideDialog();
     } else {
       setError(true);
     }
