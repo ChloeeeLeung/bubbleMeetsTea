@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Image, SafeAreaView, StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
 import {Button, IconButton, Text, TextInput} from 'react-native-paper';
 import {
   MediaType,
@@ -112,7 +112,6 @@ export default function PostPage() {
             }}
           />
         </View>
-        
         <View style={styles.rightColumn}>
           <SearchableDropdown
             onTextChange={(text: string) => console.log(text)}
