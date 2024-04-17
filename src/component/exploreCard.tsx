@@ -32,12 +32,11 @@ export default function ExploreCard() {
               teas, from green to black, herbal to iced. Discover a serene
               space, expert guidance, and exquisite teaware.
             </Text>
-            <View style={{height: 10}}></View>
-            <Text>
-              @chloeeeeleung730 28 Mar 2024 14:15{' '}
-              <Icon name={'heart-o'} size={20} /> 150
-            </Text>
-            <View style={{height: 10}}></View>
+            <View style={styles.textContainer}>
+              <Text>28 Mar 2024 14:15</Text>
+              <Text>@chloeeeeleung730</Text>
+            </View>
+            <View style={styles.spacing}></View>
           </Card.Content>
         </View>
       </Card>
@@ -50,24 +49,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#C9D5BD',
     width: Dimensions.get('window').width - 20,
   },
-  header: {
-    marginBottom: 12,
-  },
-  title: {
-    fontWeight: 'bold',
-    fontSize: 30,
-    fontFamily: 'serif',
-    color: '#3b414c',
-    marginBottom: 10,
-    marginTop: 15,
-    paddingLeft: 5,
-  },
-  row: {
-    paddingVertical: 5,
-    borderRadius: 8,
-    marginBottom: 5,
-    paddingLeft: 12,
-    paddingRight: 12,
+  textContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  spacing: {
+    height: 5,
   },
 });

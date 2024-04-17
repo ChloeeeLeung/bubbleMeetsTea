@@ -1,5 +1,11 @@
-import React, {useState} from 'react';
-import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
+import React, {SetStateAction, useState} from 'react';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Button, IconButton, Text, TextInput} from 'react-native-paper';
 import {
   MediaType,
@@ -7,8 +13,8 @@ import {
   launchImageLibrary,
 } from 'react-native-image-picker';
 import {useNavigation} from '@react-navigation/native';
-import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
-import SearchableDropdown from 'react-native-searchable-dropdown';
+import {SelectList} from 'react-native-dropdown-select-list';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function PostPage() {
   const navigation = useNavigation();
@@ -18,24 +24,22 @@ export default function PostPage() {
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
-  const [reset, setReset] = useState(false);
+  const [selected, setSelected] = useState('');
+  const [starRating, setStarRating] = useState(5);
 
   const options = [
     {
-      id: 1,
-      name: 'A Nice Gift',
+      key: 1,
+      value: 'A Nice Gift',
       address: 'Tea House, LG2, Kunkle Student Centre, Ma Liu Shui',
     },
     {
-      id: 2,
-      name: 'Comebuytea',
-      address: 'Shop G03, G/F, T.O.P This is Our Place, 700 Nathan Road, Mong Kok',
+      key: 2,
+      value: 'Comebuytea',
+      address:
+        'Shop G03, G/F, T.O.P This is Our Place, 700 Nathan Road, Mong Kok',
     },
   ];
-
-  const dropdownHeight = 200;
-
-  const [selectedOption, setSelectedOption] = useState(null);
 
   const openImagePicker = () => {
     const options = {
@@ -72,7 +76,6 @@ export default function PostPage() {
   };
 
   const handleSubmit = () => {
-    // Handle the submit logic here
     console.log('Form submitted');
   };
 
@@ -82,7 +85,6 @@ export default function PostPage() {
     setContent('');
     setTitle('');
     setSelectedImage('');
-    setReset(true);
   };
 
   return (
@@ -91,43 +93,34 @@ export default function PostPage() {
         <IconButton
           icon="chevron-left"
           size={25}
-          style={styles.button}
           iconColor="#2f4858"
           onPress={() => {
             navigation.goBack();
           }}
         />
-          <Text style={styles.pageTitle}>
-            Share Your Exploration!
-            </Text>
+        <Text style={styles.pageTitle}>Share Your Exploration!</Text>
       </View>
-
-      <View style={styles.shopInfoContainer}>
-        <View style={styles.leftColumn}>
-        <IconButton
-            icon="coffee"
-            size={40}
-            iconColor="#2f4858"
-            onPress={() => {
-            }}
-          />
-        </View>
-        <View style={styles.rightColumn}>
-          <SearchableDropdown
-            onTextChange={(text: string) => console.log(text)}
-            onItemSelect={(item: { id: number, name: string, address: string }) => setSelectedOption(() => item)}
-            containerStyle={styles.dropdownContainer}
-            textInputStyle={styles.dropdownTextInput}
-            itemStyle={styles.dropdownItem}
-
-            itemsContainerStyle={styles.dropdownItemsContainer}
-            items={options.map(option => ({ ...option, name: <Text><Text style={styles.dropdownItemName}>{option.name}</Text>{'\n'}<Text style={styles.dropdownItemAddress}>{option.address}</Text></Text> }))} // Update the options array
-            placeholder="Select Tea Shop"
-            resetValue={false}
-          />
-        </View>
-      </View>
-     
+      <Text style={styles.inputHint}>Name of the Tea Shop</Text>
+      <SelectList
+        setSelected={(val: SetStateAction<string>) => {
+          setSelected(val);
+          console.log(val);
+        }}
+        data={options}
+        save="key"
+        placeholder="Select Tea Shop"
+      />
+      <View style={styles.spacing}></View>
+      <Text style={styles.inputHint}>Branch of the Tea Shop</Text>
+      <SelectList
+        setSelected={(val: SetStateAction<string>) => {
+          setSelected(val);
+          console.log(val);
+        }}
+        data={options}
+        save="key"
+        placeholder="Select Tea Shop Branch Address"
+      />
       <View style={styles.imageContainer}>
         {selectedImage && (
           <Image
@@ -138,10 +131,10 @@ export default function PostPage() {
         )}
         {!selectedImage && (
           <>
-            <Text style={styles.hint}>
+            <Text style={styles.photoHint}>
               Would you like to add a photo to share with?
             </Text>
-            <Text style={styles.hint}>Click the button below!</Text>
+            <Text style={styles.photoHint}>Click the button below!</Text>
           </>
         )}
       </View>
@@ -161,21 +154,62 @@ export default function PostPage() {
           Upload Photo
         </Button>
       </View>
-      <Text>Title*</Text>
-      <TextInput value={title} onChangeText={title => setTitle(title)} style={styles.titleInputArea} />
-      <Text>Content*</Text>
+      <Text style={styles.inputHint}>Give a Title to Your Exploration</Text>
+      <TextInput
+        value={title}
+        onChangeText={title => setTitle(title)}
+        style={styles.titleInputArea}
+        theme={{
+          colors: {
+            primary: '#2f4858',
+          },
+        }}
+      />
+      <Text style={styles.inputHint}>Share Your Feelings</Text>
       <TextInput
         value={content}
         onChangeText={content => setContent(content)}
         multiline
         style={styles.inputArea}
+        theme={{
+          colors: {
+            primary: '#2f4858',
+          },
+        }}
       />
-      <Button onPress={handleSubmit} style={styles.submitButton}>
-      <Text style={styles.buttonText}>Submit</Text>
-      </Button>
-      <Button onPress={handleReset} style={styles.resetButton}>
-        <Text style={styles.buttonText}>Reset</Text>
-      </Button>
+      <View style={styles.spacing}></View>
+      <Text style={styles.inputHint}>Overall</Text>
+      <View style={styles.row}>
+        {Array.from({length: 5}, (_, index) => (
+          <TouchableOpacity
+            key={index + 1}
+            style={styles.marginRight}
+            onPress={() => setStarRating(index + 1)}>
+            <Icon
+              name={starRating >= index + 1 ? 'star' : 'star-o'}
+              size={25}
+              style={styles.starColor}
+            />
+          </TouchableOpacity>
+        ))}
+      </View>
+      <View style={styles.actionButtonRow}>
+        <Button
+          onPress={handleReset}
+          style={styles.resetButton}
+          icon="coffee-off"
+          textColor="#2f4858">
+          Reset
+        </Button>
+        <Button
+          onPress={handleSubmit}
+          style={styles.submitButton}
+          icon="coffee-to-go"
+          mode="contained"
+          buttonColor="#2f4858">
+          Submit
+        </Button>
+      </View>
     </SafeAreaView>
   );
 }
@@ -195,101 +229,39 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 10,
   },
-  shopInfoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    position: 'relative',
-  },
-  leftColumn: {
-    flex: 1,
-    paddingHorizontal: 10,
-    alignSelf: 'flex-start',
-  },
-  rightColumn: {
-    flex: 8,
-    paddingHorizontal: 10,
-  },
-  dropdownContainer: {
-    position: 'absolute',
-    top: -30,
-    left: 12,
-    right: 0,
-    zIndex: 9999,
-    borderWidth: 0.9,
-    borderColor: 'gray',
-    borderRadius: 5,
-    },
-  dropdownTextInput: {
-      padding: 10,
-    },
-  dropdownItem: {
-      padding: 10,
-      backgroundColor: '#fff',
-      borderColor: '#bbb',
-      borderWidth: 1,
-    },
-    dropdownItemName: {
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    dropdownItemAddress: {
-      fontSize: 12,
-      color: 'gray',
-    },
-  dropdownItemText: {
-      fontSize: 16,
-      lineHeight: 20, 
-    },
-  dropdownItemsContainer: {
-      maxHeight: 300,
-    },
-  shopName: {
-    fontSize: 20,
-    height: 40,
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    backgroundColor: 'transparent',
-  },
-  shopLocation:{
-    height: 25,
-    margin: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    paddingHorizontal: 10,
-    backgroundColor: 'transparent',
-    marginLeft: 20,
-  },
-  button: {
-  },
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     padding: 10,
-    marginBottom: 20,
+    marginVertical: 10,
   },
   imageContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     height: 100,
-    //backgroundColor: '#e1e9e1',
+    marginVertical: 5,
   },
   image: {
     height: 200,
     width: 200,
   },
-  hint: {
+  photoHint: {
     fontWeight: 'bold',
     fontSize: 17,
+  },
+  inputHint: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    marginVertical: 2,
+    marginLeft: 2,
   },
   titleInputArea: {
     fontWeight: 'bold',
     fontSize: 15,
     height: 40,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: '#2f4858',
     marginTop: 10,
     marginBottom: 10,
     backgroundColor: 'transparent',
@@ -298,25 +270,35 @@ const styles = StyleSheet.create({
     height: 120,
     marginTop: 10,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: '#2f4858',
     backgroundColor: 'transparent',
-  },
-  submitButton:{
-    backgroundColor: '#C9D5BD',
-    marginTop: 20,
-    borderWidth: 1,
-    borderColor: 'gray',
-  },
-  buttonText: {
-    color: 'black',
-    fontSize: 15,
   },
   resetButton: {
-    backgroundColor: 'transparent',
-    color: 'black',
-    fontSize: 15,
-    borderWidth: 1,
-    borderColor: 'gray',
-    marginTop: 10,
+    borderWidth: 2,
+    borderColor: '#2f4858',
+    minWidth: 180,
+  },
+  submitButton: {
+    minWidth: 180,
+  },
+  actionButtonRow: {
+    flexDirection: 'row',
+    marginTop: 20,
+    justifyContent: 'space-between',
+  },
+  spacing: {
+    height: 5,
+  },
+  row: {
+    justifyContent: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    margin: 20,
+  },
+  starColor: {
+    color: '#2f4858',
+  },
+  marginRight: {
+    marginRight: 10,
   },
 });

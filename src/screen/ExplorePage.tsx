@@ -2,9 +2,7 @@ import React from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {IconButton, Text} from 'react-native-paper';
 import ExploreCard from '../component/exploreCard';
-import {useNavigation, StackActions} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParams} from '../../App';
+import {useNavigation} from '@react-navigation/native';
 
 export default function ExplorePage() {
   const navigation = useNavigation();
