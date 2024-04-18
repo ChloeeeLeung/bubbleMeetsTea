@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import {IconButton, Text, Card, Avatar} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {Rating} from '@kolking/react-native-rating';
+import CardUI from '../component/card';
 
 export default function ViewPost() {
   const navigation = useNavigation();
@@ -31,12 +32,7 @@ export default function ViewPost() {
         <Card style={styles.cardBackground}>
           <Card.Title
             title={'@chloeeeeleung730'}
-            subtitle={
-              <Text>
-                28 Mar 2024 14:15{'   '}
-                <IconButton icon={'heart'} size={17} /> 150
-              </Text>
-            }
+            subtitle={'Blogger Preference: Bubble Tea'}
             titleVariant="titleMedium"
             left={props => (
               <Avatar.Image
@@ -47,6 +43,30 @@ export default function ViewPost() {
           />
         </Card>
         <View style={styles.contentContainer}>
+          <View style={styles.postDetail}>
+            <Text>28 Mar 2024 14:15</Text>
+            <View style={styles.iconWithText}>
+              <IconButton
+                icon="heart"
+                size={18}
+                iconColor="#B22222"
+                onPress={() => {}}
+              />
+              <Text>150</Text>
+            </View>
+          </View>
+          <View style={styles.iconWithText}>
+            <Text style={{fontWeight: 'bold', fontSize: 17}}>Overall:</Text>
+            <Rating
+              style={{marginLeft: 15}}
+              rating={4}
+              size={18}
+              disabled={true}
+              variant={'stars-outline'}
+              fillColor={'#2f4858'}
+              baseColor={'#2f4858'}
+            />
+          </View>
           <Text style={styles.content}>
             Introducing a new tea shop in Causeway Bay! Indulge in premium teas,
             from green to black, herbal to iced. Discover a serene space, expert
@@ -70,14 +90,24 @@ export default function ViewPost() {
             }}
           /> */}
         </View>
-        <Text style={styles.shopName}>Tea Tea</Text>
-        <View style={styles.shopInfoContainer}>
-          <Icon name={'map-pin'} style={styles.icon} />
-          <Text style={styles.shopLocation}>
-            Shop No. B240, Basement 2, Times Square, 1 Matheson Street, Causeway
-            Bay, Hong Kong.
-          </Text>
+        <View style={styles.spacing} />
+        <View style={{paddingVertical: 10}}>
+          <CardUI
+            name="Tea Tea"
+            location="Shop No. B240, Basement 2, Times Square, 1 Matheson Street, Causeway
+            Bay, Hong Kong"
+            shopRating={4.3}
+            fav={false}
+            openTime={'09:00'}
+            closeTime={'22:00'}
+            telephone={51104123}
+            handleToggleFavorite={() => {}}
+            distance={3.2}
+            shopID={'1001'}
+            id={123}
+          />
         </View>
+        <View style={styles.spacing} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -108,18 +138,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
   },
-  shopInfoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    position: 'relative',
-    marginTop: 10,
-  },
-  icon: {
-    //color: 'green',
-    fontSize: 25,
-    alignSelf: 'flex-start',
-  },
   content: {
     lineHeight: 20,
     marginVertical: 15,
@@ -127,14 +145,14 @@ const styles = StyleSheet.create({
   spacing: {
     height: 10,
   },
-  shopName: {
-    marginTop: 10,
-    fontSize: 20,
-    fontWeight: 'bold',
+  postDetail: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  shopLocation: {
-    paddingHorizontal: 10,
-    lineHeight: 15,
-    marginBottom: 10,
+  iconWithText: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
