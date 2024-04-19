@@ -1,7 +1,8 @@
-import React, {SetStateAction, useState} from 'react';
+import React, {SetStateAction, useState, useEffect} from 'react';
 import {
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -26,6 +27,8 @@ export default function PostPage() {
   const [selectedImage, setSelectedImage] = useState('');
   const [selected, setSelected] = useState('');
   const [starRating, setStarRating] = useState(5);
+  const [imageHeight, setImageHeight] = useState(0);
+  const [imageMarginBottom, setImageMarginBottom] = useState(0);
 
   const options = [
     {
@@ -89,6 +92,7 @@ export default function PostPage() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ScrollView>
       <View style={styles.titleContainer}>
         <IconButton
           icon="chevron-left"
@@ -121,21 +125,23 @@ export default function PostPage() {
         save="key"
         placeholder="Select Tea Shop Branch Address"
       />
-      <View style={styles.imageContainer}>
+      <View>
         {selectedImage && (
+          <View style={[styles.imageContainer]}>
           <Image
             source={{uri: selectedImage}}
             style={styles.image}
             resizeMode="contain"
           />
-        )}
+          </View>
+        )}  
         {!selectedImage && (
-          <>
+          <View style={styles.placeholderContainer}>
             <Text style={styles.photoHint}>
               Would you like to add a photo to share with?
             </Text>
             <Text style={styles.photoHint}>Click the button below!</Text>
-          </>
+          </View>
         )}
       </View>
       <View style={styles.buttonRow}>
@@ -210,6 +216,7 @@ export default function PostPage() {
           Submit
         </Button>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -236,15 +243,22 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   imageContainer: {
+    marginTop: 70,
+    marginBottom: 50,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     height: 100,
-    marginVertical: 5,
+    marginVertical: 5,  
   },
   image: {
     height: 200,
     width: 200,
+    //flex: 1,
+  },
+  placeholderContainer: {
+    alignItems: 'center',
+    marginTop: 10,
   },
   photoHint: {
     fontWeight: 'bold',
