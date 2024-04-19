@@ -26,7 +26,7 @@ export default function MenuModal() {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
           }}
-          source={require('../image/menu/comebuytea.jpg')}
+          source={require('../image/menu/aNiceGift.jpg')}
         />
       </ImageZoom>
     </View>

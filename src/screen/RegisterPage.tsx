@@ -26,7 +26,7 @@ const teaList = [
   {name: 'Milk Cap Tea', img: require('../image/tea/milkCapTea.jpg'), id: 4},
   {name: 'Pure Tea', img: require('../image/tea/pureTea.jpg'), id: 5},
   {name: 'Yakult', img: require('../image/tea/yakult.jpg'), id: 6},
-  {name: 'Smoothie', img: require('../image/tea/fruitTea.png'), id: 7},
+  {name: 'Smoothie', img: require('../image/tea/smoothie.png'), id: 7},
   {name: 'No Idea', img: require('../image/tea/noIdea.png'), id: 8},
 ];
 
