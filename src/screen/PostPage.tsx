@@ -2,6 +2,7 @@ import React, {SetStateAction, useState, useEffect} from 'react';
 import {
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -91,6 +92,7 @@ export default function PostPage() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <ScrollView>
       <View style={styles.titleContainer}>
         <IconButton
           icon="chevron-left"
@@ -214,6 +216,7 @@ export default function PostPage() {
           Submit
         </Button>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -240,8 +243,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   imageContainer: {
-    marginTop: 120,
-    marginBottom: 100,
+    marginTop: 70,
+    marginBottom: 50,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
