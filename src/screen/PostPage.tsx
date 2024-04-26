@@ -16,34 +16,74 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {SelectList} from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import storage from '@react-native-firebase/storage';
+import {firebase} from '@react-native-firebase/database';
+
+const databaseUrl =
+  'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
 export default function PostPage() {
   const navigation = useNavigation();
 
   const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
+  const [shopID, setShopID] = useState('');
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
-  const [selected, setSelected] = useState('');
-  const [starRating, setStarRating] = useState(5);
-  const [imageHeight, setImageHeight] = useState(0);
-  const [imageMarginBottom, setImageMarginBottom] = useState(0);
+  const [starRating, setStarRating] = useState( 5 );
+  const [nameList, setNameList] = useState([]);
+  const [addrList, setAddrList] = useState([]);
 
-  const options = [
-    {
-      key: 1,
-      value: 'A Nice Gift',
-      address: 'Tea House, LG2, Kunkle Student Centre, Ma Liu Shui',
-    },
-    {
-      key: 2,
-      value: 'Comebuytea',
-      address:
-        'Shop G03, G/F, T.O.P This is Our Place, 700 Nathan Road, Mong Kok',
-    },
-  ];
+  const getShopName = async () => {
+    try {
+      const getShopNameList = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('shop')
+        .once('value');
+      const shopNameList = getShopNameList.val();
+      const uniqueNames = new Set();
+      const newList = shopNameList.reduce((acc: { value: any; }[], item: { name: string; }) => {
+        if (!uniqueNames.has(item.name)) {
+          uniqueNames.add(item.name);
+          acc.push({ value: item.name });
+        }
+        return acc;
+      }, []);
+      setNameList(newList);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
+  const getShopAddr = async () => {
+    try {
+      const getShopAddrList = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('shop')
+        .once('value');
+      const shopAddrList = getShopAddrList.val();
+      const filteredList = shopAddrList
+      .filter((item: { name: string; }) => item.name === name)
+      .map(({ addr, id }: {addr:string, id: number}) => ({ value: addr, key: id }));
+      setAddrList(filteredList);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+  useEffect( () =>
+  {
+    getShopName();
+  }, [] );
+  
+  useEffect( () =>
+  {
+    getShopAddr();
+  }, [name] );
+  
   const openImagePicker = () => {
     const options = {
       mediaType: 'photo' as MediaType,
@@ -78,16 +118,46 @@ export default function PostPage() {
     }
   };
 
-  const handleSubmit = () => {
-    console.log('Form submitted');
-  };
+  const handleSubmit = () =>
+  {
+    //todo: check input 
+  if (selectedImage) {
+    const storageRef = storage().ref();
+    const newFileName = '123';
+    const imageRef = storageRef.child(newFileName);
+
+    const uploadTask = imageRef.putFile(selectedImage);
+
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+      },
+      (error) => {
+        console.log('Error uploading image:', error);
+      },
+      () => {
+        // Image uploaded successfully
+        uploadTask.snapshot?.ref
+          .getDownloadURL()
+          .then((downloadURL) => {
+            // Use the downloadURL as needed (e.g., save it to a database)
+            console.log('Download URL:', downloadURL);
+          })
+          .catch((error) => {
+            console.log('Error getting download URL:', error);
+          });
+      }
+    );
+  }
+    console.log( 'Form submitted' );
+    navigation.goBack();
+};
 
   const handleReset = () => {
-    setName('');
-    setLocation('');
     setContent('');
     setTitle('');
     setSelectedImage('');
+    setStarRating(5);
   };
 
   return (
@@ -107,21 +177,19 @@ export default function PostPage() {
       <Text style={styles.inputHint}>Name of the Tea Shop</Text>
       <SelectList
         setSelected={(val: SetStateAction<string>) => {
-          setSelected(val);
-          console.log(val);
+          setName(val);
         }}
-        data={options}
-        save="key"
+        data={nameList}
+        save="value"
         placeholder="Select Tea Shop"
       />
       <View style={styles.spacing}></View>
       <Text style={styles.inputHint}>Branch of the Tea Shop</Text>
       <SelectList
         setSelected={(val: SetStateAction<string>) => {
-          setSelected(val);
-          console.log(val);
+          setShopID(val);
         }}
-        data={options}
+        data={addrList}
         save="key"
         placeholder="Select Tea Shop Branch Address"
       />

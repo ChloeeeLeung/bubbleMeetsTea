@@ -87,11 +87,11 @@ export default function RatingDialog({
       let totalRatingSum = 0;
       let totalRatingCount = 0;
       drinkList.forEach(item => {
-        if (item.comment[id] !== undefined) {
+        if (item.comment?.[id] !== undefined) {
           const ratings = item.comment[id].map(
             (comment: {rate: number}) => comment.rate,
           );
-          const ratingSum = ratings.reduce((a: any, b: any) => a + b, 0);
+          const ratingSum = ratings.reduce((a: number, b: number) => a + b, 0);
           totalRatingSum += ratingSum;
           totalRatingCount += ratings.length;
         }
