@@ -12,16 +12,10 @@ import {useNavigation} from '@react-navigation/native';
 import {Rating} from '@kolking/react-native-rating';
 import CardUI from '../component/card';
 
-export default function ViewPost({
-  route,
-}: {
-  route: any;
-}) {
+export default function ViewPost({route}: {route: any}) {
   const navigation = useNavigation();
 
-  const {
-    title, postTime, content, like, rate, photoURL,
-  } = route.params;
+  const {title, postTime, content, like, rate, photoURL} = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -75,11 +69,13 @@ export default function ViewPost({
               baseColor={'#2f4858'}
             />
           </View>
-          <Text style={styles.content}>
-            {content}
-          </Text>
+          <Text style={styles.content}>{content}</Text>
           <Image
-            source={{uri: photoURL?? 'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'}}
+            source={{
+              uri:
+                photoURL ??
+                'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+            }}
             style={{
               width: Dimensions.get('window').width,
               height: Dimensions.get('window').height / 1.5,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
 import {IconButton, Text} from 'react-native-paper';
 import ExploreCard from '../component/exploreCard';
@@ -10,8 +10,8 @@ const databaseUrl =
 
 export default function ExplorePage() {
   const navigation = useNavigation();
-  
-  const [postList, setPostList] = useState<[]|any>([]);
+
+  const [postList, setPostList] = useState<[] | any>([]);
   const [test, setText] = useState();
 
   const getExplore = async () => {
@@ -22,16 +22,15 @@ export default function ExplorePage() {
         .ref('explore')
         .once('value');
       const List = exploreData.val();
-      setPostList( List );
+      setPostList(List);
     } catch (err) {
       console.log(err);
     }
   };
 
-  useEffect( () =>
-  {
+  useEffect(() => {
     getExplore();
-  },[])
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,8 +49,7 @@ export default function ExplorePage() {
       </View>
       <FlatList
         data={postList !== null ? postList : []}
-        renderItem={ ( { item } ) =>
-        {
+        renderItem={({item}) => {
           // const shopID = item.shopID;
           // console.log( shopID );
           // const shop = firebase
@@ -60,12 +58,19 @@ export default function ExplorePage() {
           //   .ref('shop')
           //   .orderByChild('id')
           //   .equalTo(shopID)
-          //   .once( 'value' );          
+          //   .once( 'value' );
           // console.log(test)
           if (item !== null) {
             return (
               <View style={styles.cardMargin}>
-                <ExploreCard title={ item.title } postTime={ item.postTime } content={ item.content } like={ item.like } rate={ item.rate } photoURL={item.photoURL} />
+                <ExploreCard
+                  title={item.title}
+                  postTime={item.postTime}
+                  content={item.content}
+                  like={item.like}
+                  rate={item.rate}
+                  photoURL={item.photoURL}
+                />
               </View>
             );
           }
@@ -102,5 +107,5 @@ const styles = StyleSheet.create({
   cardMargin: {
     paddingVertical: 5,
     marginBottom: 5,
-  }
+  },
 });
