@@ -30,7 +30,7 @@ export default function ExplorePage() {
 
   useEffect(() => {
     getExplore();
-  }, []);
+  }, [postList]);
 
   return (
     <SafeAreaView style={styles.container}>
