@@ -12,8 +12,16 @@ import {useNavigation} from '@react-navigation/native';
 import {Rating} from '@kolking/react-native-rating';
 import CardUI from '../component/card';
 
-export default function ViewPost() {
+export default function ViewPost({
+  route,
+}: {
+  route: any;
+}) {
   const navigation = useNavigation();
+
+  const {
+    title, postTime, content, like, rate, photoURL,
+  } = route.params;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -26,7 +34,7 @@ export default function ViewPost() {
             navigation.goBack();
           }}
         />
-        <Text style={styles.pageTitle}>New Tea Shop in Causeway Bay!!</Text>
+        <Text style={styles.pageTitle}>{title}</Text>
       </View>
       <ScrollView>
         <Card style={styles.cardBackground}>
@@ -44,7 +52,7 @@ export default function ViewPost() {
         </Card>
         <View style={styles.contentContainer}>
           <View style={styles.postDetail}>
-            <Text>28 Mar 2024 14:15</Text>
+            <Text>{postTime}</Text>
             <View style={styles.iconWithText}>
               <IconButton
                 icon="heart"
@@ -52,14 +60,14 @@ export default function ViewPost() {
                 iconColor="#B22222"
                 onPress={() => {}}
               />
-              <Text>150</Text>
+              <Text>{like}</Text>
             </View>
           </View>
           <View style={styles.iconWithText}>
             <Text style={{fontWeight: 'bold', fontSize: 17}}>Overall:</Text>
             <Rating
               style={{marginLeft: 15}}
-              rating={4}
+              rating={rate}
               size={18}
               disabled={true}
               variant={'stars-outline'}
@@ -68,12 +76,10 @@ export default function ViewPost() {
             />
           </View>
           <Text style={styles.content}>
-            Introducing a new tea shop in Causeway Bay! Indulge in premium teas,
-            from green to black, herbal to iced. Discover a serene space, expert
-            guidance, and exquisite teaware.
+            {content}
           </Text>
           <Image
-            source={require('../image/blogger/bloggerpic1.jpg')}
+            source={{uri: photoURL?? 'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'}}
             style={{
               width: Dimensions.get('window').width,
               height: Dimensions.get('window').height / 1.5,

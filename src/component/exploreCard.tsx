@@ -4,14 +4,16 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 import {Avatar, Text, TouchableRipple, Card} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default function ExploreCard() {
+export default function ExploreCard ( { title, postTime, content, like, rate, photoURL }: { title: String, postTime: String; content: String; like: number, rate: number, photoURL:String}) {
   const navigation = useNavigation();
   return (
-    <TouchableRipple onPress={() => navigation.navigate('ViewPost')}>
+    <TouchableRipple onPress={ () => navigation.navigate( 'ViewPost', {
+      title, postTime, content, like, rate, photoURL
+    })}>
       <Card style={styles.cardBackground}>
         <View>
           <Card.Title
-            title={'New Tea Shop in Causeway Bay!!'}
+            title={title}
             subtitle={
               <Text>
                 <Icon name={'map-pin'} />
@@ -28,12 +30,10 @@ export default function ExploreCard() {
           />
           <Card.Content>
             <Text variant="bodyMedium">
-              Introducing a new tea shop in Causeway Bay! Indulge in premium
-              teas, from green to black, herbal to iced. Discover a serene
-              space, expert guidance, and exquisite teaware.
+              {content}
             </Text>
             <View style={styles.textContainer}>
-              <Text>28 Mar 2024 14:15</Text>
+              <Text>{ postTime }</Text>
               <Text>@chloeeeeleung730</Text>
             </View>
             <View style={styles.spacing}></View>

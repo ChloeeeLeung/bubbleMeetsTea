@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, FlatList, View} from 'react-native';
+import {Dimensions, FlatList, StyleSheet, View} from 'react-native';
 import {Searchbar} from 'react-native-paper';
 import {firebase} from '@react-native-firebase/database';
 import CardUI from './card';
@@ -214,7 +214,7 @@ export default function CardList({
         renderItem={({item}) => {
           if (item !== null) {
             return (
-              <View style={{paddingVertical: 5, marginBottom: 5}}>
+              <View style={styles.cardMargin}>
                 <CardUI
                   name={item.name}
                   location={item.addr}
@@ -241,3 +241,10 @@ export default function CardList({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  cardMargin: {
+    paddingVertical: 5,
+    marginBottom: 5,
+  }
+});
