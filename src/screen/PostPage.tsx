@@ -18,6 +18,7 @@ import {SelectList} from 'react-native-dropdown-select-list';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import storage from '@react-native-firebase/storage';
 import {firebase} from '@react-native-firebase/database';
+import { format } from 'date-fns';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -33,6 +34,8 @@ export default function PostPage() {
   const [starRating, setStarRating] = useState( 5 );
   const [nameList, setNameList] = useState([]);
   const [addrList, setAddrList] = useState([]);
+  const [error, setError] = useState(false);
+  const [postNum, setPostNum] = useState(0);
 
   const getShopName = async () => {
     try {
@@ -73,10 +76,24 @@ export default function PostPage() {
     }
   };
 
+  const getPostNum = async () => {
+    try {
+      const postData = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('explore')
+        .once( 'value' );
+      const postLength = postData.numChildren() ?? 0;
+      setPostNum(postLength);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect( () =>
   {
     getShopName();
+    getPostNum();
   }, [] );
   
   useEffect( () =>
@@ -120,10 +137,14 @@ export default function PostPage() {
 
   const handleSubmit = () =>
   {
-    //todo: check input 
-  if (selectedImage) {
-    const storageRef = storage().ref();
-    const newFileName = '123';
+    if (selectedImage=='' || shopID == '' || title == '' || content == '')
+    {
+      setError( true );
+    } else
+    {
+      setError( false );
+      const storageRef = storage().ref();
+    const newFileName = 'explore'+postNum;
     const imageRef = storageRef.child(newFileName);
 
     const uploadTask = imageRef.putFile(selectedImage);
@@ -136,21 +157,31 @@ export default function PostPage() {
         console.log('Error uploading image:', error);
       },
       () => {
-        // Image uploaded successfully
         uploadTask.snapshot?.ref
           .getDownloadURL()
           .then((downloadURL) => {
-            // Use the downloadURL as needed (e.g., save it to a database)
-            console.log('Download URL:', downloadURL);
+            const postTime = format( new Date(), 'dd MMM yyyy HH:mm' );
+            firebase
+              .app()
+              .database(databaseUrl)
+              .ref(`explore/${postNum}`)
+              .set( {
+                shopID: shopID,
+                title: title,
+                content: content,
+                rate: starRating,
+                like: 0,
+                photoURL: downloadURL,
+                postTime: postTime,
+              } );
+            navigation.goBack();
           })
           .catch((error) => {
             console.log('Error getting download URL:', error);
           });
       }
     );
-  }
-    console.log( 'Form submitted' );
-    navigation.goBack();
+    }
 };
 
   const handleReset = () => {
@@ -173,7 +204,12 @@ export default function PostPage() {
           }}
         />
         <Text style={styles.pageTitle}>Share Your Exploration!</Text>
-      </View>
+        </View>
+        {error === true && (
+            <Text style={styles.errorText}>
+              Hey, it seems like you haven't filled in all the columns
+            </Text>
+          )}
       <Text style={styles.inputHint}>Name of the Tea Shop</Text>
       <SelectList
         setSelected={(val: SetStateAction<string>) => {
@@ -382,5 +418,8 @@ const styles = StyleSheet.create({
   },
   marginRight: {
     marginRight: 10,
+  },
+  errorText: {
+    color: '#D2042D',
   },
 });
