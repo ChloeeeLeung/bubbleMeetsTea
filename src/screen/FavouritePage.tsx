@@ -48,7 +48,7 @@ export default function FavouritePage() {
           const getShopInfo = await firebase
             .app()
             .database(databaseUrl)
-            .ref('shop')
+            .ref('branch')
             .once('value');
           const shopInfo = getShopInfo.val();
           setShopList(shopInfo);

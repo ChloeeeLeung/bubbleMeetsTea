@@ -5,17 +5,13 @@ import {Dimensions, View} from 'react-native';
 import {
   Avatar,
   IconButton,
-  Searchbar,
   Text,
   TouchableRipple,
   Card,
+  Menu,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Double} from 'react-native/Libraries/Types/CodegenTypes';
-
-const icon1 = '../image/shop/aNiceGift.jpg';
-const icon2 = '../image/shop/comebuytea.png';
-const icon3 = '../image/shop/sharetea.png';
 
 export default function CardUI({
   name,
@@ -29,6 +25,8 @@ export default function CardUI({
   distance,
   shopID,
   id,
+  logo,
+  menu,
 }: {
   name: String;
   location: String;
@@ -41,6 +39,8 @@ export default function CardUI({
   distance: any;
   shopID: String;
   id: number;
+  logo: string;
+  menu: string;
 }) {
   const navigation = useNavigation();
   return (
@@ -57,6 +57,8 @@ export default function CardUI({
           handleToggleFavorite,
           shopID,
           id,
+          logo,
+          menu,
         })
       }>
       <Card
@@ -67,15 +69,16 @@ export default function CardUI({
         <Card.Title
           title={name}
           titleVariant="titleMedium"
-          left={props =>
-            name == 'Comebuytea' ? (
-              <Avatar.Image {...props} source={require(icon2)} />
-            ) : name == 'ShareTea' ? (
-              <Avatar.Image {...props} source={require(icon3)} />
-            ) : (
-              <Avatar.Image {...props} source={require(icon1)} />
-            )
-          }
+          left={props => (
+            <Avatar.Image
+              {...props}
+              source={{
+                uri:
+                  logo ??
+                  'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+              }}
+            />
+          )}
           right={props => (
             <IconButton
               {...props}
@@ -116,7 +119,7 @@ export default function CardUI({
             fillColor={'#2f4858'}
             baseColor={'#2f4858'}
           />
-          <Text style={{marginLeft: 5}}>{shopRating.toFixed(1)}</Text>
+          <Text style={{marginLeft: 5}}>{shopRating.toFixed(1) ?? 0}</Text>
         </View>
       </Card>
     </TouchableRipple>

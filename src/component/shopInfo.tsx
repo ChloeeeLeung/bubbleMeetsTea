@@ -9,12 +9,14 @@ export default function ShopInfo({
   location,
   telephone,
   navigation,
+  menu,
 }: {
   closeTime: String;
   openTime: String;
   location: String;
   telephone: String;
   navigation: any;
+  menu: string;
 }) {
   const [hourNow, setHourNew] = useState('');
 
@@ -54,7 +56,7 @@ export default function ShopInfo({
         buttonColor="#2f4858"
         icon="book"
         mode="contained"
-        onPress={() => navigation.navigate('MenuModal')}>
+        onPress={() => navigation.navigate('MenuModal', {menu})}>
         Menu
       </Button>
       <View style={styles.row}>

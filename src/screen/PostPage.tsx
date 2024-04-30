@@ -42,7 +42,7 @@ export default function PostPage() {
       const getShopNameList = await firebase
         .app()
         .database(databaseUrl)
-        .ref('shop')
+        .ref('branch')
         .once('value');
       const shopNameList = getShopNameList.val();
       const uniqueNames = new Set();
@@ -67,7 +67,7 @@ export default function PostPage() {
       const getShopAddrList = await firebase
         .app()
         .database(databaseUrl)
-        .ref('shop')
+        .ref('branch')
         .once('value');
       const shopAddrList = getShopAddrList.val();
       const filteredList = shopAddrList

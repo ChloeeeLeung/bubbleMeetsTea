@@ -29,7 +29,7 @@ export default function MapPage({
       const data = await firebase
         .app()
         .database(databaseUrl)
-        .ref('shop')
+        .ref('branch')
         .once('value');
 
       setList(data.val() || []);

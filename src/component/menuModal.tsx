@@ -4,8 +4,9 @@ import {Dimensions, Image, ImageSourcePropType, View} from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import {IconButton, Modal, Text} from 'react-native-paper';
 
-export default function MenuModal() {
+export default function MenuModal({route}: {route: any}) {
   const navigation = useNavigation();
+  const {menu} = route.params;
   return (
     <View style={{flex: 1, backgroundColor: '#e1e9e1'}}>
       <View style={{flexDirection: 'row-reverse'}}>
@@ -26,7 +27,11 @@ export default function MenuModal() {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
           }}
-          source={require('../image/menu/aNiceGift.jpg')}
+          source={{
+            uri:
+              menu ??
+              'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+          }}
         />
       </ImageZoom>
     </View>

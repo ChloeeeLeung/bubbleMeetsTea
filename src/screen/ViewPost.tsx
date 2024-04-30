@@ -32,7 +32,7 @@ export default function ViewPost({route}: {route: any}) {
       const shopData = await firebase
         .app()
         .database(databaseUrl)
-        .ref('shop')
+        .ref('branch')
         .orderByChild('id')
         .equalTo(shopID)
         .once('value');

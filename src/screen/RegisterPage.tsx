@@ -99,14 +99,14 @@ export default function RegisterPage() {
         const allShop = await firebase
           .app()
           .database(databaseUrl)
-          .ref('/shop')
+          .ref('/branch')
           .once('value');
         const shopNum = allShop.numChildren() ?? 0;
         for (let i = 0; i <= shopNum; i++) {
           const idSnapshot = await firebase
             .app()
             .database(databaseUrl)
-            .ref(`shop/${i}/id`)
+            .ref(`branch/${i}/id`)
             .once('value');
           const shopData = {
             id: idSnapshot.val(),

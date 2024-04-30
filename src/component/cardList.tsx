@@ -18,6 +18,7 @@ export default function CardList({
 }) {
   const [list, setList] = useState([]);
   const [shopList, setShopList] = useState([]);
+  const [shopPhotoList, setPhotoList] = useState([]);
   const [finalList, setFinalList] = useState<[] | any[]>([]);
   const [visibleData, setVisibleData] = useState(10);
 
@@ -57,10 +58,18 @@ export default function CardList({
           const getShopInfo = await firebase
             .app()
             .database(databaseUrl)
-            .ref('shop')
+            .ref('branch')
             .once('value');
           const shopInfo = getShopInfo.val();
           setShopList(shopInfo);
+
+          const getShopPhoto = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref('shop')
+            .once('value');
+          const shopPhoto = getShopPhoto.val();
+          setPhotoList(shopPhoto);
         } else {
           console.log('No user found for the provided ID');
         }
@@ -77,14 +86,20 @@ export default function CardList({
   }, []);
 
   useEffect(() => {
-    if (shopList.length > 0 && list.length > 0) {
+    if (shopList.length > 0 && list.length > 0 && shopPhotoList.length > 0) {
       const combinedList = list.map((item: any) => {
         const shopItem = shopList.find(
           (shopItem: any) => shopItem && shopItem.id === item.id,
         );
         return {...item, ...(shopItem || {})};
       });
-      combinedList.map((item: any) => {
+      const finalCombinedList = combinedList.map((item: any) => {
+        const final = shopPhotoList.find(
+          (final: any) => final && final.shopID === item.shopID,
+        );
+        return {...item, ...(final || {})};
+      });
+      finalCombinedList.map((item: any) => {
         let distance = null;
         if (
           item !== null &&
@@ -101,7 +116,7 @@ export default function CardList({
         }
         return null;
       });
-      setFinalList(combinedList);
+      setFinalList(finalCombinedList);
     }
   }, [list, shopList]);
 
@@ -216,7 +231,9 @@ export default function CardList({
             return (
               <View style={styles.cardMargin}>
                 <CardUI
-                  name={item.name}
+                  logo={item.shopLogo}
+                  menu={item.shopMenu}
+                  name={item.shopName}
                   location={item.addr}
                   shopRating={item.rating}
                   fav={item.fav}
@@ -246,5 +263,5 @@ const styles = StyleSheet.create({
   cardMargin: {
     paddingVertical: 5,
     marginBottom: 5,
-  }
+  },
 });

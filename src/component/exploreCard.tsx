@@ -37,7 +37,7 @@ export default function ExploreCard({
       const shopData = await firebase
         .app()
         .database(databaseUrl)
-        .ref('shop')
+        .ref('branch')
         .orderByChild('id')
         .equalTo(shopID)
         .once('value');

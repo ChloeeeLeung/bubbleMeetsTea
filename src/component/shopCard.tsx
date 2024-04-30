@@ -1,15 +1,10 @@
 import {Rating} from '@kolking/react-native-rating';
 import React, {useState} from 'react';
 import {ImageBackground, SafeAreaView, StyleSheet, View} from 'react-native';
-import {Button, IconButton, Text} from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {IconButton, Text} from 'react-native-paper';
 import DrinkCard from './drinkCard';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import ShopInfo from './shopInfo';
-
-const icon1 = '../image/shop/aNiceGift.jpg';
-const icon2 = '../image/shop/comebuytea.png';
-const icon3 = '../image/shop/sharetea.png';
 
 export default function ShopCard({
   route,
@@ -28,6 +23,8 @@ export default function ShopCard({
     fav,
     shopID,
     id,
+    logo,
+    menu,
   } = route.params;
 
   const [index, setIndex] = useState(0);
@@ -41,6 +38,7 @@ export default function ShopCard({
         location={location}
         telephone={telephone}
         navigation={navigation}
+        menu={menu}
       />
     ),
     drinks: () => <DrinkCard shopID={shopID} id={id} />,
@@ -59,13 +57,11 @@ export default function ShopCard({
     <SafeAreaView style={{flex: 1, padding: 15}}>
       <View style={{justifyContent: 'center'}}>
         <ImageBackground
-          source={
-            name == 'Comebuytea'
-              ? require(icon2)
-              : name == 'ShareTea'
-              ? require(icon3)
-              : require(icon1)
-          }
+          source={{
+            uri:
+              logo ??
+              'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+          }}
           style={{justifyContent: 'center', height: 250}}
           imageStyle={{borderRadius: 25}}>
           <View
