@@ -11,6 +11,7 @@ const databaseUrl =
 export default function FavouritePage() {
   const [list, setList] = useState([]);
   const [shopList, setShopList] = useState([]);
+  const [shopPhotoList, setPhotoList] = useState([]);
   const [finalList, setFinalList] = useState<[] | any[]>([]);
 
   const getDatabase = async () => {
@@ -42,7 +43,9 @@ export default function FavouritePage() {
               (a: {recommend: number}, b: {recommend: number}) =>
                 b.recommend - a.recommend,
             );
-          const favList = sortedList.filter((item: { fav: boolean; }) => item.fav === true);
+          const favList = sortedList.filter(
+            (item: {fav: boolean}) => item.fav === true,
+          );
           setList(favList);
 
           const getShopInfo = await firebase
@@ -52,6 +55,14 @@ export default function FavouritePage() {
             .once('value');
           const shopInfo = getShopInfo.val();
           setShopList(shopInfo);
+
+          const getShopPhoto = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref('shop')
+            .once('value');
+          const shopPhoto = getShopPhoto.val();
+          setPhotoList(shopPhoto);
         } else {
           console.log('No user found for the provided ID');
         }
@@ -68,16 +79,22 @@ export default function FavouritePage() {
   }, []);
 
   useEffect(() => {
-    if (shopList.length > 0 && list.length > 0) {
+    if (shopList.length > 0 && list.length > 0 && shopPhotoList.length > 0) {
       const combinedList = list.map((item: any) => {
         const shopItem = shopList.find(
           (shopItem: any) => shopItem && shopItem.id === item.id,
         );
         return {...item, ...(shopItem || {})};
       });
-      setFinalList(combinedList);
+      const finalCombinedList = combinedList.map((item: any) => {
+        const final = shopPhotoList.find(
+          (final: any) => final && final.shopID === item.shopID,
+        );
+        return {...item, ...(final || {})};
+      });
+      setFinalList(finalCombinedList);
     }
-  }, [list, shopList]);
+  }, [list, shopList, shopPhotoList]);
 
   const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
     if (itemId !== undefined) {
@@ -123,7 +140,9 @@ export default function FavouritePage() {
             return (
               <View style={{paddingVertical: 5, marginBottom: 5}}>
                 <CardUI
-                  name={item.name}
+                  logo={item.shopLogo}
+                  menu={item.shopMenu}
+                  name={item.shopName}
                   location={item.addr}
                   shopRating={item.rating}
                   fav={item.fav}

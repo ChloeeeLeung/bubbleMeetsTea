@@ -119,7 +119,7 @@ export default function CardUI({
             fillColor={'#2f4858'}
             baseColor={'#2f4858'}
           />
-          <Text style={{marginLeft: 5}}>{shopRating.toFixed(1) ?? 0}</Text>
+          <Text style={{marginLeft: 5}}>{shopRating?.toFixed(1) ?? 0}</Text>
         </View>
       </Card>
     </TouchableRipple>

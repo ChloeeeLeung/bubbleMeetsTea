@@ -15,7 +15,7 @@ export default function ExploreCard({
   like,
   rate,
   photoURL,
-  shopID,
+  id,
 }: {
   title: String;
   postTime: String;
@@ -23,7 +23,7 @@ export default function ExploreCard({
   like: number;
   rate: number;
   photoURL: String;
-  shopID: number;
+  id: number;
 }) {
   const navigation = useNavigation();
   const [shop, setShop] = useState<{name: string}[]>([]);
@@ -39,7 +39,7 @@ export default function ExploreCard({
         .database(databaseUrl)
         .ref('branch')
         .orderByChild('id')
-        .equalTo(shopID)
+        .equalTo(id)
         .once('value');
       const List = shopData.val();
       setShop(List);
@@ -58,7 +58,7 @@ export default function ExploreCard({
           like,
           rate,
           photoURL,
-          shopID,
+          id,
         })
       }>
       <Card style={styles.cardBackground}>
@@ -68,7 +68,7 @@ export default function ExploreCard({
             subtitle={
               <Text>
                 <Icon name={'map-pin'} />
-                {shop[shopID]?.name}
+                {shop[id]?.name}
               </Text>
             }
             titleVariant="titleMedium"

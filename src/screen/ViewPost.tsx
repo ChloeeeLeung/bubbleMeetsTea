@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {Rating} from '@kolking/react-native-rating';
 import CardUI from '../component/card';
 import {firebase} from '@react-native-firebase/database';
+import Auth from '@react-native-firebase/auth';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -19,9 +20,9 @@ const databaseUrl =
 export default function ViewPost({route}: {route: any}) {
   const navigation = useNavigation();
 
-  const {title, postTime, content, like, rate, photoURL, shopID} = route.params;
+  const {title, postTime, content, like, rate, photoURL, id} = route.params;
 
-  const [shop, setShop] = useState([]);
+  const [shop, setShop] = useState<any[] | []>([]);
 
   useEffect(() => {
     getShopDetail();
@@ -29,16 +30,70 @@ export default function ViewPost({route}: {route: any}) {
 
   const getShopDetail = async () => {
     try {
-      const shopData = await firebase
+      const userUUID = Auth().currentUser?.uid;
+      const getUserID = await firebase
         .app()
         .database(databaseUrl)
-        .ref('branch')
+        .ref('user')
         .orderByChild('id')
-        .equalTo(shopID)
+        .equalTo(userUUID)
         .once('value');
-      const List = shopData.val();
-      setShop(List[shopID]);
-      console.log(List[shopID]);
+      const userID = getUserID.val();
+
+      if (userID) {
+        const keys = Object.keys(userID);
+        if (keys.length > 0) {
+          const key = keys[1];
+          const data = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref(`user/${key}/shop`)
+            .once('value');
+          const userShopList = data.val();
+
+          const shopData = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref('branch')
+            .orderByChild('id')
+            .equalTo(id)
+            .once('value');
+          const List = shopData.val();
+          const shopArray = Object.values(List);
+
+          const combinedList = shopArray.map((item: any) => {
+            const final = userShopList.find(
+              (final: any) => final && final.id === item.id,
+            );
+            return {...item, ...(final || {})};
+          });
+
+          const shopPhoto = await firebase
+            .app()
+            .database(databaseUrl)
+            .ref('shop')
+            .orderByChild('shopID')
+            .equalTo(combinedList[0].shopID)
+            .once('value');
+          const photo = shopPhoto.val();
+          const photoArray = Object.values(photo);
+          const filteredPhotoArray = photoArray.filter(item => item !== null);
+
+          const finalcombinedList = combinedList.map((item: any) => {
+            const final = filteredPhotoArray.find(
+              (final: any) => final && final.shopID === item.shopID,
+            );
+            return {...item, ...(final || {})};
+          });
+
+          setShop(finalcombinedList);
+          console.log(finalcombinedList);
+        } else {
+          console.log('No user found for the provided ID');
+        }
+      } else {
+        console.log('Snapshot value is null or undefined');
+      }
     } catch (err) {
       console.log(err);
     }
@@ -111,20 +166,21 @@ export default function ViewPost({route}: {route: any}) {
           />
         </View>
         <View style={styles.spacing} />
-        <View style={{paddingVertical: 10}}>
+        <View style={styles.cardPadding}>
           <CardUI
-            name="Tea Tea"
-            location="Shop No. B240, Basement 2, Times Square, 1 Matheson Street, Causeway
-            Bay, Hong Kong"
-            shopRating={4.3}
-            fav={false}
-            openTime={'09:00'}
-            closeTime={'22:00'}
-            telephone={51104123}
+            logo={shop[0]?.shopLogo}
+            menu={shop[0]?.shopMenu}
+            name={shop[0]?.shopName}
+            location={shop[0]?.addr}
+            shopRating={shop[0]?.rating}
+            fav={shop[0]?.fav}
+            openTime={shop[0]?.openTime}
+            closeTime={shop[0]?.closeTime}
+            telephone={shop[0]?.telephone}
             handleToggleFavorite={() => {}}
-            distance={3.2}
-            shopID={'1001'}
-            id={123}
+            distance={shop[0]?.distance}
+            shopID={shop[0]?.shopID}
+            id={shop[0]?.id}
           />
         </View>
         <View style={styles.spacing} />
@@ -174,5 +230,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  cardPadding: {
+    paddingVertical: 10,
   },
 });

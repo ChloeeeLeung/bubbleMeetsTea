@@ -118,7 +118,7 @@ export default function CardList({
       });
       setFinalList(finalCombinedList);
     }
-  }, [list, shopList]);
+  }, [list, shopList, shopPhotoList]);
 
   const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
     if (itemId !== undefined) {
@@ -213,7 +213,7 @@ export default function CardList({
   };
 
   return (
-    <View style={{marginVertical: 5, flex: 1, paddingHorizontal: 10}}>
+    <View style={styles.container}>
       <Searchbar
         style={{
           width: Dimensions.get('window').width - 20,
@@ -260,6 +260,11 @@ export default function CardList({
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginVertical: 5,
+    flex: 1,
+    paddingHorizontal: 10,
+  },
   cardMargin: {
     paddingVertical: 5,
     marginBottom: 5,

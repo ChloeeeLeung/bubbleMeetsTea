@@ -23,31 +23,31 @@ const SECTIONS = [
       {id: 'perference', icon: 'heart', label: 'Perference', type: 'select'},
     ],
   },
-  {
-    header: 'Help',
-    items: [
-      {id: 'aboutUs', icon: 'activity', label: 'About Us', type: 'link'},
-      {id: 'faqContact', icon: 'mail', label: 'FAQ / Contact Us', type: 'link'},
-      {
-        id: 'termOfUse',
-        icon: 'alert-circle',
-        label: 'Term of Use',
-        type: 'link',
-      },
-      {
-        id: 'privacyPolicy',
-        icon: 'eye-off',
-        label: 'Privacy Policy',
-        type: 'link',
-      },
-      {
-        id: 'helpFeedback',
-        icon: 'help-circle',
-        label: 'Help / Feedback',
-        type: 'link',
-      },
-    ],
-  },
+  // {
+  //   header: 'Help',
+  //   items: [
+  //     {id: 'aboutUs', icon: 'activity', label: 'About Us', type: 'link'},
+  //     {id: 'faqContact', icon: 'mail', label: 'FAQ / Contact Us', type: 'link'},
+  //     {
+  //       id: 'termOfUse',
+  //       icon: 'alert-circle',
+  //       label: 'Term of Use',
+  //       type: 'link',
+  //     },
+  //     {
+  //       id: 'privacyPolicy',
+  //       icon: 'eye-off',
+  //       label: 'Privacy Policy',
+  //       type: 'link',
+  //     },
+  //     {
+  //       id: 'helpFeedback',
+  //       icon: 'help-circle',
+  //       label: 'Help / Feedback',
+  //       type: 'link',
+  //     },
+  //   ],
+  // },
 ];
 
 export default function ProfilePage() {
@@ -265,14 +265,15 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     marginTop: 16,
-    marginHorizontal: 24,
+    marginHorizontal: 12,
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
+    backgroundColor: '#2f4858',
   },
   logoutButtonText: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#000000',
+    fontWeight: 'bold',
+    color: '#FFFFFF',
   },
 });

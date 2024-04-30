@@ -59,7 +59,7 @@ export default function ExplorePage() {
                   like={item.like}
                   rate={item.rate}
                   photoURL={item.photoURL}
-                  shopID={item.shopID}
+                  id={item.shopID}
                 />
               </View>
             );

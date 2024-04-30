@@ -47,10 +47,10 @@ export default function PostPage() {
       const shopNameList = getShopNameList.val();
       const uniqueNames = new Set();
       const newList = shopNameList.reduce(
-        (acc: {value: any}[], item: {name: string}) => {
-          if (!uniqueNames.has(item.name)) {
-            uniqueNames.add(item.name);
-            acc.push({value: item.name});
+        (acc: {value: any}[], item: {shopID: string}) => {
+          if (!uniqueNames.has(item.shopID)) {
+            uniqueNames.add(item.shopID);
+            acc.push({value: item.shopID});
           }
           return acc;
         },
@@ -71,7 +71,7 @@ export default function PostPage() {
         .once('value');
       const shopAddrList = getShopAddrList.val();
       const filteredList = shopAddrList
-        .filter((item: {name: string}) => item.name === name)
+        .filter((item: {shopID: string}) => item.shopID === name)
         .map(({addr, id}: {addr: string; id: number}) => ({
           value: addr,
           key: id,
@@ -141,6 +141,7 @@ export default function PostPage() {
 
   const handleSubmit = () => {
     if (selectedImage == '' || shopID == '' || title == '' || content == '') {
+      console.log(selectedImage, shopID, title, content);
       setError(true);
     } else {
       setError(false);
