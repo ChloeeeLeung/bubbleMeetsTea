@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,11 +11,38 @@ import {IconButton, Text, Card, Avatar} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import {Rating} from '@kolking/react-native-rating';
 import CardUI from '../component/card';
+import {firebase} from '@react-native-firebase/database';
+
+const databaseUrl =
+  'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
 export default function ViewPost({route}: {route: any}) {
   const navigation = useNavigation();
 
-  const {title, postTime, content, like, rate, photoURL} = route.params;
+  const {title, postTime, content, like, rate, photoURL, shopID} = route.params;
+
+  const [shop, setShop] = useState([]);
+
+  useEffect(() => {
+    getShopDetail();
+  }, []);
+
+  const getShopDetail = async () => {
+    try {
+      const shopData = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('shop')
+        .orderByChild('id')
+        .equalTo(shopID)
+        .once('value');
+      const List = shopData.val();
+      setShop(List[shopID]);
+      console.log(List[shopID]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,15 +109,6 @@ export default function ViewPost({route}: {route: any}) {
               resizeMode: 'contain',
             }}
           />
-          {/* <View style={styles.spacing} />
-          <Image
-            source={require('../image/blogger/bloggerpic2.jpg')}
-            style={{
-              width: Dimensions.get('window').width,
-              height: Dimensions.get('window').height / 1.5,
-              resizeMode: 'contain',
-            }}
-          /> */}
         </View>
         <View style={styles.spacing} />
         <View style={{paddingVertical: 10}}>

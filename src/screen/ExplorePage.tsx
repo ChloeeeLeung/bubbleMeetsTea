@@ -12,7 +12,6 @@ export default function ExplorePage() {
   const navigation = useNavigation();
 
   const [postList, setPostList] = useState<[] | any>([]);
-  const [test, setText] = useState();
 
   const getExplore = async () => {
     try {
@@ -50,16 +49,6 @@ export default function ExplorePage() {
       <FlatList
         data={postList !== null ? postList : []}
         renderItem={({item}) => {
-          // const shopID = item.shopID;
-          // console.log( shopID );
-          // const shop = firebase
-          //   .app()
-          //   .database(databaseUrl)
-          //   .ref('shop')
-          //   .orderByChild('id')
-          //   .equalTo(shopID)
-          //   .once( 'value' );
-          // console.log(test)
           if (item !== null) {
             return (
               <View style={styles.cardMargin}>
@@ -70,6 +59,7 @@ export default function ExplorePage() {
                   like={item.like}
                   rate={item.rate}
                   photoURL={item.photoURL}
+                  shopID={item.shopID}
                 />
               </View>
             );
