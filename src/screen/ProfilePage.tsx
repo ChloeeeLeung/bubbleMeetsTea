@@ -1,279 +1,247 @@
-import React, {useState} from 'react';
-import {StackActions, useNavigation} from '@react-navigation/native';
-import {Text} from 'react-native-paper';
+import React, {useEffect, useState} from 'react';
 import {
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  View,
+  Dimensions,
   Image,
+  SafeAreaView,
+  StyleSheet,
   TouchableOpacity,
-  Switch,
+  View,
 } from 'react-native';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import Auth from '@react-native-firebase/auth';
+import {IconButton, Text, TextInput} from 'react-native-paper';
+import {useNavigation} from '@react-navigation/native';
+import Auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {MediaType, launchImageLibrary} from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {firebase} from '@react-native-firebase/database';
 
-const SECTIONS = [
-  {
-    header: 'Preferences',
-    items: [
-      {id: 'language', icon: 'globe', label: 'Language', type: 'select'},
-      {id: 'notification', icon: 'bell', label: 'Notification', type: 'toggle'},
-      {id: 'darkMode', icon: 'moon', label: 'Dark Mode', type: 'toggle'},
-      {id: 'perference', icon: 'heart', label: 'Perference', type: 'select'},
-    ],
-  },
-  // {
-  //   header: 'Help',
-  //   items: [
-  //     {id: 'aboutUs', icon: 'activity', label: 'About Us', type: 'link'},
-  //     {id: 'faqContact', icon: 'mail', label: 'FAQ / Contact Us', type: 'link'},
-  //     {
-  //       id: 'termOfUse',
-  //       icon: 'alert-circle',
-  //       label: 'Term of Use',
-  //       type: 'link',
-  //     },
-  //     {
-  //       id: 'privacyPolicy',
-  //       icon: 'eye-off',
-  //       label: 'Privacy Policy',
-  //       type: 'link',
-  //     },
-  //     {
-  //       id: 'helpFeedback',
-  //       icon: 'help-circle',
-  //       label: 'Help / Feedback',
-  //       type: 'link',
-  //     },
-  //   ],
-  // },
-];
+const databaseUrl =
+  'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
 export default function ProfilePage() {
-  const [form, setForm] = useState({
-    language: 'English',
-    notification: true,
-    darkMode: false,
-  });
-
   const navigation = useNavigation();
 
-  console.log(Auth().currentUser);
+  const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    setUser(Auth().currentUser);
+  }, [user]);
+
+  const changeIcon = () => {
+    const options = {
+      mediaType: 'photo' as MediaType,
+      includeBase64: false,
+      maxHeight: 2000,
+      maxWidth: 2000,
+    };
+
+    launchImageLibrary(options, handleResponse);
+  };
+
+  const handleResponse = (response: any) => {
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('Image picker error: ', response.error);
+    } else {
+      let imageUri = response.uri || response.assets?.[0]?.uri;
+      const storageRef = storage().ref('user');
+      const newFileName = user?.email ?? '';
+      const imageRef = storageRef.child(newFileName);
+
+      const uploadTask = imageRef.putFile(imageUri);
+
+      uploadTask.on(
+        'state_changed',
+        snapshot => {},
+        error => {
+          console.log('Error uploading image:', error);
+        },
+        () => {
+          uploadTask.snapshot?.ref
+            .getDownloadURL()
+            .then(async downloadURL => {
+              if (user) {
+                user
+                  .updateProfile({
+                    photoURL: downloadURL,
+                  })
+                  .then(() => {
+                    console.log('Photo URL updated successfully');
+                    setUser({
+                      ...user,
+                      photoURL: downloadURL,
+                    });
+                  })
+                  .catch(error => {
+                    console.log('Error updating photo URL:', error);
+                  });
+                const getUserID = await firebase
+                  .app()
+                  .database(databaseUrl)
+                  .ref('user')
+                  .orderByChild('id')
+                  .equalTo(user.uid)
+                  .once('value');
+                const userID = getUserID.val();
+                const keys = Object.keys(userID);
+                if (keys.length > 0) {
+                  const key = keys[1];
+                  await firebase
+                    .app()
+                    .database(databaseUrl)
+                    .ref(`user/${key}`)
+                    .update({
+                      iconURL: downloadURL,
+                    });
+                }
+              }
+            })
+            .catch(error => {
+              console.log('Error getting download URL:', error);
+            });
+        },
+      );
+    }
+  };
+
+  const changeName = async () => {
+    if (user && userName != '') {
+      await user.updateProfile({
+        displayName: userName,
+      });
+      const getUserID = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('user')
+        .orderByChild('id')
+        .equalTo(user.uid)
+        .once('value');
+      const userID = getUserID.val();
+      const keys = Object.keys(userID);
+      if (keys.length > 0) {
+        const key = keys[1];
+        await firebase.app().database(databaseUrl).ref(`user/${key}`).update({
+          name: userName,
+        });
+      }
+      navigation.goBack();
+    }
+  };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ScrollView contentContainerStyle={{paddingVertical: 24}}>
-        <View style={{paddingLeft: 24}}>
-          <Text style={styles.title}>Settings</Text>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.titleContainer}>
+        <IconButton
+          icon="chevron-left"
+          size={25}
+          iconColor="#2f4858"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+        <Text style={styles.pageTitle}>Edit Profile</Text>
+      </View>
 
-        <View style={styles.profile}>
+      <View style={styles.iconContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            changeIcon();
+          }}>
           <Image
-            alt=""
             source={{
-              uri: 'https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+              uri:
+                user?.photoURL ??
+                'https://firebasestorage.googleapis.com/v0/b/bubble-milk-tea-de1cd.appspot.com/o/user%2FdeflaultIcon.jpg?alt=media&token=64b4ec17-103e-40a3-aebd-9067c3f030aa',
             }}
             style={styles.profileAvatar}
           />
-
-          <Text style={styles.profileName}>
-            {Auth().currentUser?.displayName ?? ''}
-          </Text>
-
-          <Text style={styles.profileEmail}>{Auth().currentUser?.email}</Text>
-
-          <TouchableOpacity onPress={() => {}}>
-            <View style={styles.profileAction}>
-              <Text style={styles.profileActionText}>Edit Profile</Text>
-              <FeatherIcon color="#000" name="edit" size={16} />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {SECTIONS.map(({header, items}) => (
-          <View style={{paddingTop: 12}} key={header}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionHeaderText}>{header}</Text>
-            </View>
-            <View style={styles.sectionBody}>
-              {items.map(({id, label, icon, type}, index) => {
-                return (
-                  <View
-                    key={id}
-                    style={[
-                      styles.rowWrapper,
-                      index === 0 && {borderTopWidth: 0},
-                    ]}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        // handle onPress
-                      }}>
-                      <View style={styles.row}>
-                        <FeatherIcon
-                          color="#616161"
-                          name={icon}
-                          style={styles.rowIcon}
-                          size={22}
-                        />
-
-                        <Text style={styles.rowLabel}>{label}</Text>
-
-                        <View style={styles.rowSpacer} />
-
-                        {type === 'select' && (
-                          <Text style={styles.rowValue}>{form[id]}</Text>
-                        )}
-
-                        {type === 'toggle' && (
-                          <Switch
-                            onChange={val => setForm({...form, [id]: val})}
-                            value={form[id]}
-                          />
-                        )}
-
-                        {(type === 'select' || type === 'link') && (
-                          <FeatherIcon
-                            color="#ababab"
-                            name="chevron-right"
-                            size={22}
-                          />
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                );
-              })}
-            </View>
+          <View style={styles.iconOverlay}>
+            <Icon name={'pencil'} size={80} color={'#FFFFFF'} />
           </View>
-        ))}
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={async () => {
-            await Auth().signOut();
-            // navigation.dispatch(StackActions.popToTop());
-            navigation.navigate('LoginPage');
-          }}>
-          <Text style={styles.logoutButtonText}>Log out</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
+
+      <View style={styles.nameContainer}>
+        <Text style={styles.nameText}>{user?.displayName}</Text>
+      </View>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          label="New User Name"
+          value={userName}
+          onChangeText={userName => setUserName(userName)}
+          style={styles.inputArea}
+          theme={{
+            colors: {
+              primary: '#2f4858',
+            },
+          }}
+        />
+        <IconButton
+          icon="pencil"
+          iconColor="#2f4858"
+          size={25}
+          onPress={() => {
+            changeName();
+          }}
+        />
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  title: {
-    fontWeight: 'bold',
-    fontSize: 30,
-    fontFamily: 'serif',
-    color: '#3b414c',
+  container: {
+    flex: 1,
+    padding: 10,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
   },
-  profile: {
-    marginHorizontal: 12,
-    padding: 16,
-    borderRadius: 12,
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: '#e1e9e1',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#e3e3e3',
+  pageTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  iconContainer: {
+    alignContent: 'center',
+    alignSelf: 'center',
   },
   profileAvatar: {
-    width: 70,
-    height: 70,
+    width: 200,
+    height: 200,
     borderRadius: 9999,
   },
-  profileName: {
-    marginTop: 12,
-    fontSize: 20,
-    fontWeight: '600',
-  },
-  profileEmail: {
-    marginTop: 6,
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#848484',
-  },
-  profileAction: {
-    marginTop: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
+  iconOverlay: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 10,
+    left: 0,
     justifyContent: 'center',
-    backgroundColor: '#f4e6dc',
-    borderRadius: 12,
-  },
-  profileActionText: {
-    marginRight: 8,
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#000',
-  },
-  sectionHeader: {
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-  },
-  sectionHeaderText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#424242',
-    textTransform: 'uppercase',
-    letterSpacing: 1.2,
-  },
-  sectionBody: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: '#e3e3e3',
-  },
-  row: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    height: 50,
-    backgroundColor: '#c9d5bd',
-    borderRadius: 8,
-    marginBottom: 12,
-    paddingLeft: 12,
-    paddingRight: 12,
   },
-  rowWrapper: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    borderTopWidth: 1,
-    borderColor: '#e3e3e3',
+  nameContainer: {
+    marginTop: 10,
+    alignContent: 'center',
+    alignSelf: 'center',
   },
-  rowIcon: {
-    marginRight: 12,
-  },
-  rowLabel: {
-    fontSize: 17,
-    fontWeight: '500',
-    color: '#000000',
-  },
-  rowValue: {
-    fontSize: 17,
-    color: '#616161',
-    marginRight: 4,
-  },
-  rowSpacer: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
-  logoutButton: {
-    marginTop: 16,
-    marginHorizontal: 12,
-    paddingVertical: 12,
-    borderRadius: 12,
-    alignItems: 'center',
-    backgroundColor: '#2f4858',
-  },
-  logoutButtonText: {
-    fontSize: 15,
+  nameText: {
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontSize: 25,
+  },
+  inputContainer: {
+    paddingVertical: 30,
+    flexDirection: 'row',
+  },
+  inputArea: {
+    borderWidth: 1,
+    borderColor: '#2f4858',
+    backgroundColor: 'transparent',
+    width: Dimensions.get('window').width - 80,
   },
 });

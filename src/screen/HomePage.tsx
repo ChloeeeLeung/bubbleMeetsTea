@@ -4,7 +4,7 @@ import {Route, SceneMap, TabBar, TabView} from 'react-native-tab-view';
 import RatingPage from './RatingPage';
 import MapPage from './MapPage';
 import FavouritePage from './FavouritePage';
-import ProfilePage from './ProfilePage';
+import SettingPage from './SettingPage';
 import {Scene} from 'react-native-tab-view/lib/typescript/src/types';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import GetLocation from 'react-native-get-location';
@@ -59,7 +59,7 @@ export default function HomePage() {
     ),
     explore: ExplorePage,
     favourite: FavouritePage,
-    profile: ProfilePage,
+    profile: SettingPage,
   });
 
   const getTabBarIcon = (

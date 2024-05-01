@@ -12,6 +12,8 @@ import RegisterPage from './src/screen/RegisterPage';
 import SplashPage from './src/screen/SplashPage';
 import PostPage from './src/screen/PostPage';
 import ViewPost from './src/screen/ViewPost';
+import ProfilePage from './src/screen/ProfilePage';
+import PerferencePage from './src/screen/PerferencePage';
 
 export type RootStackParams = {
   SplashPage: any;
@@ -23,6 +25,8 @@ export type RootStackParams = {
   MenuModal: any;
   PostPage: any;
   ViewPost: any;
+  ProfilePage: any;
+  PerferencePage: any;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParams>();
@@ -94,6 +98,16 @@ function App(): JSX.Element {
           <RootStack.Screen
             name="ViewPost"
             component={ViewPost}
+            options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="ProfilePage"
+            component={ProfilePage}
+            options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="PerferencePage"
+            component={PerferencePage}
             options={{headerShown: false}}
           />
         </RootStack.Navigator>

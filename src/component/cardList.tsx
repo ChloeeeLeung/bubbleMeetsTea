@@ -131,8 +131,6 @@ export default function CardList({
         .equalTo(id)
         .once('value');
       const userID = getUserID.val();
-      console.log(itemId);
-      console.log(itemFav);
 
       if (userID) {
         const keys = Object.keys(userID);
