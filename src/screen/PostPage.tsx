@@ -27,7 +27,7 @@ export default function PostPage() {
   const navigation = useNavigation();
 
   const [name, setName] = useState('');
-  const [shopID, setShopID] = useState('');
+  const [shopID, setShopID] = useState(-1);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
@@ -140,12 +140,12 @@ export default function PostPage() {
   };
 
   const handleSubmit = () => {
-    if (selectedImage == '' || shopID == '' || title == '' || content == '') {
+    if (selectedImage == '' || shopID == -1 || title == '' || content == '') {
       console.log(selectedImage, shopID, title, content);
       setError(true);
     } else {
       setError(false);
-      const storageRef = storage().ref();
+      const storageRef = storage().ref('explore');
       const newFileName = 'explore' + postNum;
       const imageRef = storageRef.child(newFileName);
 
@@ -223,7 +223,7 @@ export default function PostPage() {
         <View style={styles.spacing}></View>
         <Text style={styles.inputHint}>Branch of the Tea Shop</Text>
         <SelectList
-          setSelected={(val: SetStateAction<string>) => {
+          setSelected={(val: SetStateAction<number>) => {
             setShopID(val);
           }}
           data={addrList}
