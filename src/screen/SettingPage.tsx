@@ -91,7 +91,7 @@ export default function SettingPage() {
                 style={styles.rowIcon}
                 size={22}
               />
-              <Text style={styles.rowLabel}>Perference</Text>
+              <Text style={styles.rowLabel}>Preference</Text>
               <View style={styles.rowSpacer} />
               <FeatherIcon color="#ababab" name="chevron-right" size={22} />
             </View>
