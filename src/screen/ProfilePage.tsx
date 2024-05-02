@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {IconButton, Text, TextInput} from 'react-native-paper';
+import {Button, IconButton, Text, TextInput} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import Auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {MediaType, launchImageLibrary} from 'react-native-image-picker';
@@ -68,7 +68,6 @@ export default function ProfilePage() {
                     photoURL: downloadURL,
                   })
                   .then(() => {
-                    console.log('Photo URL updated successfully');
                     setUser({
                       ...user,
                       photoURL: downloadURL,
@@ -130,6 +129,39 @@ export default function ProfilePage() {
     }
   };
 
+  const deleteIcon = async () => {
+    if (user) {
+      user
+        .updateProfile({
+          photoURL: null,
+        })
+        .then(() => {
+          setUser({
+            ...user,
+            photoURL: null,
+          });
+        })
+        .catch(error => {
+          console.log('Error updating photo URL:', error);
+        });
+      const getUserID = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('user')
+        .orderByChild('id')
+        .equalTo(user.uid)
+        .once('value');
+      const userID = getUserID.val();
+      const keys = Object.keys(userID);
+      if (keys.length > 0) {
+        const key = keys[1];
+        await firebase.app().database(databaseUrl).ref(`user/${key}`).update({
+          iconURL: '',
+        });
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleContainer}>
@@ -161,6 +193,19 @@ export default function ProfilePage() {
             <Icon name={'pencil'} size={80} color={'#FFFFFF'} />
           </View>
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <Button
+          icon="delete"
+          mode="contained"
+          buttonColor="#2f4858"
+          style={styles.button}
+          onPress={() => {
+            deleteIcon();
+          }}>
+          Delete Icon
+        </Button>
       </View>
 
       <View style={styles.nameContainer}>
@@ -226,7 +271,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nameContainer: {
-    marginTop: 10,
     alignContent: 'center',
     alignSelf: 'center',
   },
@@ -243,5 +287,12 @@ const styles = StyleSheet.create({
     borderColor: '#2f4858',
     backgroundColor: 'transparent',
     width: Dimensions.get('window').width - 80,
+  },
+  button: {
+    width: 200,
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    padding: 15,
   },
 });
