@@ -212,7 +212,10 @@ export default function ViewPost({route}: {route: any}) {
             closeTime={shop[0]?.closeTime}
             telephone={shop[0]?.telephone}
             handleToggleFavorite={() => {
-              handleToggleFavorite(shop[0]?.id, shop[0]?.fav);
+              handleToggleFavorite(
+                shop[0]?.id,
+                clickFav ? !shop[0]?.fav : shop[0]?.fav,
+              );
             }}
             distance={shop[0]?.distance}
             shopID={shop[0]?.shopID}
