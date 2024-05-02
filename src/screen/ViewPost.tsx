@@ -23,6 +23,7 @@ export default function ViewPost({route}: {route: any}) {
   const {title, postTime, content, like, rate, photoURL, id} = route.params;
 
   const [shop, setShop] = useState<any[] | []>([]);
+  const [clickFav, setClickFav] = useState(false);
 
   useEffect(() => {
     getShopDetail();
@@ -30,7 +31,7 @@ export default function ViewPost({route}: {route: any}) {
 
   const getShopDetail = async () => {
     try {
-      const userUUID = Auth().currentUser?.uid;
+      const userUUID = Auth().currentUser?.uid ?? '';
       const getUserID = await firebase
         .app()
         .database(databaseUrl)
@@ -96,6 +97,39 @@ export default function ViewPost({route}: {route: any}) {
       }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
+    if (itemId !== undefined) {
+      const id = Auth().currentUser?.uid ?? '';
+      const getUserID = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('user')
+        .orderByChild('id')
+        .equalTo(id)
+        .once('value');
+      const userID = getUserID.val();
+
+      if (userID) {
+        const keys = Object.keys(userID);
+        if (keys.length > 0) {
+          const key = keys[1];
+          await firebase
+            .app()
+            .database(databaseUrl)
+            .ref(`user/${key}/shop/${itemId}`)
+            .update({
+              fav: !itemFav,
+            });
+          setClickFav(!clickFav);
+        } else {
+          console.log('No user found for the provided ID');
+        }
+      } else {
+        console.log('Snapshot value is null or undefined');
+      }
     }
   };
 
@@ -173,11 +207,13 @@ export default function ViewPost({route}: {route: any}) {
             name={shop[0]?.shopName}
             location={shop[0]?.addr}
             shopRating={shop[0]?.rating}
-            fav={shop[0]?.fav}
+            fav={clickFav ? !shop[0]?.fav : shop[0]?.fav}
             openTime={shop[0]?.openTime}
             closeTime={shop[0]?.closeTime}
             telephone={shop[0]?.telephone}
-            handleToggleFavorite={() => {}}
+            handleToggleFavorite={() => {
+              handleToggleFavorite(shop[0]?.id, shop[0]?.fav);
+            }}
             distance={shop[0]?.distance}
             shopID={shop[0]?.shopID}
             id={shop[0]?.id}
