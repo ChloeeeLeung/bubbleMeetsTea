@@ -103,6 +103,11 @@ export default function RatingDialog({
         rating: averageRating,
       });
 
+      var Sentiment = require('sentiment');
+      var sentiment = new Sentiment();
+      var result = sentiment.analyze(comment);
+      console.log(result.comparative);
+
       hideDialog();
     } else {
       setError(true);
