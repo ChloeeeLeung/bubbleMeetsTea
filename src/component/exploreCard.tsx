@@ -16,6 +16,7 @@ export default function ExploreCard({
   rate,
   photoURL,
   id,
+  bloggerID,
 }: {
   title: String;
   postTime: String;
@@ -24,25 +25,60 @@ export default function ExploreCard({
   rate: number;
   photoURL: String;
   id: number;
+  bloggerID: string;
 }) {
   const navigation = useNavigation();
-  const [shop, setShop] = useState<{name: string}[]>([]);
+  const [bloggerInfo, setBloggerInfo] = useState<any[] | []>( [] );
+  const [shopName, setShopName] = useState<any[] | []>([]);
 
   useEffect(() => {
-    getShopDetail();
+    getBlogger();
+    getShopName();
   }, []);
+  
+  const getBlogger = async () =>
+  {
+    try
+    {
+      const blogger = await firebase
+        .app()
+        .database( databaseUrl )
+        .ref( 'user' )
+        .orderByChild( 'id' )
+        .equalTo( bloggerID )
+        .once( 'value' );
+      const bloggerInfo = blogger.val();
+      setBloggerInfo( bloggerInfo );
+    } catch ( err )
+    {
+      console.log( err );
+    }
+  };
 
-  const getShopDetail = async () => {
+  const getShopName = async () => {
     try {
-      const shopData = await firebase
+      const getShopID = await firebase
         .app()
         .database(databaseUrl)
         .ref('branch')
         .orderByChild('id')
         .equalTo(id)
         .once('value');
-      const List = shopData.val();
-      setShop(List);
+      const shopID = getShopID.val();
+      const shopIDValue = shopID[id].shopID;
+
+      const getShopName = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('shop')
+        .orderByChild('shopID')
+        .equalTo(shopIDValue)
+        .once('value');
+      const shopNameData = getShopName.val();
+      const shopNames = Object.values(shopNameData)
+        .filter((item) => item !== null)
+        .map((item: any) => item.shopName.toString());
+      setShopName(shopNames);
     } catch (err) {
       console.log(err);
     }
@@ -59,6 +95,7 @@ export default function ExploreCard({
           rate,
           photoURL,
           id,
+          bloggerInfo,
         })
       }>
       <Card style={styles.cardBackground}>
@@ -68,14 +105,14 @@ export default function ExploreCard({
             subtitle={
               <Text>
                 <Icon name={'map-pin'} />
-                {shop[id]?.name}
+                {shopName}
               </Text>
             }
             titleVariant="titleMedium"
             left={props => (
               <Avatar.Image
                 {...props}
-                source={require('../image/aesthetic-sailor-moon.jpg')}
+                source={{uri: bloggerInfo[1]?.iconURL == ''?'https://firebasestorage.googleapis.com/v0/b/bubble-milk-tea-de1cd.appspot.com/o/user%2FdeflaultIcon.jpg?alt=media&token=64b4ec17-103e-40a3-aebd-9067c3f030aa':bloggerInfo[1]?.iconURL}}
               />
             )}
           />
@@ -83,7 +120,7 @@ export default function ExploreCard({
             <Text variant="bodyMedium">{content}</Text>
             <View style={styles.textContainer}>
               <Text>{postTime}</Text>
-              <Text>@chloeeeeleung730</Text>
+              <Text>@{bloggerInfo[1]?.name}</Text>
             </View>
             <View style={styles.spacing}></View>
           </Card.Content>

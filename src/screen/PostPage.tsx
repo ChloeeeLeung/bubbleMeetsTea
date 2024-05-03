@@ -19,6 +19,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import storage from '@react-native-firebase/storage';
 import {firebase} from '@react-native-firebase/database';
 import {format} from 'date-fns';
+import Auth from '@react-native-firebase/auth';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -135,13 +136,11 @@ export default function PostPage() {
     } else {
       let imageUri = response.uri || response.assets?.[0]?.uri;
       setSelectedImage(imageUri);
-      console.log(selectedImage);
     }
   };
 
   const handleSubmit = () => {
     if (selectedImage == '' || shopID == -1 || title == '' || content == '') {
-      console.log(selectedImage, shopID, title, content);
       setError(true);
     } else {
       setError(false);
@@ -161,7 +160,7 @@ export default function PostPage() {
           uploadTask.snapshot?.ref
             .getDownloadURL()
             .then(downloadURL => {
-              const postTime = format(new Date(), 'dd MMM yyyy HH:mm');
+              const postTime = format( new Date(), 'dd MMM yyyy HH:mm' );
               firebase
                 .app()
                 .database(databaseUrl)
@@ -174,6 +173,7 @@ export default function PostPage() {
                   like: 0,
                   photoURL: downloadURL,
                   postTime: postTime,
+                  bloggerID: Auth().currentUser?.uid,
                 });
               navigation.goBack();
             })

@@ -99,7 +99,7 @@ export default function RatingDialog({
       const averageRating =
         totalRatingCount > 0 ? totalRatingSum / totalRatingCount : 0;
 
-      firebase.app().database(databaseUrl).ref(`shop/${id}`).update({
+      firebase.app().database(databaseUrl).ref(`branch/${id}`).update({
         rating: averageRating,
       });
 

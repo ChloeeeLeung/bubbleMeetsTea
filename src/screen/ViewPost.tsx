@@ -20,13 +20,27 @@ const databaseUrl =
 export default function ViewPost({route}: {route: any}) {
   const navigation = useNavigation();
 
-  const {title, postTime, content, like, rate, photoURL, id} = route.params;
+  const {title, postTime, content, like, rate, photoURL, id, bloggerInfo} = route.params;
 
   const [shop, setShop] = useState<any[] | []>([]);
   const [clickFav, setClickFav] = useState(false);
+  const [bloggerPrefer, setBloggerPrefer] = useState('');
+  
+  const teaList = [
+    {name: 'Bubble Tea', id: 1},
+    {name: 'Fruit Tea', id: 2},
+    {name: 'Herbal Tea', id: 3},
+    {name: 'Milk Cap Tea', id: 4},
+    {name: 'Pure Tea', id: 5},
+    {name: 'Yakult', id: 6},
+    {name: 'Smoothie', id: 7},
+    {name: 'No Idea', id: 8},
+  ];
 
   useEffect(() => {
     getShopDetail();
+    const tea = teaList.find(item => item.id === bloggerInfo[1]?.preferType);
+    setBloggerPrefer(tea ? tea.name : 'No Idea');
   }, []);
 
   const getShopDetail = async () => {
@@ -149,13 +163,13 @@ export default function ViewPost({route}: {route: any}) {
       <ScrollView>
         <Card style={styles.cardBackground}>
           <Card.Title
-            title={'@chloeeeeleung730'}
-            subtitle={'Blogger Preference: Bubble Tea'}
+            title={`@ ${bloggerInfo[1]?.name}`}
+            subtitle={`Blogger Preference: ${bloggerPrefer}`}
             titleVariant="titleMedium"
             left={props => (
               <Avatar.Image
                 {...props}
-                source={require('../image/aesthetic-sailor-moon.jpg')}
+                source={{uri: bloggerInfo[1]?.iconURL == ''?'https://firebasestorage.googleapis.com/v0/b/bubble-milk-tea-de1cd.appspot.com/o/user%2FdeflaultIcon.jpg?alt=media&token=64b4ec17-103e-40a3-aebd-9067c3f030aa':bloggerInfo[1].iconURL}}
               />
             )}
           />
