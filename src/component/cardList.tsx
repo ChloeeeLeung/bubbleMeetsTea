@@ -19,8 +19,10 @@ export default function CardList({
   const [list, setList] = useState([]);
   const [shopList, setShopList] = useState([]);
   const [shopPhotoList, setPhotoList] = useState([]);
-  const [finalList, setFinalList] = useState<[] | any[]>([]);
+  const [allShopList, setAllShopList] = useState<[] | any[]>( [] );
+  const [showList, setShowList] = useState<[] | any[]>([]);
   const [visibleData, setVisibleData] = useState(10);
+  const [search, setSearch] = useState('');
 
   const getDatabase = async () => {
     try {
@@ -116,7 +118,8 @@ export default function CardList({
         }
         return null;
       });
-      setFinalList(finalCombinedList);
+      setAllShopList( finalCombinedList );
+      setShowList( finalCombinedList );
     }
   }, [list, shopList, shopPhotoList]);
 
@@ -205,7 +208,7 @@ export default function CardList({
   };
 
   const handleEndReached = () => {
-    if (visibleData < finalList.length) {
+    if (visibleData < showList.length) {
       setVisibleData(visibleData + 10);
     }
   };
@@ -213,17 +216,25 @@ export default function CardList({
   return (
     <View style={styles.container}>
       <Searchbar
-        style={{
-          width: Dimensions.get('window').width - 20,
-          marginVertical: 10,
-          backgroundColor: '#AEB6AE',
-        }}
+        style={styles.searchbar}
         placeholder="Search"
-        value={''}
+        onChangeText={ (value) =>
+        {
+          setSearch(value);
+          const searchList = allShopList.filter((item) =>
+            item.shopName.toLowerCase().includes(search)
+          );
+          setShowList( searchList );
+          if ( value == '' )
+          {
+            setShowList(allShopList);
+          }
+        } }
+        onClearIconPress={()=>{setShowList(allShopList);}}
+        value={search}
       />
-      {/* <DrinkTypes /> */}
       <FlatList
-        data={finalList !== null ? finalList.slice(0, visibleData) : []}
+        data={showList !== null ? showList.slice(0, visibleData) : []}
         renderItem={({item}) => {
           if (item !== null) {
             return (
@@ -257,7 +268,12 @@ export default function CardList({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create( {
+  searchbar:{
+    width: Dimensions.get('window').width - 20,
+    marginVertical: 10,
+    backgroundColor: '#AEB6AE',
+  },
   container: {
     marginVertical: 5,
     flex: 1,
