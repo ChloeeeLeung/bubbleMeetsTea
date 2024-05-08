@@ -68,13 +68,34 @@ export default function RatingDialog({
       setError(false);
       setComment('');
       setStarRating(5);
-      setCrowds('1');
+      setCrowds( '1' );
+      
       const drinkComment = await firebase
         .app()
         .database(databaseUrl)
         .ref(`drink/${shopID}/${drinkID}/comment/${id}`)
         .once('value');
       const commentLength = drinkComment.numChildren() ?? 0;
+
+      var Sentiment = require('sentiment');
+      var sentiment = new Sentiment();
+      var result = sentiment.analyze(comment);
+      let comparative;
+      if ( result.comparative > 1 )
+      {
+        comparative = 1;
+      } else if ( result.comparative < -1 )
+      {
+        comparative = -1;
+      } else if ( starRating == 5 )
+      {
+        comparative = 0;
+      }      
+      else
+      {
+        comparative = result.comparative;
+      }
+
       firebase
         .app()
         .database(databaseUrl)
@@ -82,6 +103,7 @@ export default function RatingDialog({
         .set({
           detail: comment,
           rate: starRating,
+          sentimentRate: starRating + comparative,
         });
 
       let totalRatingSum = 0;
@@ -103,11 +125,7 @@ export default function RatingDialog({
         rating: averageRating,
       });
 
-      var Sentiment = require('sentiment');
-      var sentiment = new Sentiment();
-      var result = sentiment.analyze(comment);
-      console.log(result.comparative);
-
+      
       hideDialog();
     } else {
       setError(true);

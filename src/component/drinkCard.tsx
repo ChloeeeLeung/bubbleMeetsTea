@@ -91,7 +91,9 @@ export default function DrinkCard({shopID, id}: {shopID: String; id: number}) {
         data={drinkList !== null ? drinkList : []}
         renderItem={({item}) => {
           let averageRating = 3;
-          if (item.comment !== undefined || item.comment != null) {
+          // console.log( item );
+          // console.log( item.comment[id] );
+          if (item.comment !== undefined && item.comment[id] != null) {
             const ratings = item.comment[id].map(
               (comment: {rate: number}) => comment.rate,
             );
