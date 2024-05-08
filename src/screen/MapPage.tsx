@@ -38,16 +38,27 @@ export default function MapPage({
     }
   };
 
-  const test = async (index: number) => {
+  const getCard = async (index: number) => {
     if (index !== Infinity) {
       try {
-        const data = await firebase
+        const photo = await firebase
           .app()
           .database(databaseUrl)
           .ref(`shop/${index}`)
           .once('value');
+        const shopPhoto = photo.val();
 
-        const shopData = data.val();
+        const info = await firebase
+          .app()
+          .database(databaseUrl)
+          .ref('branch')
+          .orderByChild('id')
+          .equalTo(index)
+          .once( 'value' );
+        const shopInfo = info.val();
+
+        const shopData = { ...shopPhoto, ...shopInfo[index] };
+        console.log( shopData );
 
         if (shopData) {
           const distance =
@@ -59,18 +70,20 @@ export default function MapPage({
           setCardContent(
             <View style={{padding: 10}}>
               <CardUI
-                name={shopData.name}
-                location={shopData.addr}
-                shopRating={shopData.rating}
-                fav={shopData.fav}
-                openTime={shopData.openTime}
-                closeTime={shopData.closeTime}
-                telephone={shopData.telephone}
-                handleToggleFavorite={() => {}}
-                distance={distance}
-                shopID={shopData.shopID}
-                id={shopData.id}
-              />
+                name={ shopData.shopName }
+                location={ shopData.addr }
+                shopRating={ shopData.rating }
+                fav={ shopData.fav }
+                openTime={ shopData.openTime }
+                closeTime={ shopData.closeTime }
+                telephone={ shopData.telephone }
+                //TODO
+                handleToggleFavorite={ () => { } }
+                distance={ distance }
+                shopID={ shopData.shopID }
+                id={ shopData.id }
+                logo={ shopData.shopLogo}
+                menu={ shopData.shopMenu } />
             </View>,
           );
         } else {
@@ -86,7 +99,7 @@ export default function MapPage({
   };
 
   useEffect(() => {
-    test(card);
+    getCard(card);
   }, [card]);
 
   return (
