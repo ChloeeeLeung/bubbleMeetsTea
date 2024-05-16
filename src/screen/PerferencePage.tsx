@@ -45,7 +45,7 @@ export default function PerferencePage() {
       const userID = getUserID.val();
       const keys = Object.keys(userID);
       if (keys.length > 0) {
-        const key = keys[1];
+        const key = keys[1] != undefined ? keys[1] : keys[0];
         await firebase.app().database(databaseUrl).ref(`user/${key}`).update({
           preferType: preferable,
         });

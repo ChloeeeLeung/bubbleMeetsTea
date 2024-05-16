@@ -110,7 +110,7 @@ export default function FavouritePage() {
       if (userID) {
         const keys = Object.keys(userID);
         if (keys.length > 0) {
-          const key = keys[1];
+          const key = keys[1] != undefined ? keys[1] : keys[0];
           await firebase
             .app()
             .database(databaseUrl)

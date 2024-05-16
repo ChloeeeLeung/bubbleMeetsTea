@@ -60,7 +60,14 @@ export default function DrinkCard({shopID, id}: {shopID: String; id: number}) {
 
     if (data.exists()) {
       const userData = data.val();
-      const preferType = userData[Object.keys(userData)[1]].preferType;
+      console.log(userData);
+      const preferType =
+        userData[
+          Object.keys(userData)[1] != undefined
+            ? Object.keys(userData)[1]
+            : Object.keys(userData)[0]
+        ].preferType;
+      console.log(preferType);
       setUserPreferType(preferType);
     } else {
       console.log('User data not found.');

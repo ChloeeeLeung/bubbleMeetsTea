@@ -103,7 +103,7 @@ export default function RegisterPage() {
           .ref('/branch')
           .once('value');
         const shopNum = allShop.numChildren() ?? 0;
-        for (let i = 0; i <= shopNum; i++) {
+        for (let i = 0; i < shopNum; i++) {
           const idSnapshot = await firebase
             .app()
             .database(databaseUrl)

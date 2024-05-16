@@ -38,8 +38,9 @@ export default function CardList({
 
       if (userID) {
         const keys = Object.keys(userID);
+        console.log(keys);
         if (keys.length > 0) {
-          const key = keys[1];
+          const key = keys[1] != undefined ? keys[1] : keys[0];
           const data = await firebase
             .app()
             .database(databaseUrl)
@@ -138,7 +139,7 @@ export default function CardList({
       if (userID) {
         const keys = Object.keys(userID);
         if (keys.length > 0) {
-          const key = keys[1];
+          const key = keys[1] != undefined ? keys[1] : keys[0];
           console.log(key);
           await firebase
             .app()
@@ -175,7 +176,7 @@ export default function CardList({
     if (userID) {
       const keys = Object.keys(userID);
       if (keys.length > 0) {
-        const key = keys[1];
+        const key = keys[1] != undefined ? keys[1] : keys[0];
         await firebase
           .app()
           .database(databaseUrl)
