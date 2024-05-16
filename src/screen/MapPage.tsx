@@ -93,7 +93,15 @@ export default function MapPage({
           .equalTo(shop.shopID)
           .once('value');
         const shopPhoto = photo.val();
-        const key = Object.keys(shopPhoto)[0];
+
+        let filteredShopPhoto;
+        if (Array.isArray(shopPhoto)) {
+          const shopPhotoList = shopPhoto.filter(item => item !== null);
+          filteredShopPhoto = shopPhotoList[0];
+        } else {
+          const key = Object.keys(shopPhoto)[0];
+          filteredShopPhoto = shopPhoto[key];
+        }
 
         const id = Auth().currentUser?.uid ?? '';
         const getUserID = await firebase
@@ -124,7 +132,7 @@ export default function MapPage({
         }
 
         const shopData = {
-          ...shopPhoto[key],
+          ...filteredShopPhoto,
           ...shopInfo[index],
           ...userShopInfo,
         };
