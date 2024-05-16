@@ -68,8 +68,8 @@ export default function RatingDialog({
       setError(false);
       setComment('');
       setStarRating(5);
-      setCrowds( '1' );
-      
+      setCrowds('1');
+
       const drinkComment = await firebase
         .app()
         .database(databaseUrl)
@@ -81,18 +81,13 @@ export default function RatingDialog({
       var sentiment = new Sentiment();
       var result = sentiment.analyze(comment);
       let comparative;
-      if ( result.comparative > 1 )
-      {
-        comparative = 1;
-      } else if ( result.comparative < -1 )
-      {
-        comparative = -1;
-      } else if ( starRating == 5 )
-      {
+      if (starRating == 5) {
         comparative = 0;
-      }      
-      else
-      {
+      } else if (result.comparative < -1) {
+        comparative = -1;
+      } else if (result.comparative > 1) {
+        comparative = 1;
+      } else {
         comparative = result.comparative;
       }
 
@@ -125,7 +120,6 @@ export default function RatingDialog({
         rating: averageRating,
       });
 
-      
       hideDialog();
     } else {
       setError(true);

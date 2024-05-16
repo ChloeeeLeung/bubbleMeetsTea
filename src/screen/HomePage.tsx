@@ -58,8 +58,18 @@ export default function HomePage() {
       <MapPage latitude={22.418205503565268} longitude={114.20799136514684} />
     ),
     explore: ExplorePage,
-    favourite: FavouritePage,
-    profile: SettingPage,
+    favourite: () => (
+      <FavouritePage
+        latitude={22.418205503565268}
+        longitude={114.20799136514684}
+      />
+    ),
+    profile: () => (
+      <SettingPage
+        latitude={22.418205503565268}
+        longitude={114.20799136514684}
+      />
+    ),
   });
 
   const getTabBarIcon = (

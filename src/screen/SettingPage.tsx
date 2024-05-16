@@ -13,7 +13,13 @@ import {
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import Auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
-export default function SettingPage() {
+export default function SettingPage({
+  latitude,
+  longitude,
+}: {
+  latitude: number;
+  longitude: number;
+}) {
   const navigation = useNavigation();
 
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);

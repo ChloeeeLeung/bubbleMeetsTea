@@ -185,13 +185,15 @@ export default function CardList({
             distance: itemDistance,
           });
 
+        let initial = 100;
+
         let distanceBuff;
         if (itemDistance > 1.5) {
           distanceBuff = -(itemDistance - 1.5) * 10;
         } else {
           distanceBuff = (1.5 - itemDistance) * 10;
         }
-        const buff = distanceBuff + itemRating * 10;
+        const buff = initial + distanceBuff + itemRating * 10;
 
         await firebase
           .app()

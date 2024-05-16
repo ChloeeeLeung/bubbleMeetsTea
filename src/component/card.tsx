@@ -8,10 +8,14 @@ import {
   Text,
   TouchableRipple,
   Card,
-  Menu,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Double} from 'react-native/Libraries/Types/CodegenTypes';
+import {firebase} from '@react-native-firebase/database';
+import Auth from '@react-native-firebase/auth';
+
+const databaseUrl =
+  'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
 export default function CardUI({
   name,
@@ -45,7 +49,7 @@ export default function CardUI({
   const navigation = useNavigation();
   return (
     <TouchableRipple
-      onPress={() =>
+      onPress={async () => {
         navigation.navigate('ShopCard', {
           name,
           location,
@@ -59,8 +63,40 @@ export default function CardUI({
           id,
           logo,
           menu,
-        })
-      }>
+        });
+        const userid = Auth().currentUser?.uid ?? '';
+        const getUserID = await firebase
+          .app()
+          .database(databaseUrl)
+          .ref('user')
+          .orderByChild('id')
+          .equalTo(userid)
+          .once('value');
+        const userID = getUserID.val();
+        if (userID) {
+          const keys = Object.keys(userID);
+          if (keys.length > 0) {
+            const key = keys[1] != undefined ? keys[1] : keys[0];
+            const times = await firebase
+              .app()
+              .database(databaseUrl)
+              .ref(`user/${key}/shop/${id}`)
+              .once('value');
+            const clicks = times.val().clickTime ?? 0;
+            firebase
+              .app()
+              .database(databaseUrl)
+              .ref(`user/${key}/shop/${id}`)
+              .update({
+                clickTime: clicks + 1,
+              });
+          } else {
+            console.log('No user found for the provided ID');
+          }
+        } else {
+          console.log('Snapshot value is null or undefined');
+        }
+      }}>
       <Card
         style={{
           backgroundColor: '#C9D5BD',

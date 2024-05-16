@@ -114,6 +114,7 @@ export default function RegisterPage() {
             fav: false,
             distance: 0,
             recommend: 0,
+            clickTime: 0,
           };
           await firebase
             .app()

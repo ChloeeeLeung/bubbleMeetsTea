@@ -141,7 +141,11 @@ export default function DrinkCard({shopID, id}: {shopID: String; id: number}) {
                       icon="comment-multiple"
                       iconColor="#2f4858"
                       onPress={() => {
-                        showCommentDialog(item.comment[id]);
+                        showCommentDialog(
+                          item.comment[id] !== undefined
+                            ? item.comment[id]
+                            : [],
+                        );
                       }}
                     />
                     <IconButton
