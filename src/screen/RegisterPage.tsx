@@ -87,7 +87,7 @@ export default function RegisterPage() {
           name: name,
           email: email,
           preferType: preferable,
-          blogger:false,
+          blogger: false,
         };
         await firebase
           .app()

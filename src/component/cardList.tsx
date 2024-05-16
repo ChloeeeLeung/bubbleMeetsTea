@@ -19,7 +19,7 @@ export default function CardList({
   const [list, setList] = useState([]);
   const [shopList, setShopList] = useState([]);
   const [shopPhotoList, setPhotoList] = useState([]);
-  const [allShopList, setAllShopList] = useState<[] | any[]>( [] );
+  const [allShopList, setAllShopList] = useState<[] | any[]>([]);
   const [showList, setShowList] = useState<[] | any[]>([]);
   const [visibleData, setVisibleData] = useState(10);
   const [search, setSearch] = useState('');
@@ -118,8 +118,8 @@ export default function CardList({
         }
         return null;
       });
-      setAllShopList( finalCombinedList );
-      setShowList( finalCombinedList );
+      setAllShopList(finalCombinedList);
+      setShowList(finalCombinedList);
     }
   }, [list, shopList, shopPhotoList]);
 
@@ -218,19 +218,19 @@ export default function CardList({
       <Searchbar
         style={styles.searchbar}
         placeholder="Search"
-        onChangeText={ (value) =>
-        {
+        onChangeText={value => {
           setSearch(value);
-          const searchList = allShopList.filter((item) =>
-            item.shopName.toLowerCase().includes(search)
+          const searchList = allShopList.filter(item =>
+            item.shopName.toLowerCase().includes(search),
           );
-          setShowList( searchList );
-          if ( value == '' )
-          {
+          setShowList(searchList);
+          if (value == '') {
             setShowList(allShopList);
           }
-        } }
-        onClearIconPress={()=>{setShowList(allShopList);}}
+        }}
+        onClearIconPress={() => {
+          setShowList(allShopList);
+        }}
         value={search}
       />
       <FlatList
@@ -268,8 +268,8 @@ export default function CardList({
   );
 }
 
-const styles = StyleSheet.create( {
-  searchbar:{
+const styles = StyleSheet.create({
+  searchbar: {
     width: Dimensions.get('window').width - 20,
     marginVertical: 10,
     backgroundColor: '#AEB6AE',

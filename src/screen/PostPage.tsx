@@ -160,7 +160,7 @@ export default function PostPage() {
           uploadTask.snapshot?.ref
             .getDownloadURL()
             .then(downloadURL => {
-              const postTime = format( new Date(), 'dd MMM yyyy HH:mm' );
+              const postTime = format(new Date(), 'dd MMM yyyy HH:mm');
               firebase
                 .app()
                 .database(databaseUrl)

@@ -29,8 +29,7 @@ export default function ExplorePage() {
     }
   };
 
-  const checkBlogger = async () =>
-  {
+  const checkBlogger = async () => {
     try {
       const blogger = await firebase
         .app()
@@ -40,7 +39,7 @@ export default function ExplorePage() {
         .equalTo(Auth().currentUser?.uid ?? '')
         .once('value');
       const bloggerInfo = blogger.val();
-      setIsBlogger(bloggerInfo[1]?.blogger??false);
+      setIsBlogger(bloggerInfo[1]?.blogger ?? false);
     } catch (err) {
       console.log(err);
     }
@@ -48,26 +47,28 @@ export default function ExplorePage() {
 
   useEffect(() => {
     getExplore();
-  }, [ postList ] );
-  
+  }, [postList]);
+
   useEffect(() => {
     checkBlogger();
-  }, [] );
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Explore</Text>
-        {isBlogger&&<IconButton
-          icon="plus"
-          size={20}
-          iconColor="#FFFFFF"
-          containerColor="#2f4858"
-          onPress={() => {
-            navigation.navigate('PostPage');
-          }}
-          style={styles.addPost}
-        />}
+        {isBlogger && (
+          <IconButton
+            icon="plus"
+            size={20}
+            iconColor="#FFFFFF"
+            containerColor="#2f4858"
+            onPress={() => {
+              navigation.navigate('PostPage');
+            }}
+            style={styles.addPost}
+          />
+        )}
       </View>
       <FlatList
         data={postList !== null ? postList : []}
@@ -82,7 +83,7 @@ export default function ExplorePage() {
                   like={item.like}
                   rate={item.rate}
                   photoURL={item.photoURL}
-                  id={item.shopID }
+                  id={item.shopID}
                   bloggerID={item.bloggerID}
                 />
               </View>
