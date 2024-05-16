@@ -5,6 +5,7 @@ import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import CardUI from '../component/card';
 import {getPreciseDistance} from 'geolib';
+import Auth from '@react-native-firebase/auth';
 
 const databaseUrl =
   'https://bubble-milk-tea-de1cd-default-rtdb.asia-southeast1.firebasedatabase.app/';
@@ -38,27 +39,95 @@ export default function MapPage({
     }
   };
 
+  const handleToggleFavorite = async (itemId: number, itemFav: boolean) => {
+    if (itemId !== undefined) {
+      const id = Auth().currentUser?.uid ?? '';
+      const getUserID = await firebase
+        .app()
+        .database(databaseUrl)
+        .ref('user')
+        .orderByChild('id')
+        .equalTo(id)
+        .once('value');
+      const userID = getUserID.val();
+
+      if (userID) {
+        const keys = Object.keys(userID);
+        if (keys.length > 0) {
+          const key = keys[1] != undefined ? keys[1] : keys[0];
+          await firebase
+            .app()
+            .database(databaseUrl)
+            .ref(`user/${key}/shop/${itemId}`)
+            .update({
+              fav: !itemFav,
+            });
+          await getDatabase();
+        } else {
+          console.log('No user found for the provided ID');
+        }
+      } else {
+        console.log('Snapshot value is null or undefined');
+      }
+    }
+  };
+
   const getCard = async (index: number) => {
     if (index !== Infinity) {
       try {
-        const photo = await firebase
-          .app()
-          .database(databaseUrl)
-          .ref(`shop/${index}`)
-          .once('value');
-        const shopPhoto = photo.val();
-
         const info = await firebase
           .app()
           .database(databaseUrl)
           .ref('branch')
           .orderByChild('id')
           .equalTo(index)
-          .once( 'value' );
+          .once('value');
         const shopInfo = info.val();
 
-        const shopData = { ...shopPhoto, ...shopInfo[index] };
-        console.log( shopData );
+        const shop = Object.values(shopInfo)[0];
+        const photo = await firebase
+          .app()
+          .database(databaseUrl)
+          .ref('shop')
+          .orderByChild('shopID')
+          .equalTo(shop.shopID)
+          .once('value');
+        const shopPhoto = photo.val();
+        const key = Object.keys(shopPhoto)[0];
+
+        const id = Auth().currentUser?.uid ?? '';
+        const getUserID = await firebase
+          .app()
+          .database(databaseUrl)
+          .ref('user')
+          .orderByChild('id')
+          .equalTo(id)
+          .once('value');
+        const userID = getUserID.val();
+
+        let userShopInfo;
+        if (userID) {
+          const keys = Object.keys(userID);
+          if (keys.length > 0) {
+            const key = keys[1] != undefined ? keys[1] : keys[0];
+            const userShop = await firebase
+              .app()
+              .database(databaseUrl)
+              .ref(`user/${key}/shop/${shopInfo[index].id}`)
+              .once('value');
+            userShopInfo = userShop.val();
+          } else {
+            console.log('No user found for the provided ID');
+          }
+        } else {
+          console.log('Snapshot value is null or undefined');
+        }
+
+        const shopData = {
+          ...shopPhoto[key],
+          ...shopInfo[index],
+          ...userShopInfo,
+        };
 
         if (shopData) {
           const distance =
@@ -70,20 +139,22 @@ export default function MapPage({
           setCardContent(
             <View style={{padding: 10}}>
               <CardUI
-                name={ shopData.shopName }
-                location={ shopData.addr }
-                shopRating={ shopData.rating }
-                fav={ shopData.fav }
-                openTime={ shopData.openTime }
-                closeTime={ shopData.closeTime }
-                telephone={ shopData.telephone }
-                //TODO
-                handleToggleFavorite={ () => { } }
-                distance={ distance }
-                shopID={ shopData.shopID }
-                id={ shopData.id }
-                logo={ shopData.shopLogo}
-                menu={ shopData.shopMenu } />
+                name={shopData.shopName}
+                location={shopData.addr}
+                shopRating={shopData.rating}
+                fav={shopData.fav}
+                openTime={shopData.openTime}
+                closeTime={shopData.closeTime}
+                telephone={shopData.telephone}
+                handleToggleFavorite={() => {
+                  handleToggleFavorite(shopData.id, shopData.fav);
+                }}
+                distance={distance}
+                shopID={shopData.shopID}
+                id={shopData.id}
+                logo={shopData.shopLogo}
+                menu={shopData.shopMenu}
+              />
             </View>,
           );
         } else {
